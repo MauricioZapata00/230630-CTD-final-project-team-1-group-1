@@ -1,0 +1,22 @@
+.header {
+    height: 60px;
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $pimary-color-light;
+    color: white;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+
+    &__logo {
+        cursor: pointer;
+    }
+
+    &__buttons {
+     display: flex;
+     gap: 15px;
+    }
+}
+
