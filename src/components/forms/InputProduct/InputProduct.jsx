@@ -1,4 +1,5 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material'
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, OutlinedInput, TextField } from '@mui/material'
+import axios from 'axios'
 import React, { useState } from 'react'
 
 const InputProduct = (props) => {
@@ -17,6 +18,8 @@ const InputProduct = (props) => {
 
     const [productImageByteArray, setProductImageByteArray] = useState([])
 
+    const [productPrice, setProductPrice] = useState("0")
+
     const handleProductNameChage = (event) => {
         setProductName(() => event.target.value)
     }
@@ -25,11 +28,24 @@ const InputProduct = (props) => {
         setProductDescription(() => event.target.value)
     }
 
+    const handleProductPriceChange = (event) => {
+        if (isProductPriceCorrect(event.target.value)) {
+            setProductPrice(() => event.target.value)
+        }
+    }
+
+    const isProductPriceCorrect = (value) => {
+        if (value === "") {
+            setProductPrice(() => "0")
+            return false
+        }
+        return true
+    }
+
     const handleproductImageURLChage = (event) => {
         const fileReceived = event.target.files[0]
         const reader = new FileReader()
         reader.readAsArrayBuffer(fileReceived)
-        console.log('event.target.files[0]', event.target.files[0])
         reader.onloadend = (evt) => {
             convertArrayBufferToImage(evt.target.result, fileReceived.type)
         }
@@ -52,8 +68,25 @@ const InputProduct = (props) => {
         imageCreated.src = imageToCreateURL
     }
 
-    const createProduct = () => {
-        console.log('productImageByteArray', productImageByteArray)
+    const createProduct = async () => {
+        const dtoObject = createProductDtoToCreate()
+        const result = await axios.post('http://localhost:8080/productos/registrar', dtoObject
+        ,{
+            'Content-Type': 'application/json'
+        })
+            .then(response => response.data)
+            .catch(error => console.log('error', error))
+        console.log('result', result)
+    }
+
+    const createProductDtoToCreate = () => {
+        const objectToReturn = {
+            nombre: productName,
+            descripcion: productDescription,
+            precio: parseFloat(productPrice),
+            imagen: Object.values(productImageByteArray[0]).map(stringOfByteNumber => parseInt(stringOfByteNumber))
+        }
+        return objectToReturn
     }
 
     const handleCloseDialog = () => {
@@ -61,9 +94,10 @@ const InputProduct = (props) => {
         setProductName(() => "")
         setProductDescription(() => "")
         setproductImageURL(() => "")
+        setProductPrice(() => 0.0)
         const imageToRemove = document.getElementById(imageCreatedId)
         if (imageToRemove) {
-            imageToRemove.remove()    
+            imageToRemove.remove()
         }
     }
 
@@ -102,6 +136,19 @@ const InputProduct = (props) => {
                         onChange={handleProductDescriptionChage}
                     />
                 </Box>
+                <OutlinedInput
+                    id="input-product-price-id"
+
+                    inputProps={{
+                        type: 'number',
+                        min: '0',
+                        step: '0.01',
+                        label: "Precio del producto:"
+                    }}
+                    startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                    value={productPrice.toString()}
+                    onChange={handleProductPriceChange}
+                />
                 <Box>
                     <input
                         type="file"
