@@ -18,6 +18,10 @@ const AppContextProvider = ({ children }) => {
 
 AppContextProvider.propTypes = {
   children: PropTypes.node.isRequired,
+  //category: PropTypes.shape({
+  //image: PropTypes.string.isRequired,
+
+  //})
 };
 
 export default AppContextProvider;

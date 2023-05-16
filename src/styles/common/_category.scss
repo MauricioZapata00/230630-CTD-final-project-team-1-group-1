@@ -1,0 +1,44 @@
+.category {
+    flex: 1;
+    background-color: white;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: $card-box-shadow;
+    -webkit-box-shadow: $card-box-shadow;
+    -moz-box-shadow: $card-box-shadow;
+
+    &:hover {
+        cursor: pointer;
+        box-shadow: $card-box-shadow-hover;
+        -webkit-box-shadow: $card-box-shadow-hover;
+        -moz-box-shadow: $card-box-shadow-hover;
+    }
+
+    &__image-container {
+        height: 160px;
+        overflow: hidden;
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+
+        @media (max-width: 800px) {
+            height: auto;
+            width: 100%;
+        }
+    }
+
+    h3 {
+        padding: 0 10px;
+        font-size: 14px;
+        margin: 10px 0 6px;
+    }
+
+    p {
+        padding: 0 10px;
+        font-size: 12px;
+        margin: 6px 0 10px;
+        color: $gray-dark;
+    }
+}
