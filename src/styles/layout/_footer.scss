@@ -4,6 +4,35 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: $pimary-color-light;
+    background-color: $secondary-color-dark;
     color: white;
+
+    @media (max-width: 800px) {
+        flex-direction: column;
+        height: fit-content;
+        padding: 30px;
+    }
+
+    &__copyright {
+        font-size: 14px;
+
+        @media (max-width: 800px) {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+    }
+
+    &__social {
+        display: flex;
+        gap: 10px;
+
+        svg {
+            font-size: 30px;
+
+            @media (max-width: 800px) {
+                font-size: 50px;
+            }
+        }
+        
+    }
 }

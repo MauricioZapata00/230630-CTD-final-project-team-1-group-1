@@ -130,7 +130,7 @@ const InputProduct = (props) => {
                 {"Ingresa los datos del producto:"}
             </DialogTitle>
             <DialogContent>
-                <Box>
+                <Box sx={{ margin: "15px 0" }}>
                     <TextField
                         id="input-product-name-id"
                         label="Nombre del producto:"
@@ -140,7 +140,7 @@ const InputProduct = (props) => {
                         onChange={handleProductNameChage}
                     />
                 </Box>
-                <Box>
+                <Box sx={{ margin: "15px 0" }}>
                     <TextField
                         id="input-product-description-id"
                         label="Descripción del producto:"
