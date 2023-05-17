@@ -5,8 +5,10 @@
     padding: 30px;
     background-color: $primary-color-light;
     color: white;
+    margin-bottom: 15px;
 
     @media (max-width: 800px) {
+        margin-bottom: 5px;
         padding: 30px 15px;
     }
 
