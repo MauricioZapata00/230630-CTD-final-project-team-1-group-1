@@ -8,6 +8,10 @@ const InputProduct = (props) => {
 
     const imageCreatedId = 'image-created-id'
 
+    const FORM_FILE_STRING_CONST = "imageFile"
+
+    const FORM_OBJECT_STRING_CONST = "productoDto"
+
     const { isOpenDialog, setIsOpenDialog } = props
 
     const [productName, setProductName] = useState("")
@@ -16,9 +20,11 @@ const InputProduct = (props) => {
 
     const [productImageURL, setproductImageURL] = useState("")
 
-    const [productImageByteArray, setProductImageByteArray] = useState([])
-
     const [productPrice, setProductPrice] = useState("0")
+
+    const [file, setFile] = useState(null)
+
+    const [stringImageUrl, setStringImageUrl] = useState("")
 
     const handleProductNameChage = (event) => {
         setProductName(() => event.target.value)
@@ -49,12 +55,13 @@ const InputProduct = (props) => {
         reader.onloadend = (evt) => {
             convertArrayBufferToImage(evt.target.result, fileReceived.type)
         }
-        setproductImageURL(() => event.target.value)
+        setproductImageURL(() => event.result)
+        setFile(() => fileReceived)
+        setStringImageUrl(() => "" + Date.now() + fileReceived.name)
     }
 
     const convertArrayBufferToImage = (arrayBuffer, type) => {
         const byteArray = new Uint8Array(arrayBuffer)
-        setProductImageByteArray(() => [byteArray])
         const imageBlob = new Blob([byteArray], { type: type })
         const imageURL = URL.createObjectURL(imageBlob)
         createDynamicPicture(imageURL)
@@ -70,13 +77,22 @@ const InputProduct = (props) => {
 
     const createProduct = async () => {
         const dtoObject = createProductDtoToCreate()
-        const result = await axios.post('http://localhost:8080/productos/registrar', dtoObject
-        ,{
-            'Content-Type': 'application/json'
-        })
+        const formData = new FormData()
+
+        formData.append(FORM_FILE_STRING_CONST, file, stringImageUrl)
+        formData.append(FORM_OBJECT_STRING_CONST, JSON.stringify(dtoObject))
+
+        const result = await axios.post('http://localhost:8080/productos/registrar', formData
+            , {
+                headers: {
+                    'Content-Type': `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`
+                }
+            })
             .then(response => response.data)
             .catch(error => console.log('error', error))
         console.log('result', result)
+        formData.delete(FORM_FILE_STRING_CONST)
+        formData.delete(FORM_OBJECT_STRING_CONST)
     }
 
     const createProductDtoToCreate = () => {
@@ -84,7 +100,7 @@ const InputProduct = (props) => {
             nombre: productName,
             descripcion: productDescription,
             precio: parseFloat(productPrice),
-            imagen: Object.values(productImageByteArray[0]).map(stringOfByteNumber => parseInt(stringOfByteNumber))
+            imagenUrl: stringImageUrl
         }
         return objectToReturn
     }
