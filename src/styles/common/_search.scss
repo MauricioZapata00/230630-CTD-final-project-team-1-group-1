@@ -1,0 +1,28 @@
+.search {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    background-color: $primary-color-light;
+    color: white;
+    margin-bottom: 15px;
+
+    @media (max-width: 800px) {
+        margin-bottom: 5px;
+        padding: 30px 15px;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    &__form {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+
+        @media (max-width: 800px) {
+            width: 100%;
+        }
+    }
+}

@@ -1,6 +1,14 @@
 @import './variables';
+//LAYOUT
 @import "./layout/header";
 @import "./layout/footer";
+//COMMON   
+@import "./common/search";
+@import "./common/categories";
+@import "./common/category";
+@import "./common/products";
+@import "./common/product";
+
 
 * {
     margin: 0;
@@ -14,12 +22,14 @@
     flex-direction: column;
     min-height: 100vh;
     padding-top: 60px;
+
+    @media (max-width: 800px) {
+        padding-top: 115px;
+    }
 }
 
-.section-container{
+.section-container {
     flex: 1;
-    padding: 30px;
-    height: 1200px;
     background-color: $gray-light;
 }
 
