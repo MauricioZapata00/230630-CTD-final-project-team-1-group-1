@@ -37,17 +37,6 @@ const Header = () => {
           <img height="50px" src={Logo} alt="logo" />
           Servicios de Caterig
         </div>
-        {logedUser && logedUser.isAdmin && (
-          <div>
-            <Button
-              variant="outlined"
-              sx={{ background: "white" }}
-              onClick={handleAddProduct}
-            >
-              Cargar producto
-            </Button>
-          </div>
-        )}
         {!logedUser ? (
           <div className="header__buttons">
             <Button
@@ -67,6 +56,17 @@ const Header = () => {
           </div>
         ) : (
           <div className="header__user-info">
+            {logedUser.isAdmin && (
+              <div>
+                <Button
+                  variant="outlined"
+                  sx={{ background: "white" }}
+                  onClick={handleAddProduct}
+                >
+                  Cargar producto
+                </Button>
+              </div>
+            )}
             <Avatar sx={{ bgcolor: "#67D671" }}>A</Avatar>
             <span>{logedUser.userName}</span>
           </div>
