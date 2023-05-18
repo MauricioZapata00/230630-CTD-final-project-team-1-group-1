@@ -33,3 +33,17 @@
     background-color: $gray-light;
 }
 
+.error {
+    padding: 25px 0;
+    color: #e19a9a;
+}
+
+.preview {
+    margin-top: 15px;
+    width: 250px;
+
+    img {
+        width: 100%;
+    }
+}
+

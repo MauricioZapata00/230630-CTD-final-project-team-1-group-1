@@ -1,8 +1,8 @@
-import axios from "axios";
 import Categories from "../../common/Categories";
 import Products from "../../common/Products";
 import Search from "../../common/Search";
 import { useEffect, useState } from "react";
+import { getProducts } from "../../../services";
 
 const categories = [
   {
@@ -31,51 +31,28 @@ const categories = [
   },
 ];
 
-// const products = [
-//   {
-//     image:
-//       "https://http2.mlstatic.com/D_NQ_NP_976413-MLA45362229964_032021-O.jpg",
-//     name: "Finger Food",
-//     price: 4800,
-//   },
-//   {
-//     image:
-//       "https://www.bsas-catering.com.ar/documentos/1/11_servicio-de-pasta-party.jpg",
-//     name: "Menú de Pastas",
-//     price: 3550,
-//   },
-//   {
-//     image:
-//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSahWphFdPSIg0xWp3W-xLR0i9FQwNoTGeKMA&usqp=CAU",
-//     name: "Bebidas",
-//     price: 1900,
-//   },
-//   {
-//     image:
-//       "https://cdn0.casamientos.com.ar/vendor/3739/3_2/960/jpeg/aaea4718-2d78-4de6-94ae-e98f1fa97cf8_7_153739-159146789464383.jpeg",
-//     name: "Mesa dulce",
-//     price: 1000,
-//   },
-// ];
-
 const Home = () => {
-
-  const [products, setProducts] = useState([])
-    const getProducts = async () => {
-    const fetchedProducts = await axios.get('http://localhost:8080/productos/')
-      .then(response => response.data)
-      .catch(error => console.log(error))
-    setProducts(() => fetchedProducts)
-  }
+  const [products, setProducts] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     getProducts()
-  }, [])
+      .then((response) => {
+        setProducts(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <div>
       <Search />
       <Categories categories={categories} />
-      <Products products={products} />
+      <Products products={products} loading={loading} />
     </div>
   );
 };
