@@ -1,189 +1,233 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, OutlinedInput, TextField } from '@mui/material'
-import axios from 'axios'
-import React, { useState } from 'react'
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  InputAdornment,
+  OutlinedInput,
+  TextField,
+} from "@mui/material";
+import SaveIcon from "@mui/icons-material/Save";
+import LoadingButton from "@mui/lab/LoadingButton";
+import axios from "axios";
+import { useState } from "react";
+import PropTypes from "prop-types";
 
 const InputProduct = (props) => {
+  const imageContainerId = "image-container-id";
 
-    const imageContainerId = 'image-container-id'
+  const imageCreatedId = "image-created-id";
 
-    const imageCreatedId = 'image-created-id'
+  const FORM_FILE_STRING_CONST = "imageFile";
 
-    const FORM_FILE_STRING_CONST = "imageFile"
+  const FORM_OBJECT_STRING_CONST = "productoDto";
 
-    const FORM_OBJECT_STRING_CONST = "productoDto"
+  const { isOpenDialog, setIsOpenDialog } = props;
 
-    const { isOpenDialog, setIsOpenDialog } = props
+  const [productName, setProductName] = useState("");
 
-    const [productName, setProductName] = useState("")
+  const [productDescription, setProductDescription] = useState("");
 
-    const [productDescription, setProductDescription] = useState("")
+  const [productImageURL, setproductImageURL] = useState("");
 
-    const [productImageURL, setproductImageURL] = useState("")
+  const [productPrice, setProductPrice] = useState(0);
 
-    const [productPrice, setProductPrice] = useState("0")
+  const [file, setFile] = useState(null);
 
-    const [file, setFile] = useState(null)
+  const [stringImageUrl, setStringImageUrl] = useState("");
 
-    const [stringImageUrl, setStringImageUrl] = useState("")
+  const [sending, setSending] = useState(false);
 
-    const handleProductNameChage = (event) => {
-        setProductName(() => event.target.value)
+  const [error, setError] = useState(false);
+
+  const handleProductNameChage = (event) => {
+    setProductName(() => event.target.value);
+  };
+
+  const handleProductDescriptionChage = (event) => {
+    setProductDescription(event.target.value);
+  };
+
+  const handleProductPriceChange = (event) => {
+    if (isProductPriceCorrect(event.target.value)) {
+      setProductPrice(event.target.value);
     }
+  };
 
-    const handleProductDescriptionChage = (event) => {
-        setProductDescription(() => event.target.value)
+  const isProductPriceCorrect = (value) => {
+    if (value === "") {
+      setProductPrice(0);
+      return false;
     }
+    return true;
+  };
 
-    const handleProductPriceChange = (event) => {
-        if (isProductPriceCorrect(event.target.value)) {
-            setProductPrice(() => event.target.value)
-        }
+  const handleproductImageURLChage = (event) => {
+    const fileReceived = event.target.files[0];
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(fileReceived);
+    reader.onloadend = (evt) => {
+      convertArrayBufferToImage(evt.target.result, fileReceived.type);
+    };
+    setproductImageURL(event.result);
+    setFile(fileReceived);
+    setStringImageUrl("" + Date.now() + fileReceived.name);
+  };
+
+  const convertArrayBufferToImage = (arrayBuffer, type) => {
+    const byteArray = new Uint8Array(arrayBuffer);
+    const imageBlob = new Blob([byteArray], { type: type });
+    const imageURL = URL.createObjectURL(imageBlob);
+    createDynamicPicture(imageURL);
+  };
+
+  const createDynamicPicture = (imageToCreateURL) => {
+    const imageContainer = document.getElementById(imageContainerId);
+    const img = document.createElement("img");
+    img.id = imageCreatedId;
+    imageContainer.appendChild(img);
+    let imageCreated = document.getElementById(imageCreatedId);
+    imageCreated.src = imageToCreateURL;
+  };
+
+  const createProduct = () => {
+    setError(false);
+    const dtoObject = createProductDtoToCreate();
+    const formData = new FormData();
+
+    formData.append(FORM_FILE_STRING_CONST, file, stringImageUrl);
+    formData.append(FORM_OBJECT_STRING_CONST, JSON.stringify(dtoObject));
+
+    setSending(true);
+
+    axios
+      .post("http://localhost:8080/productos/registrar", formData, {
+        headers: {
+          "Content-Type": `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`,
+        },
+      })
+      .then((response) => {
+        setSending(false);
+        console.log(response.data);
+        handleCloseDialog();
+      })
+      .catch((error) => {
+        setSending(false);
+        setError(true);
+        console.log("error", error);
+      });
+  };
+
+  const createProductDtoToCreate = () => {
+    const objectToReturn = {
+      nombre: productName,
+      descripcion: productDescription,
+      precio: parseFloat(productPrice),
+      imagenUrl: stringImageUrl,
+    };
+    return objectToReturn;
+  };
+
+  const handleCloseDialog = () => {
+    setProductName("");
+    setProductDescription("");
+    setproductImageURL("");
+    setProductPrice(0);
+    const imageToRemove = document.getElementById(imageCreatedId);
+    if (imageToRemove) {
+      imageToRemove.remove();
     }
+    setIsOpenDialog(false);
+  };
 
-    const isProductPriceCorrect = (value) => {
-        if (value === "") {
-            setProductPrice(() => "0")
-            return false
-        }
-        return true
-    }
-
-    const handleproductImageURLChage = (event) => {
-        const fileReceived = event.target.files[0]
-        const reader = new FileReader()
-        reader.readAsArrayBuffer(fileReceived)
-        reader.onloadend = (evt) => {
-            convertArrayBufferToImage(evt.target.result, fileReceived.type)
-        }
-        setproductImageURL(() => event.result)
-        setFile(() => fileReceived)
-        setStringImageUrl(() => "" + Date.now() + fileReceived.name)
-    }
-
-    const convertArrayBufferToImage = (arrayBuffer, type) => {
-        const byteArray = new Uint8Array(arrayBuffer)
-        const imageBlob = new Blob([byteArray], { type: type })
-        const imageURL = URL.createObjectURL(imageBlob)
-        createDynamicPicture(imageURL)
-    }
-
-    const createDynamicPicture = (imageToCreateURL) => {
-        const imageContainer = document.getElementById(imageContainerId)
-        imageContainer.appendChild(document.createElement('img'))
-        let imageCreated = document.getElementsByTagName('img')[0]
-        imageCreated.id = imageCreatedId
-        imageCreated.src = imageToCreateURL
-    }
-
-    const createProduct = async () => {
-        const dtoObject = createProductDtoToCreate()
-        const formData = new FormData()
-
-        formData.append(FORM_FILE_STRING_CONST, file, stringImageUrl)
-        formData.append(FORM_OBJECT_STRING_CONST, JSON.stringify(dtoObject))
-
-        const result = await axios.post('http://localhost:8080/productos/registrar', formData
-            , {
-                headers: {
-                    'Content-Type': `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`
-                }
-            })
-            .then(response => response.data)
-            .catch(error => console.log('error', error))
-        console.log('result', result)
-        formData.delete(FORM_FILE_STRING_CONST)
-        formData.delete(FORM_OBJECT_STRING_CONST)
-    }
-
-    const createProductDtoToCreate = () => {
-        const objectToReturn = {
-            nombre: productName,
-            descripcion: productDescription,
-            precio: parseFloat(productPrice),
-            imagenUrl: stringImageUrl
-        }
-        return objectToReturn
-    }
-
-    const handleCloseDialog = () => {
-        setIsOpenDialog(false)
-        setProductName(() => "")
-        setProductDescription(() => "")
-        setproductImageURL(() => "")
-        setProductPrice(() => 0.0)
-        const imageToRemove = document.getElementById(imageCreatedId)
-        if (imageToRemove) {
-            imageToRemove.remove()
-        }
-    }
-
-
-    return (
-        <Dialog open={isOpenDialog}
-            onClose={handleCloseDialog}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-            maxWidth={'lg'}
+  return (
+    <Dialog
+      open={isOpenDialog}
+      onClose={handleCloseDialog}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      maxWidth={"lg"}
+      fullWidth={true}
+    >
+      <DialogTitle id="enter-product-dialog-title-id">
+        {"Ingresa los datos del producto:"}
+      </DialogTitle>
+      <DialogContent>
+        <Box sx={{ margin: "15px 0" }}>
+          <TextField
+            id="input-product-name-id"
+            label="Nombre del producto:"
+            variant="outlined"
             fullWidth={true}
-        >
-            <DialogTitle id="enter-product-dialog-title-id">
-                {"Ingresa los datos del producto:"}
-            </DialogTitle>
-            <DialogContent>
-                <Box sx={{ margin: "15px 0" }}>
-                    <TextField
-                        id="input-product-name-id"
-                        label="Nombre del producto:"
-                        variant="outlined"
-                        fullWidth={true}
-                        value={productName}
-                        onChange={handleProductNameChage}
-                    />
-                </Box>
-                <Box sx={{ margin: "15px 0" }}>
-                    <TextField
-                        id="input-product-description-id"
-                        label="Descripción del producto:"
-                        multiline={true}
-                        minRows={2}
-                        variant="outlined"
-                        fullWidth={true}
-                        value={productDescription}
-                        onChange={handleProductDescriptionChage}
-                    />
-                </Box>
-                <OutlinedInput
-                    id="input-product-price-id"
+            value={productName}
+            onChange={handleProductNameChage}
+          />
+        </Box>
+        <Box sx={{ margin: "15px 0" }}>
+          <TextField
+            id="input-product-description-id"
+            label="Descripción del producto:"
+            multiline={true}
+            minRows={2}
+            variant="outlined"
+            fullWidth={true}
+            value={productDescription}
+            onChange={handleProductDescriptionChage}
+          />
+        </Box>
+        <OutlinedInput
+          id="input-product-price-id"
+          inputProps={{
+            type: "number",
+            min: "0",
+            step: "0.01",
+            label: "Precio del producto:",
+          }}
+          startAdornment={<InputAdornment position="start">$</InputAdornment>}
+          value={productPrice.toString()}
+          onChange={handleProductPriceChange}
+        />
+        <Box sx={{ margin: "15px 0" }}>
+          <input
+            type="file"
+            id="input-product-image-id"
+            accept="image/png, image/jpeg"
+            value={productImageURL}
+            onChange={handleproductImageURLChage}
+          />
+        </Box>
+        <div id={imageContainerId} className="preview">
+          {/* <img id='image' src={productImageURL}/> */}
+        </div>
+        {error && (
+          <div className="error">
+            <p>Ocurrió un error en el servidor.</p>
+          </div>
+        )}
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancelar</Button>
+          <LoadingButton
+            size="small"
+            onClick={createProduct}
+            endIcon={<SaveIcon />}
+            loading={sending}
+            loadingPosition="end"
+            variant="contained"
+            disabled={sending}
+          >
+            <span>Guardar</span>
+          </LoadingButton>
+        </DialogActions>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
-                    inputProps={{
-                        type: 'number',
-                        min: '0',
-                        step: '0.01',
-                        label: "Precio del producto:"
-                    }}
-                    startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                    value={productPrice.toString()}
-                    onChange={handleProductPriceChange}
-                />
-                <Box>
-                    <input
-                        type="file"
-                        id="input-product-image-id"
-                        accept="image/png, image/jpeg"
-                        value={productImageURL}
-                        onChange={handleproductImageURLChage}
-                    />
-                </Box>
-                <div id={imageContainerId}>
-                    {/* <img id='image' src={productImageURL}/> */}
-                </div>
-                <DialogActions>
-                    <Button onClick={handleCloseDialog}>Cancelar</Button>
-                    <Button onClick={createProduct} autoFocus>Crear producto</Button>
-                </DialogActions>
-            </DialogContent>
-        </Dialog>
-    )
-}
+InputProduct.propTypes = {
+  isOpenDialog: PropTypes.bool.isRequired,
+  setIsOpenDialog: PropTypes.func.isRequired,
+};
 
-export default InputProduct
+export default InputProduct;

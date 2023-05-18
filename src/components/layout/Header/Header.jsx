@@ -1,9 +1,8 @@
-import { Avatar, Button, IconButton, Tooltip } from "@mui/material";
+import { Avatar, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../../assets/logo.png";
 import { useContext, useState } from "react";
 import { AppContext } from "../../../context";
-import AddIcon from "@mui/icons-material/Add";
 import InputProduct from "../../forms/InputProduct/InputProduct";
 
 const Header = () => {
@@ -38,15 +37,6 @@ const Header = () => {
           <img height="50px" src={Logo} alt="logo" />
           Servicios de Caterig
         </div>
-        {logedUser && logedUser.isAdmin && (
-          <div>
-            <Tooltip title="Agregar Producto">
-              <IconButton aria-label="delete" onClick={handleAddProduct}>
-                <AddIcon />
-              </IconButton>
-            </Tooltip>
-          </div>
-        )}
         {!logedUser ? (
           <div className="header__buttons">
             <Button
@@ -66,6 +56,17 @@ const Header = () => {
           </div>
         ) : (
           <div className="header__user-info">
+            {logedUser.isAdmin && (
+              <div>
+                <Button
+                  variant="outlined"
+                  sx={{ background: "white" }}
+                  onClick={handleAddProduct}
+                >
+                  Cargar producto
+                </Button>
+              </div>
+            )}
             <Avatar sx={{ bgcolor: "#67D671" }}>A</Avatar>
             <span>{logedUser.userName}</span>
           </div>

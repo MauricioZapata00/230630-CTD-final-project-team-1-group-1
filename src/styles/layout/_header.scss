@@ -11,11 +11,13 @@
     box-shadow: $card-box-shadow;
     -webkit-box-shadow: $card-box-shadow;
     -moz-box-shadow: $card-box-shadow;
+    z-index: 99;
 
     @media (max-width: 800px) {
         flex-direction: column;
-        height: 115px;
-        padding: 10px 15px;
+        height: fit-content;
+        gap: 10px;
+        padding: 10px 15px 15px;
     }
 
     &__logo {

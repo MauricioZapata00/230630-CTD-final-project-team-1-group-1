@@ -8,6 +8,14 @@
     h2 {
         font-size: 20px;
     }
+    
+    &__loading {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100px;
+    }
 
     &__container {
         margin-top: 15px;
@@ -18,5 +26,13 @@
             flex-direction: column;
             gap: 15px;
         }
+    }
+
+    &__empty {
+        display: flex;
+        align-items: center;
+        padding: 15px 0;
+        color: silver;
+        margin: 15px 5px;
     }
 }
