@@ -6,6 +6,8 @@
     box-shadow: $card-box-shadow;
     -webkit-box-shadow: $card-box-shadow;
     -moz-box-shadow: $card-box-shadow;
+    max-width: 340px;
+    margin: 10px 15px;
 
     &:hover {
         cursor: pointer;
