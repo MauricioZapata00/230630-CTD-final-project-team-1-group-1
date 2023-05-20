@@ -35,22 +35,14 @@ const Header = () => {
       <div className="header">
         <div onClick={handleLogoClick} className="header__logo">
           <img height="50px" src={Logo} alt="logo" />
-          Servicios de Caterig
+          Servicios de Catering
         </div>
         {!logedUser ? (
           <div className="header__buttons">
-            <Button
-              variant="outlined"
-              sx={{ background: "white" }}
-              onClick={handleRegisterClick}
-            >
+            <Button variant="text" onClick={handleRegisterClick}>
               Crear Cuenta
             </Button>
-            <Button
-              variant="outlined"
-              sx={{ background: "white" }}
-              onClick={handleLoginClick}
-            >
+            <Button variant="text" onClick={handleLoginClick}>
               Iniciar Sesión
             </Button>
           </div>
@@ -58,11 +50,7 @@ const Header = () => {
           <div className="header__user-info">
             {logedUser.isAdmin && (
               <div>
-                <Button
-                  variant="outlined"
-                  sx={{ background: "white" }}
-                  onClick={handleAddProduct}
-                >
+                <Button variant="contained" onClick={handleAddProduct}>
                   Cargar producto
                 </Button>
               </div>

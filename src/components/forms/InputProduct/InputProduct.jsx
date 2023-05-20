@@ -40,7 +40,7 @@ const InputProduct = (props) => {
 
   const [sending, setSending] = useState(false);
 
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleProductNameChage = (event) => {
     setProductName(() => event.target.value);
@@ -93,7 +93,7 @@ const InputProduct = (props) => {
   };
 
   const createProduct = () => {
-    setError(false);
+    setError(null);
     const dtoObject = createProductDtoToCreate();
     const formData = new FormData();
 
@@ -115,8 +115,8 @@ const InputProduct = (props) => {
       })
       .catch((error) => {
         setSending(false);
-        setError(true);
-        console.log("error", error);
+        const errorMsg = error?.response?.data?.description;
+        setError(errorMsg || "Ha ocurrido un error.");
       });
   };
 
@@ -203,7 +203,7 @@ const InputProduct = (props) => {
         </div>
         {error && (
           <div className="error">
-            <p>Ocurrió un error en el servidor.</p>
+            <p>{error}</p>
           </div>
         )}
         <DialogActions>

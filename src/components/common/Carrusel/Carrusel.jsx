@@ -20,11 +20,11 @@ const responsive = {
   },
 };
 
-const Carrusel = ({ children, partialVisbile = true }) => {
+const Carrusel = ({ children }) => {
   return (
     <Carousel
       ssr
-      partialVisbile={partialVisbile}
+      partialVisbile
       deviceType="desktop"
       itemClass="image-item"
       responsive={responsive}
@@ -36,7 +36,6 @@ const Carrusel = ({ children, partialVisbile = true }) => {
 
 Carrusel.propTypes = {
   children: PropTypes.node.isRequired,
-  partialVisbile: PropTypes.bool,
 };
 
 export default Carrusel;
