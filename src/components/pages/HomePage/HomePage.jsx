@@ -1,8 +1,11 @@
 import Categories from "../../common/Categories";
 import Products from "../../common/Products";
 import Search from "../../common/Search";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { getProducts } from "../../../services";
+import { AppContext } from "../../../context";
+import SuccessMessage from "../../common/SuccessMessage";
+import ErrorMessage from "./../../common/ErrorMessage";
 
 const categories = [
   {
@@ -32,6 +35,8 @@ const categories = [
 ];
 
 const Home = () => {
+  const { success, error } = useContext(AppContext);
+
   const [products, setProducts] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -53,6 +58,8 @@ const Home = () => {
       <Search />
       <Categories categories={categories} />
       <Products products={products} loading={loading} />
+      {success && <SuccessMessage />}
+      {error && <ErrorMessage />}
     </div>
   );
 };

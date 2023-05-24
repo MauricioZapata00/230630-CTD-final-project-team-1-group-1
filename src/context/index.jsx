@@ -5,10 +5,16 @@ export const AppContext = createContext();
 
 const AppContextProvider = ({ children }) => {
   const [logedUser, setLogedUser] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [error, setError] = useState(null);
 
   const contextValue = {
     logedUser,
     setLogedUser,
+    success,
+    setSuccess,
+    error,
+    setError,
   };
 
   return (

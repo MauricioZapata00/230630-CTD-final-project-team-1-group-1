@@ -14,8 +14,12 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import axios from "axios";
 import { useState } from "react";
 import PropTypes from "prop-types";
+import { useContext } from "react";
+import { AppContext } from "../../../context";
 
 const InputProduct = (props) => {
+  const { setSuccess, setError } = useContext(AppContext);
+
   const imageContainerId = "image-container-id";
 
   const imageCreatedId = "image-created-id";
@@ -39,8 +43,6 @@ const InputProduct = (props) => {
   const [stringImageUrl, setStringImageUrl] = useState("");
 
   const [sending, setSending] = useState(false);
-
-  const [error, setError] = useState(null);
 
   const handleProductNameChage = (event) => {
     setProductName(() => event.target.value);
@@ -112,6 +114,7 @@ const InputProduct = (props) => {
         setSending(false);
         console.log(response.data);
         handleCloseDialog();
+        setSuccess("El producto se guardó correctamente.");
       })
       .catch((error) => {
         setSending(false);
@@ -201,11 +204,6 @@ const InputProduct = (props) => {
         <div id={imageContainerId} className="preview">
           {/* <img id='image' src={productImageURL}/> */}
         </div>
-        {error && (
-          <div className="error">
-            <p>{error}</p>
-          </div>
-        )}
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancelar</Button>
           <LoadingButton
