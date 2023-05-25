@@ -1,9 +1,17 @@
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router";
 
 const Product = ({ product }) => {
-  const { imagenUrl, nombre, precio } = product;
+  const { imagenUrl, nombre, precio, id } = product;
+
+  const navigate = useNavigate();
+
+  const handleClickNavigate = () => {
+    navigate(`/detalle/${id}`);
+  };
+
   return (
-    <div className="product">
+    <div onClick={handleClickNavigate} className="product">
       <div className="product__image-container">
         <img src={imagenUrl} alt={nombre} />
       </div>
@@ -18,6 +26,7 @@ Product.propTypes = {
     imagenUrl: PropTypes.string.isRequired,
     nombre: PropTypes.string.isRequired,
     precio: PropTypes.number.isRequired,
+    id: PropTypes.number.isRequired,
   }).isRequired,
 };
 
