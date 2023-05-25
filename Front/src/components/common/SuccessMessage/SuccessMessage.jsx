@@ -22,7 +22,7 @@ const SuccessMessage = () => {
   }, [setSuccess]);
 
   return (
-    <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+    <Snackbar open autoHideDuration={3000} onClose={handleClose}>
       <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
         {success}
       </Alert>

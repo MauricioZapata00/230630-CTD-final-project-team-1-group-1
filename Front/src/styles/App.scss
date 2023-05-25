@@ -2,6 +2,8 @@
 //LAYOUT
 @import "./layout/header";
 @import "./layout/footer";
+//PAGES
+@import "./pages/detailPage";
 //COMMON   
 @import "./common/search";
 @import "./common/categories";
@@ -32,6 +34,8 @@
 .section-container {
     flex: 1;
     background-color: $gray-light;
+    display: flex;
+    flex-direction: column;
 }
 
 .error {

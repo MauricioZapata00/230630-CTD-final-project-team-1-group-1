@@ -23,9 +23,9 @@ const DetailPage = () => {
         setLoading(false);
       })
       .catch((error) => {
-        setLoading(false);
         const errorMsg = error?.response?.data?.description;
         setError(errorMsg || "Ha ocurrido un error.");
+        setLoading(false);
       });
 
     // setTimeout(() => {
@@ -43,9 +43,16 @@ const DetailPage = () => {
   }, [id, setError]);
 
   return (
-    <div>
+    <div className="detail-page">
       {loading && <CircularProgress />}
-      {productDetail && <ProductDetail productDetail={productDetail} />}
+      {productDetail && (
+        <ProductDetail productDetail={productDetail} loading={loading} />
+      )}
+      {!loading && !productDetail && (
+        <div className="detail-page__empty">
+          No es posible mostrar la información del producto
+        </div>
+      )}
       {error && <ErrorMessage />}
     </div>
   );

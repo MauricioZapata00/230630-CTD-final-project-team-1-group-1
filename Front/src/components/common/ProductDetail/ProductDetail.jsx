@@ -4,7 +4,7 @@ const ProductDetail = ({ productDetail }) => {
   const { imagenUrl, nombre, descripcion, precio, id } = productDetail;
 
   return (
-    <div>
+    <div className="product-detail">
       <p>Id de producto: {id}</p>
       <div>
         <div>
