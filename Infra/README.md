@@ -2,7 +2,7 @@
 
  * La estructura sugerida para nuestra aplicación se puede ver en la siguiente imagen.
 
-![Diagrama sugerido para nuestra aplicación](/home/mauricio/Documentos/DigitalHouse/ProyectoIntegradorCTD/equipo-1/Infra/Diagrama_Infra.jpg "Diagrama_Infraestructura")
+![Diagrama sugerido para nuestra aplicación](Diagrama_Infra.jpg "Diagrama_Infraestructura")
 
 Para ello se cuenta con la aplicación corriendo para el cliente corriendo
 en Amazon S3, guardando imágenes en un bucket también de S3 para que
