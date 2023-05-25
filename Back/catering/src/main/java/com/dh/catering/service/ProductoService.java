@@ -2,7 +2,7 @@ package com.dh.catering.service;
 
 import com.dh.catering.domain.Producto;
 import com.dh.catering.dto.ProductoDto;
-import com.dh.catering.exceptions.NombreDuplicadoException;
+import com.dh.catering.exceptions.DuplicadoException;
 import com.dh.catering.exceptions.RecursoNoEncontradoException;
 import com.dh.catering.repository.ProductoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,12 +31,12 @@ public class ProductoService {
   @Autowired
   private S3Imageservice s3ImageService;
 
-  public Optional<String> save(ProductoDto productoDto, MultipartFile archivoAGuardar) throws NombreDuplicadoException {
+  public Optional<String> save(ProductoDto productoDto, MultipartFile archivoAGuardar) throws DuplicadoException {
     String mensaje = null;
     if (productoDto != null) {
       if (productoRepository.getByNombre(productoDto.getNombre()).isPresent()) {
         log.error("Ya existe un producto registrado con el nombre: {}", productoDto.getNombre());
-        throw new NombreDuplicadoException(
+        throw new DuplicadoException(
             "Ya existe un producto registrado con el nombre: " + productoDto.getNombre());
       }
       s3ImageService.uploadImage(productoDto.getImagenUrl(), archivoAGuardar);
@@ -88,7 +88,7 @@ public class ProductoService {
   }
 
   public Optional<String> updateByNombre(String nombre, ProductoDto productoDto)
-      throws RecursoNoEncontradoException, NombreDuplicadoException {
+      throws RecursoNoEncontradoException {
     String mensaje = null;
     Optional<ProductoDto> optionalProductoDto = this.getByNombre(nombre);
     if (optionalProductoDto.isPresent()) {

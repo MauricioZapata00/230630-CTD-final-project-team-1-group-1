@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptions {
 
-    @ExceptionHandler({NombreDuplicadoException.class})
-    public ResponseEntity<MensajeError> procesarNombreDuplicado(NombreDuplicadoException e){
+    @ExceptionHandler({DuplicadoException.class})
+    public ResponseEntity<MensajeError> procesarDuplicado(DuplicadoException e){
         MensajeError mensajeError = new MensajeError();
         mensajeError.setMessage("Lo sentimos, ha ocurrido un error!");
         mensajeError.setDescription(e.getMessage());

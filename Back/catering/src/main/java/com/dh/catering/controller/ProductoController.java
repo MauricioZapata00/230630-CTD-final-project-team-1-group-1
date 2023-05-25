@@ -1,7 +1,7 @@
 package com.dh.catering.controller;
 
 import com.dh.catering.dto.ProductoDto;
-import com.dh.catering.exceptions.NombreDuplicadoException;
+import com.dh.catering.exceptions.DuplicadoException;
 import com.dh.catering.exceptions.RecursoNoEncontradoException;
 import com.dh.catering.service.ProductoService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -32,7 +32,7 @@ public class ProductoController {
     @PostMapping(value = "/registrar", consumes = {"multipart/form-data", "application/octet-stream"})
     @Operation(summary = "Registrar un producto")
     public ResponseEntity<String> registrar(@RequestParam("productoDto") String productoDto,
-                                            @RequestParam("imageFile")MultipartFile archivoImagen) throws NombreDuplicadoException, JsonProcessingException, ParseException {
+                                            @RequestParam("imageFile")MultipartFile archivoImagen) throws DuplicadoException, JsonProcessingException, ParseException {
         log.info("ProductoDTO recibido: " + productoDto);
         ObjectMapper mapper = new ObjectMapper();
         ProductoDto dtoObtenido = mapper.readValue(productoDto, ProductoDto.class);
@@ -67,7 +67,7 @@ public class ProductoController {
 
     @PutMapping("/{nombre}")
     @Operation(summary = "Actualizar un producto por nombre")
-    public ResponseEntity<String> actualizarPorNombre(@PathVariable String nombre, @RequestBody ProductoDto productoDto) throws NombreDuplicadoException, RecursoNoEncontradoException{
+    public ResponseEntity<String> actualizarPorNombre(@PathVariable String nombre, @RequestBody ProductoDto productoDto) throws DuplicadoException, RecursoNoEncontradoException{
         return productoService.updateByNombre(nombre,productoDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
