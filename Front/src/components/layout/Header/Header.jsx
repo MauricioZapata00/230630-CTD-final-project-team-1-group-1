@@ -17,8 +17,7 @@ const Header = () => {
   };
 
   const handleRegisterClick = () => {
-    // navigateTo("/registro");
-    setLogedUser({ userName: "admin", isAdmin: true });
+    navigateTo("/registro");
   };
 
   const handleLoginClick = () => {
