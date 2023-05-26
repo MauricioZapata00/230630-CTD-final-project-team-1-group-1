@@ -4,6 +4,7 @@
 @import "./layout/footer";
 //PAGES
 @import "./pages/detailPage";
+@import "./pages/registerPage";
 //COMMON   
 @import "./common/search";
 @import "./common/categories";
@@ -11,6 +12,7 @@
 @import "./common/products";
 @import "./common/product";
 @import "./common/productDetail";
+@import "./common/formatText";
 
 
 * {
@@ -41,6 +43,11 @@
 .error {
     padding: 25px 0;
     color: #ab2525;
+}
+
+.form-control {
+    margin: 15px 0;
+    width: 100%;
 }
 
 .preview {

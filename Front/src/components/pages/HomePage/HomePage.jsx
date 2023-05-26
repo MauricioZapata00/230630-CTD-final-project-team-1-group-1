@@ -35,7 +35,7 @@ const categories = [
 ];
 
 const Home = () => {
-  const { success, error } = useContext(AppContext);
+  const { success, error, setError } = useContext(AppContext);
 
   const [products, setProducts] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -47,11 +47,11 @@ const Home = () => {
         setProducts(response.data);
         setLoading(false);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
+        setError("Ha ocurrido un error en el servidor");
         setLoading(false);
       });
-  }, []);
+  }, [setError]);
 
   return (
     <div>
