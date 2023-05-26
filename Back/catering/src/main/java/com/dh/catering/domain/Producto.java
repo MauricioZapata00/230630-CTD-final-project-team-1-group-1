@@ -31,10 +31,31 @@ public class Producto {
     @Column(length = 500)
     private String imagenUrl;
 
-    public Producto(String nombre, String descripcion, Double precio, String imagenUrl) {
+    @Column
+    private Integer cantMin;
+
+    @Column
+    private Boolean requierePagoAnticipado;
+
+    @Column
+    private Integer minDiasReservaPrevia;
+
+    @Column
+    private Boolean permiteCambios;
+
+    @ManyToOne
+    @JoinColumn(name = "categoria_producto_id")
+    private CategoriaProducto categoriaProducto;
+
+    public Producto(String nombre, String descripcion, Double precio, String imagenUrl, Integer cantMin, Boolean requierePagoAnticipado, Integer minDiasReservaPrevia, Boolean permiteCambios, CategoriaProducto categoriaProducto) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.imagenUrl = imagenUrl;
+        this.cantMin = cantMin;
+        this.requierePagoAnticipado = requierePagoAnticipado;
+        this.minDiasReservaPrevia = minDiasReservaPrevia;
+        this.permiteCambios = permiteCambios;
+        this.categoriaProducto = categoriaProducto;
     }
 }

@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptions {
 
-    @ExceptionHandler({DuplicadoException.class})
-    public ResponseEntity<MensajeError> procesarDuplicado(DuplicadoException e){
+    @ExceptionHandler({NombreDuplicadoException.class})
+    public ResponseEntity<MensajeError> procesarNombreDuplicado(NombreDuplicadoException e){
         MensajeError mensajeError = new MensajeError();
         mensajeError.setMessage("Lo sentimos, ha ocurrido un error!");
         mensajeError.setDescription(e.getMessage());
-        mensajeError.setStatusCode(1002);
+        mensajeError.setStatusCode(1001);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mensajeError);
     }
@@ -23,7 +23,7 @@ public class GlobalExceptions {
         MensajeError mensajeError = new MensajeError();
         mensajeError.setMessage("Lo sentimos, ha ocurrido un error!");
         mensajeError.setDescription(e.getMessage());
-        mensajeError.setStatusCode(1001);
+        mensajeError.setStatusCode(1002);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mensajeError);
     }
@@ -31,9 +31,19 @@ public class GlobalExceptions {
     @ExceptionHandler({ArchivoVacioONuloException.class})
     public ResponseEntity<MensajeError> procesarArchivoVacioONulo(ArchivoVacioONuloException e){
         MensajeError mensajeError = new MensajeError();
-        mensajeError.setMessage("Archivo recibido está vacío o es nuo.");
+        mensajeError.setMessage("Archivo recibido está vacío o es nulo.");
         mensajeError.setDescription(e.getMessage());
-        mensajeError.setStatusCode(1001);
+        mensajeError.setStatusCode(1003);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mensajeError);
+    }
+
+    @ExceptionHandler({CategoriaAsignadaException.class})
+    public ResponseEntity<MensajeError> procesarCategoriaAsdignada(CategoriaAsignadaException e){
+        MensajeError mensajeError = new MensajeError();
+        mensajeError.setMessage("Lo sentimos, ha ocurrido un error!");
+        mensajeError.setDescription(e.getMessage());
+        mensajeError.setStatusCode(1004);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mensajeError);
     }
