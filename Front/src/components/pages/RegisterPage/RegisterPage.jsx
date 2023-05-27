@@ -17,8 +17,12 @@ const RegisterPage = () => {
     contrasena: "",
   });
   const [sending, setSending] = useState(false);
+  const [errors, setErrors] = useState([]);
 
-  const [errorMessage, setErrorMessage] = useState(null);
+  const hasError = (name) => {
+    const foundError = errors.find((error) => error.name === name);
+    return foundError?.message;
+  };
 
   const handleChange = ({ target }) => {
     setData({ ...data, [target.name]: target.value });
@@ -26,12 +30,41 @@ const RegisterPage = () => {
   };
 
   const handleSubmit = () => {
-    if (data.nombre.trim().length < 5 || !data.email.match(emailRegex)) {
-      setErrorMessage("Por favor verifique su información nuevamente");
+    const newErrors = [];
+    if (data.nombre.trim().length < 3) {
+      newErrors.push({
+        name: "nombre",
+        message: "El nombre debe contener al menos 3 caracteres.",
+      });
+    }
+
+    if (data.apellido.trim().length < 3) {
+      newErrors.push({
+        name: "apellido",
+        message: "El apellido debe contener al menos 3 caracteres.",
+      });
+    }
+
+    if (!data.email.match(emailRegex)) {
+      newErrors.push({
+        name: "email",
+        message: "Email inválido.",
+      });
+    }
+
+    if (data.contrasena.trim().length < 8) {
+      newErrors.push({
+        name: "password",
+        message: "La contraseña debe contener al menos 8 caracteres.",
+      });
+    }
+
+    setErrors(newErrors);
+
+    if (newErrors.length > 0) {
       return;
     } else {
       setSending(true);
-      setErrorMessage(null);
       createUser(data)
         .then((response) => {
           setSuccess(response.data);
@@ -59,6 +92,7 @@ const RegisterPage = () => {
             value={data.nombre}
             onChange={handleChange}
           />
+          {hasError("nombre") && <p className="error">{hasError("nombre")}</p>}
         </div>
         <div className="form-control">
           <TextField
@@ -69,6 +103,9 @@ const RegisterPage = () => {
             value={data.apellido}
             onChange={handleChange}
           />
+          {hasError("apellido") && (
+            <p className="error">{hasError("apellido")}</p>
+          )}
         </div>
         <div className="form-control">
           <TextField
@@ -79,6 +116,7 @@ const RegisterPage = () => {
             value={data.email}
             onChange={handleChange}
           />
+          {hasError("email") && <p className="error">{hasError("email")}</p>}
         </div>
         <div className="form-control">
           <TextField
@@ -88,7 +126,11 @@ const RegisterPage = () => {
             fullWidth={true}
             value={data.contrasena}
             onChange={handleChange}
+            type="password"
           />
+          {hasError("password") && (
+            <p className="error">{hasError("password")}</p>
+          )}
         </div>
         <LoadingButton
           onClick={handleSubmit}
@@ -98,7 +140,6 @@ const RegisterPage = () => {
         >
           <span>Crear Cuenta</span>
         </LoadingButton>
-        {errorMessage && <p className="error">{errorMessage}</p>}
       </div>
       {success && <SuccessMessage />}
       {error && <ErrorMessage />}
