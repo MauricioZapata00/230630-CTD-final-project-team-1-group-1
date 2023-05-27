@@ -3,7 +3,6 @@ package com.dh.catering.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.dh.catering.exceptions.ArchivoVacioONuloException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,12 +12,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.*;
 
 @Service
 @Slf4j
-public class S3Imageservice {
+public class S3ImageService {
 
     @Autowired
     private AmazonS3 amazonS3Client;

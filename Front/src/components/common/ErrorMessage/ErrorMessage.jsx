@@ -1,6 +1,6 @@
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-import { forwardRef, useContext } from "react";
+import { forwardRef, useContext, useEffect } from "react";
 import { AppContext } from "../../../context";
 
 const Alert = forwardRef(function Alert(props, ref) {
@@ -14,11 +14,15 @@ const ErrorMessage = () => {
     if (reason === "clickaway") {
       return;
     }
-
     setError(null);
   };
+
+  useEffect(() => {
+    return () => setError(null);
+  }, [setError]);
+
   return (
-    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+    <Snackbar open autoHideDuration={3000} onClose={handleClose}>
       <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
         {error}
       </Alert>

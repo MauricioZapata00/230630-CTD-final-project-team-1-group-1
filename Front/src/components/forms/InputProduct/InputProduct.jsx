@@ -16,6 +16,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import { useContext } from "react";
 import { AppContext } from "../../../context";
+// import FormatText from "./../../common/FormatText";
 
 const InputProduct = (props) => {
   const { setSuccess, setError } = useContext(AppContext);
@@ -179,6 +180,11 @@ const InputProduct = (props) => {
             value={productDescription}
             onChange={handleProductDescriptionChage}
           />
+          {/* <FormatText
+            placeholder="Descripción"
+            value={productDescription}
+            setValue={setProductDescription}
+          /> */}
         </Box>
         <OutlinedInput
           id="input-product-price-id"
