@@ -1,6 +1,7 @@
 import { Avatar, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../../assets/logo.png";
+//import Logo from "../../../assets/logo.png";
+import Logo1 from "../../../assets/Imagen2.png";
 import { useContext, useState } from "react";
 import { AppContext } from "../../../context";
 import InputProduct from "../../forms/InputProduct/InputProduct";
@@ -25,16 +26,16 @@ const Header = () => {
     setLogedUser({ userName: "admin", isAdmin: true });
   };
 
-  const handleAddProduct = () => {
-    setIsOpenDialog(true);
+  const handleGoToAdmin = () => {
+    navigateTo("/admin");
   };
 
   return (
     <>
       <div className="header">
         <div onClick={handleLogoClick} className="header__logo">
-          <img height="50px" src={Logo} alt="logo" />
-          Servicios de Catering
+          <img height="50px" src={Logo1} alt="logo" />
+          Digital Catering
         </div>
         {!logedUser ? (
           <div className="header__buttons">
@@ -49,8 +50,8 @@ const Header = () => {
           <div className="header__user-info">
             {logedUser.isAdmin && (
               <div>
-                <Button variant="contained" onClick={handleAddProduct}>
-                  Cargar producto
+                <Button variant="contained" onClick={handleGoToAdmin}>
+                  Administrar
                 </Button>
               </div>
             )}
@@ -59,10 +60,6 @@ const Header = () => {
           </div>
         )}
       </div>
-      <InputProduct
-        isOpenDialog={isOpenDialog}
-        setIsOpenDialog={setIsOpenDialog}
-      />
     </>
   );
 };

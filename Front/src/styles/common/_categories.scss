@@ -19,4 +19,20 @@
             gap: 15px;
         }
     }
+
+    &__loading {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100px;
+    }
+
+    &__empty {
+        display: flex;
+        align-items: center;
+        padding: 15px 0;
+        color: silver;
+        margin: 15px 5px;
+    }
 }
