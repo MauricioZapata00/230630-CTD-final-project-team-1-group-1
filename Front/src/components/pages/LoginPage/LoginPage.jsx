@@ -2,37 +2,44 @@ import LoadingButton from "@mui/lab/LoadingButton/LoadingButton";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../../context";
+import { validateUser } from "../../../services";
 
 const LoginPage = () => {
   const navigateTo = useNavigate();
   const {setLogedUser } = useContext(AppContext);
   
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
 
-  function handleChangeEmail(e) {
-    setEmail(e.target.value);
-  }
-
-  function handleChangePassword(e) {
-    setPassword(e.target.value);
-}
-
-  function handleSubmit(e) {
+  const handleSubmit = async(e) =>{
       e.preventDefault();
+
       const cleanEmail = email.trim();
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-      if (password.length > 0 && emailRegex.test(email)) {
-          setError(`Bienvenido, te estamos redirigiendo`);
-          navigateTo("/")
-          setLogedUser({ userName: "admin", isAdmin: true })
-      } else {
-          console.log("The password is invalid.");
-          console.log(`The email address ${email} is invalid.`);
-          setError("Por favor verifique su información nuevamente")
+      if (!email || !emailRegex.test(email) || !contrasena) {
+        setError('Por favor, ingresa el email y la contraseña');
+        return;
       }
+    try {
+      const response = await validateUser({ email, contrasena });
+
+      if (response.status === 200) {
+        navigateTo("/")
+        const firstLetter = email.charAt(0).toUpperCase()
+        const username = email.split("@")[0]
+        setLogedUser({ userName: username, avatar:firstLetter, isAdmin: true })
+        console.log('Inicio de sesión exitoso');
+      } else {
+        setError("Por favor, verifique que el email y contraseña ingresados sean correctos")
+        console.log('Credenciales inválidas');
+      }
+    } catch (error) {
+      setError("Por favor, verifique que el email y contraseña ingresados sean correctos")
+      console.error('Error al iniciar sesión', error);
+    }
+      
   }
 
   return (
@@ -41,14 +48,16 @@ const LoginPage = () => {
           <h4>Disfrutá de los beneficios al inciar sesión</h4>
           <form onSubmit={handleSubmit}>
               <input
-                  value={email}
-                  onChange={handleChangeEmail}
-                  placeholder="Ingrese su correo electrónico"
+                type="email"                
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Ingrese su correo electrónico"
               />
               <input
-                  value={password}
-                  onChange={handleChangePassword}
-                  placeholder="Ingrese su contraseña"
+                type="password"
+                value={contrasena}
+                onChange={(e) => setContrasena(e.target.value)}
+                placeholder="Ingrese su contraseña"
               />
               <div>{error}</div>
               <LoadingButton variant="contained" type="submit">Iniciar sesión</LoadingButton>

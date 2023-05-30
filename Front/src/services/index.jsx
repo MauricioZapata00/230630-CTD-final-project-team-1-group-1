@@ -6,6 +6,10 @@ export const createUser = (data) => {
   return axios.post(`${baseUrl}/usuarios/`, data);
 };
 
+export const validateUser = (data) => {
+  return axios.post(`${baseUrl}/usuarios/auth`, data);
+}
+
 export const getProducts = () => {
   return axios.get(`${baseUrl}/productos/`);
 };
@@ -17,3 +21,5 @@ export const getProductDetail = (id) => {
 export const getCategories = () => {
   return axios.get(`${baseUrl}/categorias/`);
 };
+
+
