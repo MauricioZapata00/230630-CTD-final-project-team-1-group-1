@@ -63,20 +63,19 @@ const RegisterPage = () => {
 
     if (newErrors.length > 0) {
       return;
-    } else {
-      setSending(true);
-      createUser(data)
-        .then((response) => {
-          setSuccess(response.data);
-        })
-        .catch((error) => {
-          const errorMsg =
-            error?.response?.data?.description ||
-            "Ha ocurrido un error en el servidor";
-          setError(errorMsg);
-        })
-        .finally(() => setSending(false));
     }
+    setSending(true);
+    createUser(data)
+      .then((response) => {
+        setSuccess(response.data);
+      })
+      .catch((error) => {
+        const errorMsg =
+          error?.response?.data?.description ||
+          "Ha ocurrido un error en el servidor";
+        setError(errorMsg);
+      })
+      .finally(() => setSending(false));
   };
 
   return (
@@ -85,6 +84,7 @@ const RegisterPage = () => {
         <h1>Formulario de registro</h1>
         <div className="form-control">
           <TextField
+            error={!!hasError("nombre")}
             name="nombre"
             label="Ingrese su nombre"
             variant="outlined"
@@ -92,10 +92,13 @@ const RegisterPage = () => {
             value={data.nombre}
             onChange={handleChange}
           />
-          {hasError("nombre") && <p className="error">{hasError("nombre")}</p>}
+          {!!hasError("nombre") && (
+            <p className="error">{hasError("nombre")}</p>
+          )}
         </div>
         <div className="form-control">
           <TextField
+            error={!!hasError("apellido")}
             name="apellido"
             label="Ingrese su apellido"
             variant="outlined"
@@ -103,12 +106,13 @@ const RegisterPage = () => {
             value={data.apellido}
             onChange={handleChange}
           />
-          {hasError("apellido") && (
+          {!!hasError("apellido") && (
             <p className="error">{hasError("apellido")}</p>
           )}
         </div>
         <div className="form-control">
           <TextField
+            error={!!hasError("email")}
             name="email"
             label="Ingrese su email"
             variant="outlined"
@@ -116,10 +120,11 @@ const RegisterPage = () => {
             value={data.email}
             onChange={handleChange}
           />
-          {hasError("email") && <p className="error">{hasError("email")}</p>}
+          {!!hasError("email") && <p className="error">{hasError("email")}</p>}
         </div>
         <div className="form-control">
           <TextField
+            error={!!hasError("password")}
             name="contrasena"
             label="Ingrese su contraseña"
             variant="outlined"
@@ -128,7 +133,7 @@ const RegisterPage = () => {
             onChange={handleChange}
             type="password"
           />
-          {hasError("password") && (
+          {!!hasError("password") && (
             <p className="error">{hasError("password")}</p>
           )}
         </div>

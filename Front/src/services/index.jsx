@@ -11,5 +11,9 @@ export const getProducts = () => {
 };
 
 export const getProductDetail = (id) => {
-  return axios.get(`${baseUrl}/productos/${id}`);
+  return axios.get(`${baseUrl}/productos/id/${id}`);
+};
+
+export const getCategories = () => {
+  return axios.get(`${baseUrl}/categorias/`);
 };

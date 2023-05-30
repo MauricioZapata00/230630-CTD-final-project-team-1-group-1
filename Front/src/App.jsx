@@ -6,6 +6,8 @@ import LoginPage from "./components/pages/LoginPage";
 import DetailPage from "./components/pages/DetailPage";
 import RegisterPage from "./components/pages/RegisterPage";
 import { ThemeContextProvider } from "./theme/ThemeContextProvider";
+import AdminListProducts from "./components/pages/AdminListProducts/AdminListProducts";
+import AdminCreateProduct from "./components/pages/AdminCreateProduct/AdminCreateProduct";
 
 const App = () => {
   return (
@@ -19,6 +21,11 @@ const App = () => {
                 <Route path="/registro" element={<RegisterPage />} />
                 <Route path="/ingreso" element={<LoginPage />} />
                 <Route path="/detalle/:id" element={<DetailPage />} />
+                <Route path="/admin" element={<AdminListProducts />} />
+                <Route
+                  path="/admin/crear-producto"
+                  element={<AdminCreateProduct />}
+                />
               </Route>
             </Routes>
           </BrowserRouter>
