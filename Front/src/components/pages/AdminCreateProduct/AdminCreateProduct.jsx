@@ -1,4 +1,17 @@
-import { Button, TextField } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  CircularProgress,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  TextField,
+} from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../../context";
 import axios from "axios";
@@ -7,12 +20,18 @@ import CreateCategoryForm from "../../common/CreateCategoryForm";
 import ErrorMessage from "../../common/ErrorMessage";
 import SuccessMessage from "../../common/SuccessMessage";
 import { Link } from "react-router-dom";
+import { getCategories } from "../../../services";
 
 const defaultProductData = {
   nombre: "",
   descripcion: "",
   precio: parseFloat(0),
   imagenUrl: "",
+  cantMin: 0,
+  requierePagoAnticipado: false,
+  minDiasReservaPrevia: 0,
+  permiteCambios: false,
+  nombreCategoria: "",
 };
 
 const imageContainerId = "product-image-container-id";
@@ -33,12 +52,21 @@ const AdminCreateProduct = () => {
   const [file, setFile] = useState(null);
   const [stringImageUrl, setStringImageUrl] = useState("");
 
+  const [categories, setCategories] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const [sending, setSending] = useState(false);
 
   const [errors, setErrors] = useState([]);
 
   const handleChange = ({ target }) => {
     const { name, value } = target;
+
+    console.log({ target });
+    if (name === "requierePagoAnticipado" || name === "permiteCambios") {
+      setProduct({ ...product, [name]: target.checked });
+      return;
+    }
 
     if (name === "precio" && isProductPriceCorrect(event.target.value)) {
       setProduct({ ...product, [name]: value });
@@ -100,6 +128,14 @@ const AdminCreateProduct = () => {
   const handleSubmit = () => {
     setError(null);
     const newErrors = [];
+
+    if (product.nombreCategoria === "") {
+      newErrors.push({
+        name: "categoria",
+        message: "Debe seleccionar una categoría.",
+      });
+    }
+
     if (product.nombre.trim().length < 4) {
       newErrors.push({
         name: "nombre",
@@ -114,10 +150,31 @@ const AdminCreateProduct = () => {
       });
     }
 
+    if (product.precio === 0) {
+      newErrors.push({
+        name: "precio",
+        message: "Debe ingresar un precio.",
+      });
+    }
+
+    if (product.cantMin === 0) {
+      newErrors.push({
+        name: "cantMin",
+        message: "Debe ingresar una cantidad mínima de productos.",
+      });
+    }
+
+    if (product.minDiasReservaPrevia === 0) {
+      newErrors.push({
+        name: "minDiasReservaPrevia",
+        message: "Debe ingresar una cantidad mínima de días.",
+      });
+    }
+
     if (stringImageUrl.length === 0) {
       newErrors.push({
         name: "imagenURL",
-        message: "Se debe cargar una imágen.",
+        message: "Debe cargar una imágen.",
       });
     }
 
@@ -158,6 +215,18 @@ const AdminCreateProduct = () => {
     setProduct(defaultProductData);
   }, [isFormOpen]);
 
+  useEffect(() => {
+    setLoading(true);
+    getCategories()
+      .then((response) => {
+        setCategories(response.data);
+      })
+      .catch(() => {
+        setError("Ha ocurrido un error en el servidor");
+      })
+      .finally(() => setLoading(false));
+  }, [setError]);
+
   return (
     <div className="admin-create-product">
       <div className="admin-create-product__container">
@@ -169,64 +238,192 @@ const AdminCreateProduct = () => {
             Crear Categoría
           </Button>
         </div>
-        <div>
-          <div className="form-control">
-            <TextField
-              error={!!hasError("nombre")}
-              name="nombre"
-              label="Ingrese el nombre del producto"
-              variant="outlined"
-              fullWidth={true}
-              value={product.nombre}
-              onChange={handleChange}
-            />
-            {!!hasError("nombre") && (
-              <p className="error">{hasError("nombre")}</p>
-            )}
-          </div>
-          <div className="form-control">
-            <TextField
-              error={!!hasError("descripcion")}
-              name="descripcion"
-              label="Ingrese una descripción"
-              variant="outlined"
-              fullWidth={true}
-              value={product.descripcion}
-              onChange={handleChange}
-              multiline
-            />
-            {!!hasError("descripcion") && (
-              <p className="error">{hasError("descripcion")}</p>
-            )}
-          </div>
 
-          <div className="form-control">
-            <input
-              type="file"
-              id="input-product-image-id"
-              accept="image/png, image/jpeg"
-              value={productImageURL}
-              onChange={handleproductImageURLChage}
-            />
-
-            {!!hasError("imagenURL") && (
-              <p className="error">{hasError("imagenURL")}</p>
-            )}
-
-            <div id={imageContainerId} className="preview"></div>
+        {loading && (
+          <div className="admin-create-product__loading">
+            <CircularProgress />
           </div>
+        )}
 
-          <div className="form-control">
-            <LoadingButton
-              onClick={handleSubmit}
-              loading={sending}
-              variant="contained"
-              disabled={sending}
-            >
-              <span>Crear Producto</span>
-            </LoadingButton>
-          </div>
-        </div>
+        {!loading && categories && (
+          <>
+            <div className="admin-create-product__form">
+              <div>
+                <div className="form-control">
+                  <FormControl fullWidth error={!!hasError("categoria")}>
+                    <InputLabel id="category-select-label">
+                      Categoría
+                    </InputLabel>
+                    <Select
+                      labelId="category-select-label"
+                      id="category-select"
+                      value={product.nombreCategoria}
+                      label="Categoría"
+                      onChange={handleChange}
+                      name="nombreCategoria"
+                    >
+                      {categories.map((category) => (
+                        <MenuItem key={category.id} value={category.nombre}>
+                          {category.nombre}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+
+                  {!!hasError("categoria") && (
+                    <p className="error">{hasError("categoria")}</p>
+                  )}
+                </div>
+                <div className="form-control">
+                  <TextField
+                    error={!!hasError("nombre")}
+                    name="nombre"
+                    label="Nombre"
+                    variant="outlined"
+                    fullWidth={true}
+                    value={product.nombre}
+                    onChange={handleChange}
+                  />
+                  {!!hasError("nombre") && (
+                    <p className="error">{hasError("nombre")}</p>
+                  )}
+                </div>
+                <div className="form-control">
+                  <TextField
+                    error={!!hasError("descripcion")}
+                    name="descripcion"
+                    label="Descripción"
+                    variant="outlined"
+                    fullWidth={true}
+                    value={product.descripcion}
+                    onChange={handleChange}
+                    multiline
+                  />
+                  {!!hasError("descripcion") && (
+                    <p className="error">{hasError("descripcion")}</p>
+                  )}
+                </div>
+                <div className="form-control">
+                  <FormControl fullWidth>
+                    <InputLabel htmlFor="outlined-adornment-amount">
+                      Precio
+                    </InputLabel>
+                    <OutlinedInput
+                      error={!!hasError("precio")}
+                      fullWidth
+                      inputProps={{
+                        type: "number",
+                        min: "0",
+                        step: "0.01",
+                      }}
+                      startAdornment={
+                        <InputAdornment position="start">$</InputAdornment>
+                      }
+                      label="Precio"
+                      value={product.precio.toString()}
+                      onChange={handleChange}
+                      name="precio"
+                    />
+                  </FormControl>
+                  {!!hasError("precio") && (
+                    <p className="error">{hasError("precio")}</p>
+                  )}
+                </div>
+                <div className="form-control">
+                  <FormControl fullWidth>
+                    <InputLabel htmlFor="outlined-adornment-amount">
+                      Cantidad mínima de productos
+                    </InputLabel>
+                    <OutlinedInput
+                      error={!!hasError("cantMin")}
+                      inputProps={{
+                        type: "number",
+                        min: "0",
+                      }}
+                      label="Cantidad mínima de productos"
+                      value={product.cantMin}
+                      onChange={handleChange}
+                      name="cantMin"
+                    />
+                  </FormControl>
+                  {!!hasError("cantMin") && (
+                    <p className="error">{hasError("cantMin")}</p>
+                  )}
+                </div>
+              </div>
+              <div>
+                <div className="form-control">
+                  <FormControl fullWidth>
+                    <InputLabel htmlFor="outlined-adornment-amount">
+                      Cantidad mínima de días de reserva previa
+                    </InputLabel>
+                    <OutlinedInput
+                      error={!!hasError("minDiasReservaPrevia")}
+                      inputProps={{
+                        type: "number",
+                        min: "0",
+                      }}
+                      label="Cantidad mínima de días de reserva previa"
+                      value={product.minDiasReservaPrevia}
+                      onChange={handleChange}
+                      name="minDiasReservaPrevia"
+                    />
+                  </FormControl>
+                  {!!hasError("minDiasReservaPrevia") && (
+                    <p className="error">{hasError("minDiasReservaPrevia")}</p>
+                  )}
+                </div>
+                <div className="form-control">
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Requiere pago anticipado"
+                      checked={product.requierePagoAnticipado}
+                      onChange={handleChange}
+                      name="requierePagoAnticipado"
+                    />
+                  </FormGroup>
+                </div>
+                <div className="form-control">
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Permite cambios"
+                      checked={product.permiteCambios}
+                      onChange={handleChange}
+                      name="permiteCambios"
+                    />
+                  </FormGroup>
+                </div>
+                <div className="form-control">
+                  <input
+                    type="file"
+                    id="input-product-image-id"
+                    accept="image/png, image/jpeg"
+                    value={productImageURL}
+                    onChange={handleproductImageURLChage}
+                  />
+
+                  {!!hasError("imagenURL") && (
+                    <p className="error">{hasError("imagenURL")}</p>
+                  )}
+
+                  <div id={imageContainerId} className="preview"></div>
+                </div>
+              </div>
+            </div>
+            <div className="form-control">
+              <LoadingButton
+                onClick={handleSubmit}
+                loading={sending}
+                variant="contained"
+                disabled={sending}
+              >
+                <span>Crear Producto</span>
+              </LoadingButton>
+            </div>
+          </>
+        )}
       </div>
       <CreateCategoryForm
         isFormOpen={isFormOpen}

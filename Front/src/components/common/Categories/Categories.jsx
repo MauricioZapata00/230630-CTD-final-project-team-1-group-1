@@ -1,5 +1,4 @@
 import { CircularProgress } from "@mui/material";
-import Carrusel from "../Carrusel";
 import Category from "../Category/Category";
 import PropTypes, { shape } from "prop-types";
 
@@ -15,11 +14,9 @@ const Categories = ({ categories, loading }) => {
       {!loading && categories && (
         <div className="categories__container">
           {categories.length > 0 ? (
-            <Carrusel>
-              {categories.map((category) => (
-                <Category key={category.title} category={category} />
-              ))}
-            </Carrusel>
+            categories.map((category) => (
+              <Category key={category.id} category={category} />
+            ))
           ) : (
             <div className="categories__empty">No hay categorias cargadas.</div>
           )}

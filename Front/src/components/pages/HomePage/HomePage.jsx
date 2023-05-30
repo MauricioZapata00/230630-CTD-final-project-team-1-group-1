@@ -10,41 +10,40 @@ import ErrorMessage from "./../../common/ErrorMessage";
 const Home = () => {
   const { success, error, setError } = useContext(AppContext);
 
-  const [products, setProducts] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState(null);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
+  const [products, setProducts] = useState(null);
+  const [productsLoading, setProductsLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
-    getProducts()
-      .then((response) => {
-        setProducts(response.data);
-        setLoading(false);
-      })
-      .catch(() => {
-        setError("Ha ocurrido un error en el servidor");
-        setLoading(false);
-      });
-  }, [setError]);
-
-  useEffect(() => {
-    setLoading(true);
+    setCategoriesLoading(true);
     getCategories()
       .then((response) => {
         setCategories(response.data);
-        setLoading(false);
       })
       .catch(() => {
         setError("Ha ocurrido un error en el servidor");
-        setLoading(false);
-      });
+      })
+      .finally(() => setCategoriesLoading(false));
+  }, [setError]);
+
+  useEffect(() => {
+    setProductsLoading(true);
+    getProducts()
+      .then((response) => {
+        setProducts(response.data);
+      })
+      .catch(() => {
+        setError("Ha ocurrido un error en el servidor");
+      })
+      .finally(() => setProductsLoading(false));
   }, [setError]);
 
   return (
     <div>
       <Search />
-      <Categories categories={categories} loading={loading} />
-      <Products products={products} loading={loading} />
+      <Categories categories={categories} loading={categoriesLoading} />
+      <Products products={products} loading={productsLoading} />
       {success && <SuccessMessage />}
       {error && <ErrorMessage />}
     </div>
