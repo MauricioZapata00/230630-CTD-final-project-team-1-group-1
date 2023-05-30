@@ -1,0 +1,28 @@
+stages:
+  - build
+  - deploy
+
+build_frontend:
+  stage: build
+  image: node:lts
+  script:
+    - echo "Starting building frontend app ..."
+    - cd Front/
+    - npm install --save-dev
+    - npm run build
+    - echo "Build successfully!  :D"
+  only:
+    - release
+    - feature/Infra-create-and-configure-pipelines
+
+deploy_application_frontend:
+  stage: deploy
+  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+  script:
+    - echo "deploying frontend app ..."
+    - cd Front/
+    - aws s3 cp -r dist/* s3://equipo1-c1-bucket-frontend
+    - echo "Build successfully!  :D"
+  only:
+    - release
+    - feature/Infra-create-and-configure-pipelines
