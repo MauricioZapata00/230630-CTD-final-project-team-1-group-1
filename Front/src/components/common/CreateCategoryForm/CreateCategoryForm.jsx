@@ -22,7 +22,7 @@ const imageContainerId = "categoy-image-container-id";
 
 const imageCreatedId = "image-created-id";
 
-const FORM_FILE_STRING_CONST = "imageFile";
+const FORM_FILE_STRING_CONST = "imgFile";
 
 const FORM_OBJECT_STRING_CONST = "categoriaDto";
 
