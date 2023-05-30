@@ -5,6 +5,8 @@
 //PAGES
 @import "./pages/detailPage";
 @import "./pages/registerPage";
+@import "./pages/adminListProducts";
+@import "./pages/adminCreateProduct";
 //COMMON   
 @import "./common/search";
 @import "./common/categories";
@@ -41,7 +43,7 @@
 }
 
 .error {
-    color: #ab2525;
+    color: $error;
     font-size: 14px;
     margin-top: 5px;
 }
