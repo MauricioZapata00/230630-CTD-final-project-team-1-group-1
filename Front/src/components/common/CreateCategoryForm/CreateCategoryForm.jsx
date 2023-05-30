@@ -5,6 +5,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  InputLabel,
   TextField,
 } from "@mui/material";
 import { useContext, useState } from "react";
@@ -148,9 +149,7 @@ const CreateCategoryForm = ({ isFormOpen, setIsFormOpen }) => {
       maxWidth={"lg"}
       fullWidth={true}
     >
-      <DialogTitle id="enter-product-dialog-title-id">
-        {"Nueva Categoría:"}
-      </DialogTitle>
+      <DialogTitle>{"Nueva Categoría"}</DialogTitle>
       <DialogContent>
         <div className="form-control">
           <TextField
@@ -169,6 +168,7 @@ const CreateCategoryForm = ({ isFormOpen, setIsFormOpen }) => {
         </div>
 
         <div className="form-control">
+          <InputLabel>Cargar imágen</InputLabel>
           <input
             type="file"
             id="input-category-image-id"

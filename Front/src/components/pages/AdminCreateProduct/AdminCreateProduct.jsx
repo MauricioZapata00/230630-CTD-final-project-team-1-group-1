@@ -245,7 +245,7 @@ const AdminCreateProduct = () => {
           </div>
         )}
 
-        {!loading && categories && (
+        {!loading && categories?.length > 1 && (
           <>
             <div className="admin-create-product__form">
               <div>
@@ -396,6 +396,7 @@ const AdminCreateProduct = () => {
                   </FormGroup>
                 </div>
                 <div className="form-control">
+                  <InputLabel>Cargar imágen</InputLabel>
                   <input
                     type="file"
                     id="input-product-image-id"
@@ -423,6 +424,15 @@ const AdminCreateProduct = () => {
               </LoadingButton>
             </div>
           </>
+        )}
+
+        {!loading && categories?.length === 0 && (
+          <div className="admin-create-product__no-categories">
+            <p>No hay categorías cargadas.</p>
+            <p>
+              Antes de crear un producto se debe crear al menos una categoría.{" "}
+            </p>
+          </div>
         )}
       </div>
       <CreateCategoryForm

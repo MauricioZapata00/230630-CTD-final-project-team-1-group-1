@@ -2,16 +2,13 @@ import { Avatar, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 //import Logo from "../../../assets/logo.png";
 import Logo1 from "../../../assets/Imagen2.png";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { AppContext } from "../../../context";
-import InputProduct from "../../forms/InputProduct/InputProduct";
 
 const Header = () => {
   const navigateTo = useNavigate();
 
   const { logedUser, setLogedUser } = useContext(AppContext);
-
-  const [isOpenDialog, setIsOpenDialog] = useState(false);
 
   const handleLogoClick = () => {
     navigateTo("/");
@@ -22,8 +19,8 @@ const Header = () => {
   };
 
   const handleLoginClick = () => {
-    navigateTo("/ingreso");
-
+    setLogedUser({ userName: "admin", isAdmin: true });
+    // navigateTo("/ingreso");
   };
 
   const handleGoToAdmin = () => {
@@ -31,10 +28,9 @@ const Header = () => {
   };
 
   const handleLogOut = () => {
-    setLogedUser(false) ;
-
+    setLogedUser(false);
   };
-  
+
   return (
     <>
       <div className="header">
