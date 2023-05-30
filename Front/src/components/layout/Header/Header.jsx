@@ -20,8 +20,7 @@ const Header = ({ admin = false }) => {
   };
 
   const handleLoginClick = () => {
-    setLogedUser({ userName: "admin", isAdmin: true });
-    // navigateTo("/ingreso");
+    navigateTo("/ingreso");
   };
 
   const handleGoToAdmin = () => {
@@ -68,8 +67,7 @@ const Header = ({ admin = false }) => {
                 </Button>
               </div>
             )}
-            {admin && <Button onClick={handleGoToSite}>Ir al sitio</Button>}
-            <Avatar sx={{ bgcolor: "#67D671" }}>A</Avatar>
+            <Avatar sx={{ bgcolor: "#67D671" }}>{logedUser.avatar}</Avatar>
             <span>{logedUser.userName}</span>
             <Button onClick={handleLogOut}>Cerrar sesión</Button>
           </div>
