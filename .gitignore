@@ -58,4 +58,4 @@ dist-ssr
 *.sw?
 
 # Security
-.pem
+catering-key-c1.pem
