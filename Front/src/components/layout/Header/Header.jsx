@@ -46,7 +46,18 @@ const Header = ({ admin = false }) => {
         ) : (
           <div onClick={handleLogoClick} className="header__logo">
             <SettingsIcon />
-            Sección de administración
+            Administración
+          </div>
+        )}
+
+        {admin && (
+          <div>
+            <Button onClick={handleGoToSite}>Ir al Sitio</Button>
+          </div>
+        )}
+        {!admin && (
+          <div>
+            <Button onClick={handleGoToAdmin}>Administrar</Button>
           </div>
         )}
         {!logedUser ? (
@@ -60,13 +71,6 @@ const Header = ({ admin = false }) => {
           </div>
         ) : (
           <div className="header__user-info">
-            {!admin && logedUser.isAdmin && (
-              <div>
-                <Button variant="contained" onClick={handleGoToAdmin}>
-                  Administrar
-                </Button>
-              </div>
-            )}
             <Avatar sx={{ bgcolor: "#67D671" }}>{logedUser.avatar}</Avatar>
             <span>{logedUser.userName}</span>
             <Button onClick={handleLogOut}>Cerrar sesión</Button>
@@ -78,7 +82,11 @@ const Header = ({ admin = false }) => {
 };
 
 Header.propTypes = {
-  admin: PropTypes.bool.isRequired,
+  admin: PropTypes.bool,
+};
+
+Header.defaultProps = {
+  admin: false,
 };
 
 export default Header;

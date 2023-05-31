@@ -1,11 +1,12 @@
-import { Button, CircularProgress } from "@mui/material";
+import { Button } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { getProducts } from "../../../services";
 import { AppContext } from "../../../context";
+import ProductsList from "../../common/ProductsList";
 
 const AdminListProducts = () => {
-  const { error, setError } = useContext(AppContext);
+  const { setError } = useContext(AppContext);
 
   const navigateTo = useNavigate();
 
@@ -32,23 +33,12 @@ const AdminListProducts = () => {
     <div className="admin-list-products">
       <div className="admin-list-products__container">
         <div className="admin-list-products__header">
-          <h3>Admin</h3>
+          <h3>Admin / Listado de productos</h3>
           <Button variant="contained" onClick={handleAddProductClick}>
             Crear Producto
           </Button>
         </div>
-        {loading && (
-          <div className="admin-list-products__loading">
-            <CircularProgress />
-          </div>
-        )}
-        {!loading && products && (
-          <div>
-            {products.map((product) => (
-              <p key={product.id}>{product.nombre}</p>
-            ))}
-          </div>
-        )}
+        <ProductsList products={products} loading={loading} />
       </div>
     </div>
   );
