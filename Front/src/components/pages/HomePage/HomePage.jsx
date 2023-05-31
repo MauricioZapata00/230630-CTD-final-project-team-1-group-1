@@ -43,6 +43,7 @@ const Home = () => {
     <div>
       <Search />
       <Categories categories={categories} loading={categoriesLoading} />
+      <h2>Productos Recomendados</h2>
       <Products products={products} loading={productsLoading} />
       {success && <SuccessMessage />}
       {error && <ErrorMessage />}

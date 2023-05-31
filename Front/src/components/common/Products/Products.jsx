@@ -5,7 +5,7 @@ import PropTypes, { shape } from "prop-types";
 const Products = ({ products, loading }) => {
   return (
     <div className="products">
-      <h2>Productos Recomendados</h2>
+      
       {loading && (
         <div className="products__loading">
           <CircularProgress />
@@ -35,7 +35,7 @@ const Products = ({ products, loading }) => {
 
 Products.propTypes = {
   products: PropTypes.arrayOf(shape),
-  loading: PropTypes.bool.isRequired,
+  loading: PropTypes.bool,
 };
 
 export default Products;

@@ -8,6 +8,7 @@ import RegisterPage from "./components/pages/RegisterPage";
 import { ThemeContextProvider } from "./theme/ThemeContextProvider";
 import AdminListProducts from "./components/pages/AdminListProducts/AdminListProducts";
 import AdminCreateProduct from "./components/pages/AdminCreateProduct/AdminCreateProduct";
+import CategoryPage from "./components/pages/CategoryPage/CategoryPage";
 
 const App = () => {
   return (
@@ -26,7 +27,9 @@ const App = () => {
                   path="/admin/crear-producto"
                   element={<AdminCreateProduct />}
                 />
+                <Route path="/categoria/:id" element={<CategoryPage />} />
               </Route>
+              
             </Routes>
           </BrowserRouter>
         </AppContextProvider>
