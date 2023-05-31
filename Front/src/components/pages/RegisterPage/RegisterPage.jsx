@@ -5,10 +5,13 @@ import { createUser } from "../../../services";
 import ErrorMessage from "../../common/ErrorMessage";
 import SuccessMessage from "../../common/SuccessMessage";
 import { AppContext } from "../../../context";
+import { useNavigate } from "react-router";
 
 const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
 const RegisterPage = () => {
+  const navigateTo = useNavigate();
+
   const { success, setSuccess, error, setError } = useContext(AppContext);
   const [data, setData] = useState({
     nombre: "",
@@ -64,10 +67,12 @@ const RegisterPage = () => {
     if (newErrors.length > 0) {
       return;
     }
+
     setSending(true);
     createUser(data)
-      .then((response) => {
-        setSuccess(response.data);
+      .then(() => {
+        setSuccess("La cuenta se creó correctamente");
+        navigateTo("/ingreso");
       })
       .catch((error) => {
         const errorMsg =

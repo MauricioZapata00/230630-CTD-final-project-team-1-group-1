@@ -17,8 +17,8 @@ const ProductsList = ({ products, loading }) => {
               <ProductItem key={product.id} product={product} />
             ))
           ) : (
-            <div className="products__empty">
-              No hay productos recomendados.
+            <div className="products-list__empty">
+              <p>No hay productos cargados.</p>
             </div>
           )}
         </div>

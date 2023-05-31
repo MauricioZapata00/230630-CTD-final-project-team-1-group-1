@@ -2,10 +2,10 @@ import { CircularProgress } from "@mui/material";
 import Product from "../Product/Product";
 import PropTypes, { shape } from "prop-types";
 
-const Products = ({ products, loading }) => {
+const Products = ({ products, loading, title }) => {
   return (
     <div className="products">
-      
+      {title?.length > 0 && <h2>{title}</h2>}
       {loading && (
         <div className="products__loading">
           <CircularProgress />
@@ -19,7 +19,7 @@ const Products = ({ products, loading }) => {
             ))
           ) : (
             <div className="products__empty">
-              No hay productos recomendados.
+              No hay productos para mostrar.
             </div>
           )}
         </div>
@@ -36,6 +36,7 @@ const Products = ({ products, loading }) => {
 Products.propTypes = {
   products: PropTypes.arrayOf(shape),
   loading: PropTypes.bool,
+  title: PropTypes.string.isRequired,
 };
 
 export default Products;

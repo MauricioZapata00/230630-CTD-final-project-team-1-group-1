@@ -43,8 +43,11 @@ const Home = () => {
     <div>
       <Search />
       <Categories categories={categories} loading={categoriesLoading} />
-      <h2>Productos Recomendados</h2>
-      <Products products={products} loading={productsLoading} />
+      <Products
+        products={products}
+        loading={productsLoading}
+        title="Productos recomendados"
+      />
       {success && <SuccessMessage />}
       {error && <ErrorMessage />}
     </div>
