@@ -131,6 +131,7 @@ const CreateCategoryForm = ({ isFormOpen, setIsFormOpen }) => {
         setSending(false);
         resetData();
         setSuccess("La categoría se guardó correctamente.");
+        setIsFormOpen(false);
       })
       .catch((error) => {
         console.log({ error });
@@ -146,8 +147,6 @@ const CreateCategoryForm = ({ isFormOpen, setIsFormOpen }) => {
       onClose={handleFormClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
-      maxWidth={"lg"}
-      fullWidth={true}
     >
       <DialogTitle>{"Nueva Categoría"}</DialogTitle>
       <DialogContent>
@@ -170,6 +169,7 @@ const CreateCategoryForm = ({ isFormOpen, setIsFormOpen }) => {
         <div className="form-control">
           <InputLabel>Cargar imágen</InputLabel>
           <input
+            className="input-file"
             type="file"
             id="input-category-image-id"
             accept="image/png, image/jpeg"
