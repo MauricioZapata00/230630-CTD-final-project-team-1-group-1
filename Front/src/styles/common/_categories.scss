@@ -13,6 +13,7 @@
         margin-top: 15px;
         display: flex;
         gap: 30px;
+        flex-wrap: wrap;
 
         @media (max-width: 800px) {
             flex-direction: column;
