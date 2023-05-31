@@ -1,17 +1,18 @@
 import { Avatar, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-//import Logo from "../../../assets/logo.png";
 import Logo1 from "../../../assets/Imagen2.png";
 import { useContext } from "react";
 import { AppContext } from "../../../context";
+import PropTypes from "prop-types";
+import SettingsIcon from "@mui/icons-material/Settings";
 
-const Header = () => {
+const Header = ({ admin = false }) => {
   const navigateTo = useNavigate();
 
   const { logedUser, setLogedUser } = useContext(AppContext);
 
   const handleLogoClick = () => {
-    navigateTo("/");
+    !admin ? navigateTo("/") : navigateTo("/admin");
   };
 
   const handleRegisterClick = () => {
@@ -19,12 +20,15 @@ const Header = () => {
   };
 
   const handleLoginClick = () => {
-    setLogedUser({ userName: "admin", isAdmin: true });
-    // navigateTo("/ingreso");
+    navigateTo("/ingreso");
   };
 
   const handleGoToAdmin = () => {
     navigateTo("/admin");
+  };
+
+  const handleGoToSite = () => {
+    navigateTo("/");
   };
 
   const handleLogOut = () => {
@@ -34,10 +38,17 @@ const Header = () => {
   return (
     <>
       <div className="header">
-        <div onClick={handleLogoClick} className="header__logo">
-          <img height="50px" src={Logo1} alt="logo" />
-          Digital Catering
-        </div>
+        {!admin ? (
+          <div onClick={handleLogoClick} className="header__logo">
+            <img height="50px" src={Logo1} alt="logo" />
+            Digital Catering
+          </div>
+        ) : (
+          <div onClick={handleLogoClick} className="header__logo">
+            <SettingsIcon />
+            Sección de administración
+          </div>
+        )}
         {!logedUser ? (
           <div className="header__buttons">
             <Button variant="text" onClick={handleRegisterClick}>
@@ -49,14 +60,14 @@ const Header = () => {
           </div>
         ) : (
           <div className="header__user-info">
-            {logedUser.isAdmin && (
+            {!admin && logedUser.isAdmin && (
               <div>
                 <Button variant="contained" onClick={handleGoToAdmin}>
                   Administrar
                 </Button>
               </div>
             )}
-            <Avatar sx={{ bgcolor: "#67D671" }}>A</Avatar>
+            <Avatar sx={{ bgcolor: "#67D671" }}>{logedUser.avatar}</Avatar>
             <span>{logedUser.userName}</span>
             <Button onClick={handleLogOut}>Cerrar sesión</Button>
           </div>
@@ -64,6 +75,10 @@ const Header = () => {
       </div>
     </>
   );
+};
+
+Header.propTypes = {
+  admin: PropTypes.bool.isRequired,
 };
 
 export default Header;

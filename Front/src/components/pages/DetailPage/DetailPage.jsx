@@ -6,6 +6,20 @@ import { getProductDetail } from "../../../services";
 import ErrorMessage from "../../common/ErrorMessage";
 import { CircularProgress } from "@mui/material";
 
+const detail = {
+  cantMin: 3,
+  descripcion: "Entradas para disfrutar",
+  id: 1,
+  imagenUrl:
+    "https://equipo1-c1-bucket.s3.us-east-2.amazonaws.com/1685451960783entradas-2.jpg",
+  minDiasReservaPrevia: 5,
+  nombre: "Entradas",
+  nombreCategoria: "Casamiento",
+  permiteCambios: false,
+  precio: 1000,
+  requierePagoAnticipado: true,
+};
+
 const DetailPage = () => {
   const { id } = useParams();
 
@@ -26,20 +40,8 @@ const DetailPage = () => {
         const errorMsg = error?.response?.data?.description;
         setError(errorMsg || "Ha ocurrido un error.");
         setLoading(false);
+        setProductDetail(detail);
       });
-
-    // setTimeout(() => {
-    //   console.log({ id });
-    //   setLoading(false);
-    //   setProductDetail({
-    //     descripcion: "desc1",
-    //     id: 6,
-    //     imagenUrl:
-    //       "https://equipo1-c1-bucket.s3.us-east-2.amazonaws.com/1684507664613Sin%20t%C3%ADtulo.png",
-    //     nombre: "prueba",
-    //     precio: 100,
-    //   });
-    // }, 2000);
   }, [id, setError]);
 
   return (

@@ -211,21 +211,20 @@ const AdminCreateProduct = () => {
   };
 
   useEffect(() => {
-    setErrors([]);
-    setProduct(defaultProductData);
-  }, [isFormOpen]);
-
-  useEffect(() => {
-    setLoading(true);
-    getCategories()
-      .then((response) => {
-        setCategories(response.data);
-      })
-      .catch(() => {
-        setError("Ha ocurrido un error en el servidor");
-      })
-      .finally(() => setLoading(false));
-  }, [setError]);
+    if (!isFormOpen) {
+      setErrors([]);
+      setProduct(defaultProductData);
+      setLoading(true);
+      getCategories()
+        .then((response) => {
+          setCategories(response.data);
+        })
+        .catch(() => {
+          setError("Ha ocurrido un error en el servidor");
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [isFormOpen, setError]);
 
   return (
     <div className="admin-create-product">
@@ -245,7 +244,7 @@ const AdminCreateProduct = () => {
           </div>
         )}
 
-        {!loading && categories?.length > 1 && (
+        {!loading && categories?.length > 0 && (
           <>
             <div className="admin-create-product__form">
               <div>
@@ -350,8 +349,6 @@ const AdminCreateProduct = () => {
                     <p className="error">{hasError("cantMin")}</p>
                   )}
                 </div>
-              </div>
-              <div>
                 <div className="form-control">
                   <FormControl fullWidth>
                     <InputLabel htmlFor="outlined-adornment-amount">
@@ -373,6 +370,8 @@ const AdminCreateProduct = () => {
                     <p className="error">{hasError("minDiasReservaPrevia")}</p>
                   )}
                 </div>
+              </div>
+              <div>
                 <div className="form-control">
                   <FormGroup>
                     <FormControlLabel
@@ -398,6 +397,7 @@ const AdminCreateProduct = () => {
                 <div className="form-control">
                   <InputLabel>Cargar imágen</InputLabel>
                   <input
+                    className="input-file"
                     type="file"
                     id="input-product-image-id"
                     accept="image/png, image/jpeg"
