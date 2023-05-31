@@ -22,4 +22,6 @@ export const getCategories = () => {
   return axios.get(`${baseUrl}/categorias/`);
 };
 
-
+export const getCategoryDetail = (id) => {
+  return axios.get(`${baseUrl}/productos/categoriaId/${id}`)
+}
