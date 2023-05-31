@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
 import StarIcon from "@mui/icons-material/Star";
+import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 
 const ProductDetail = ({ productDetail }) => {
   const {
@@ -42,19 +43,35 @@ const ProductDetail = ({ productDetail }) => {
         <img src={imagenUrl} alt="" />
       </div>
       <div>
-        <p>Descripción: {descripcion}</p>
-        <div>
+        <p className="product-detail__description">{descripcion}</p>
+        <div className="product-detail__features-container">
           <h4>¿Que ofrece este producto?</h4>
-          <p>Cantidad Mínima: {cantMin}</p>
-          <p>Cantidad de días de reserva:{minDiasReservaPrevia}</p>
-          <p>{permiteCambios ? "Permite Cambios" : "No permite cambios"} </p>
-          <p>
-            {requierePagoAnticipado
-              ? "Requiere pago anticipado"
-              : "No requiere pago anticipado"}
-          </p>
+          <div className="product-detail__features">
+            <div>
+              <p>
+                <CheckCircleOutlineOutlinedIcon />
+                <b>Cantidad Mínima:</b> {cantMin}
+              </p>
+              <p>
+                <CheckCircleOutlineOutlinedIcon />
+                <b>Cantidad de días de reserva:</b> {minDiasReservaPrevia}
+              </p>
+            </div>
+            <div>
+              <p>
+                <CheckCircleOutlineOutlinedIcon />
+                {permiteCambios ? "Permite Cambios" : "No permite cambios"}{" "}
+              </p>
+              <p>
+                <CheckCircleOutlineOutlinedIcon />
+                {requierePagoAnticipado
+                  ? "Requiere pago anticipado"
+                  : "No requiere pago anticipado"}
+              </p>
+            </div>
+          </div>
         </div>
-        <p>Precio: ${precio}</p>
+        <p className="product-detail__price">${precio.toFixed(2)}</p>
       </div>
     </div>
   );

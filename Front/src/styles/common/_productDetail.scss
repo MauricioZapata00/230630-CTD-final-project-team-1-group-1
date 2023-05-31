@@ -2,7 +2,6 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
 
     &__container-title {
         background-color: $primary-color;
@@ -49,5 +48,46 @@
         grid-column: span 2;
         grid-row: span 2;
         cursor: default !important;
-     }
+    }
+
+    &__description {
+        margin-top: 25px;
+        margin-bottom: 25px;
+        margin-left: 15px;
+        font-size: 16px;
+        color: $gray-dark;
+    }
+
+    &__features-container {
+        padding: 25px;
+        background-color: $gray;
+        margin: 25px 0;
+        border-radius: 8px;
+
+        h4 {
+            margin-bottom: 25px;
+        }
+    }
+
+    &__features {
+        display: flex;
+        gap: 30px;
+
+        div {
+            flex: 1;
+        }
+
+        p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    }
+
+    &__price {
+        font-size: 28px;
+        margin: 25px 0;
+        color: $primary-color-light;
+    }
 }
