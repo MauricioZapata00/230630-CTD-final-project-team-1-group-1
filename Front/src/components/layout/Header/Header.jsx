@@ -1,7 +1,7 @@
 import { Avatar, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Logo1 from "../../../assets/Imagen2.png";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AppContext } from "../../../context";
 import PropTypes from "prop-types";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -23,17 +23,25 @@ const Header = ({ admin = false }) => {
     navigateTo("/ingreso");
   };
 
-  const handleGoToAdmin = () => {
+  /* const handleGoToAdmin = () => {
     navigateTo("/admin");
-  };
+  }; */
 
   const handleGoToSite = () => {
     navigateTo("/");
   };
 
   const handleLogOut = () => {
+    localStorage.removeItem("logedUser");
     setLogedUser(false);
   };
+
+  useEffect(() => {
+    const logedUserData = localStorage.getItem("logedUser");
+    if (logedUserData) {
+      setLogedUser(JSON.parse(logedUserData));
+    }
+  }, [setLogedUser]);
 
   return (
     <>
@@ -46,27 +54,33 @@ const Header = ({ admin = false }) => {
         ) : (
           <div onClick={handleLogoClick} className="header__logo">
             <SettingsIcon />
-            Sección de administración
+            Administración
           </div>
         )}
-        {!logedUser ? (
-          <div className="header__buttons">
-            <Button variant="text" onClick={handleRegisterClick}>
-              Crear Cuenta
-            </Button>
-            <Button variant="text" onClick={handleLoginClick}>
-              Iniciar Sesión
-            </Button>
+
+        {admin && (
+          <div>
+            <Button onClick={handleGoToSite}>Ir al Sitio</Button>
           </div>
+        )}
+        {/* {!admin && (
+          <div>
+            <Button onClick={handleGoToAdmin}>Administrar</Button>
+          </div>
+        )} */}
+        {!logedUser ? (
+          !admin && (
+            <div className="header__buttons">
+              <Button variant="text" onClick={handleRegisterClick}>
+                Crear Cuenta
+              </Button>
+              <Button variant="text" onClick={handleLoginClick}>
+                Iniciar Sesión
+              </Button>
+            </div>
+          )
         ) : (
           <div className="header__user-info">
-            {!admin && logedUser.isAdmin && (
-              <div>
-                <Button variant="contained" onClick={handleGoToAdmin}>
-                  Administrar
-                </Button>
-              </div>
-            )}
             <Avatar sx={{ bgcolor: "#67D671" }}>{logedUser.avatar}</Avatar>
             <span>{logedUser.userName}</span>
             <Button onClick={handleLogOut}>Cerrar sesión</Button>
@@ -78,7 +92,11 @@ const Header = ({ admin = false }) => {
 };
 
 Header.propTypes = {
-  admin: PropTypes.bool.isRequired,
+  admin: PropTypes.bool,
+};
+
+Header.defaultProps = {
+  admin: false,
 };
 
 export default Header;

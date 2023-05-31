@@ -4,6 +4,7 @@
 @import "./layout/footer";
 //PAGES
 @import "./pages/detailPage";
+@import "./pages/loginPage";
 @import "./pages/registerPage";
 @import "./pages/adminListProducts";
 @import "./pages/adminCreateProduct";
@@ -15,6 +16,9 @@
 @import "./common/product";
 @import "./common/productDetail";
 @import "./common/formatText";
+@import "./common/productsList";
+@import "./common/productItem";
+@import "./common/productDetail";
 
 
 * {
@@ -58,6 +62,7 @@
     padding: 15px 15px;
     border: 1px solid silver;
     border-radius: 6px;
+    max-width: 98%;
 }
 
 .preview {
