@@ -3,7 +3,7 @@ package com.dh.catering.service;
 import com.dh.catering.domain.Usuario;
 import com.dh.catering.dto.UsuarioDto;
 import com.dh.catering.exceptions.DuplicadoException;
-import com.dh.catering.repository.UsuarioRepositorio;
+import com.dh.catering.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +25,7 @@ class UsuarioServiceTest {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
     @Mock
-    private UsuarioRepositorio repositorio;
+    private UsuarioRepository repository;
     private UsuarioService servicio;
 
     @BeforeEach
