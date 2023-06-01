@@ -1,11 +1,10 @@
-import { Avatar, Button, IconButton, Tooltip } from "@mui/material";
+import { Avatar, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Logo1 from "../../../assets/Imagen2.png";
 import { useContext, useEffect } from "react";
 import { AppContext } from "../../../context";
 import PropTypes from "prop-types";
 import SettingsIcon from "@mui/icons-material/Settings";
-import LogoutIcon from "@mui/icons-material/Logout";
 
 const Header = ({ admin = false }) => {
   const navigateTo = useNavigate();
@@ -37,9 +36,6 @@ const Header = ({ admin = false }) => {
     setLogedUser(false);
   };
 
-  const handleGoToUser = () => {
-    navigateTo("/usuario");
-  };
   useEffect(() => {
     const logedUserData = localStorage.getItem("logedUser");
     if (logedUserData) {
@@ -85,13 +81,6 @@ const Header = ({ admin = false }) => {
           )
         ) : (
           <div className="header__user-info">
-            {!admin && logedUser.isAdmin && (
-              <div>
-                <Button variant="contained" onClick={handleGoToAdmin}>
-                  Administrar
-                </Button>
-              </div>
-            )}
             <Avatar sx={{ bgcolor: "#67D671" }}>{logedUser.avatar}</Avatar>
             <span>{logedUser.userName}</span>
             <Button onClick={handleLogOut}>Cerrar sesión</Button>

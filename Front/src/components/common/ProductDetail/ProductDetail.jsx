@@ -63,11 +63,11 @@ const ProductDetail = ({ productDetail }) => {
             <div>
               <p>
                 <CheckCircleOutlineOutlinedIcon />
-                <b>Cantidad Mínima de productos:</b> {cantMin}
+                Cantidad Mínima de productos: {cantMin}
               </p>
               <p>
                 <CheckCircleOutlineOutlinedIcon />
-                <b>Cantidad mínima de días de reserva:</b>
+                Cantidad mínima de días de reserva:
                 {minDiasReservaPrevia}
               </p>
             </div>

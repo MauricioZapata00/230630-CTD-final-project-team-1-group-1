@@ -11,8 +11,8 @@ import { AppContext } from "../../../context";
 const ProductItem = ({ product }) => {
   const { setError, setSuccess } = useContext(AppContext);
   const { imagenUrl, nombre, precio, id } = product;
-  const [itemDeleted, setItemDeleted] = useState(false);
 
+  const [itemDeleted, setItemDeleted] = useState(false);
   const [loading, setLoading] = useState(false);
 
   // const navigate = useNavigate();
@@ -55,7 +55,11 @@ const ProductItem = ({ product }) => {
           color="warning"
           disabled={loading}
         >
-          {loading ? <CircularProgress disableShrink /> : <DeleteIcon />}
+          {loading ? (
+            <CircularProgress disableShrink size={22} />
+          ) : (
+            <DeleteIcon />
+          )}
         </IconButton>
       </div>
     </div>

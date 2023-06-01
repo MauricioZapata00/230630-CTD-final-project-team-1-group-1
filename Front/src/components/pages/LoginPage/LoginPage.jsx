@@ -3,7 +3,6 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../../context";
 import { validateUser } from "../../../services";
-import UserPage from "../UserPage/UserPage";
 import { TextField } from "@mui/material";
 import ErrorMessage from "../../common/ErrorMessage";
 
@@ -13,7 +12,9 @@ const LoginPage = () => {
 
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
-  const [errors, setErrors] = useState("");
+
+  const [sending, setSending] = useState(false);
+  const [errors, setErrors] = useState([]);
 
   const hasError = (name) => {
     const foundError = errors.find((error) => error.name === name);
@@ -53,30 +54,26 @@ const LoginPage = () => {
     try {
       const response = await validateUser({ email, contrasena });
 
-      if (response.status === 200) {
-        console.log(response.data);
-        setUserData(response.data)
-        navigateTo("/")
-        const firstLetter = email.charAt(0).toUpperCase()
-        const username = email.split("@")[0]
-        const logedUser = {
-            userName: username,
-            avatar: firstLetter,
-            isAdmin: true,
-          };
-    
-          setLogedUser(logedUser);
-          localStorage.setItem("logedUser", JSON.stringify(logedUser));
-          setSending(false);
-    
-        console.log('Inicio de sesión exitoso');
-      } else {
-        setError("Por favor, verifique que el email y contraseña ingresados sean correctos")
-        console.log('Credenciales inválidas');
-      }
+      console.log({ response });
+
+      const userData = response?.data || {};
+
+      const firstLetter = email.charAt(0).toUpperCase();
+      const username = email.split("@")[0];
+      const logedUser = {
+        userName: username,
+        avatar: firstLetter,
+        isAdmin: true,
+        ...userData,
+      };
+
+      setLogedUser(logedUser);
+      localStorage.setItem("logedUser", JSON.stringify(logedUser));
+      setSending(false);
+      navigateTo("/");
+      console.log("Inicio de sesión exitoso");
     } catch (error) {
-      const errorMsg = error?.response?.data?.description;
-      setError(errorMsg || "Ha ocurrido un error.");
+      setError("Email y/o contraseña incorrectos");
       setSending(false);
       console.error("Error al iniciar sesión", error);
     }
