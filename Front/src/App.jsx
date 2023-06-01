@@ -10,6 +10,7 @@ import AdminListProducts from "./components/pages/AdminListProducts/AdminListPro
 import AdminCreateProduct from "./components/pages/AdminCreateProduct/AdminCreateProduct";
 import AdminLayout from "./components/layout/AdminLayout";
 import CategoryPage from "./components/pages/CategoryPage/CategoryPage";
+import UserPage from "./components/pages/UserPage/UserPage";
 
 const App = () => {
   return (
@@ -31,8 +32,8 @@ const App = () => {
                   element={<AdminCreateProduct />}
                 />
                 <Route path="/categoria/:id" element={<CategoryPage />} />
-              </Route>
-              
+                <Route path="/usuario" element ={<UserPage/>}/>
+              </Route> 
             </Routes>
           </BrowserRouter>
         </AppContextProvider>

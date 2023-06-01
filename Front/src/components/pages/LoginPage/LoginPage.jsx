@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../../context";
 import { validateUser } from "../../../services";
+import UserPage from "../UserPage/UserPage";
 
 const LoginPage = () => {
   const navigateTo = useNavigate();
@@ -11,6 +12,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
+  const {setUserData } = useContext(AppContext);
 
   const handleSubmit = async(e) =>{
       e.preventDefault();
@@ -26,6 +28,8 @@ const LoginPage = () => {
       const response = await validateUser({ email, contrasena });
 
       if (response.status === 200) {
+        console.log(response.data);
+        setUserData(response.data)
         navigateTo("/")
         const firstLetter = email.charAt(0).toUpperCase()
         const username = email.split("@")[0]
