@@ -15,6 +15,11 @@ const LoginPage = () => {
   const [contrasena, setContrasena] = useState("");
   const [errors, setErrors] = useState("");
 
+  const hasError = (name) => {
+    const foundError = errors.find((error) => error.name === name);
+    return foundError?.message;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
