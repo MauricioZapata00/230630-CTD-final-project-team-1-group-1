@@ -23,6 +23,7 @@ const App = () => {
                 <Route path="/registro" element={<RegisterPage />} />
                 <Route path="/ingreso" element={<LoginPage />} />
                 <Route path="/detalle/:id" element={<DetailPage />} />
+                <Route path="/categoria/:id" element={<CategoryPage />} />
               </Route>
               <Route element={<AdminLayout />}>
                 <Route path="/admin" element={<AdminListProducts />} />
@@ -30,9 +31,7 @@ const App = () => {
                   path="/admin/crear-producto"
                   element={<AdminCreateProduct />}
                 />
-                <Route path="/categoria/:id" element={<CategoryPage />} />
               </Route>
-              
             </Routes>
           </BrowserRouter>
         </AppContextProvider>
