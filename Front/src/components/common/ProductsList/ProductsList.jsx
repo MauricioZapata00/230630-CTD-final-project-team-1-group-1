@@ -1,25 +1,24 @@
 import { CircularProgress } from "@mui/material";
-import Product from "../Product/Product";
 import PropTypes, { shape } from "prop-types";
+import ProductItem from "../ProductItem";
 
-const Products = ({ products, loading, title }) => {
+const ProductsList = ({ products, loading }) => {
   return (
-    <div className="products">
-      {title?.length > 0 && <h2>{title}</h2>}
+    <div className="products-list">
       {loading && (
-        <div className="products__loading">
+        <div className="products-list__loading">
           <CircularProgress />
         </div>
       )}
       {!loading && products && (
-        <div className="products__container">
+        <div className="products-list__container">
           {products.length > 0 ? (
             products.map((product) => (
-              <Product key={product.id} product={product} />
+              <ProductItem key={product.id} product={product} />
             ))
           ) : (
-            <div className="products__empty">
-              No hay productos para mostrar.
+            <div className="products-list__empty">
+              <p>No hay productos cargados.</p>
             </div>
           )}
         </div>
@@ -33,10 +32,9 @@ const Products = ({ products, loading, title }) => {
   );
 };
 
-Products.propTypes = {
+ProductsList.propTypes = {
   products: PropTypes.arrayOf(shape),
-  loading: PropTypes.bool,
-  title: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
-export default Products;
+export default ProductsList;

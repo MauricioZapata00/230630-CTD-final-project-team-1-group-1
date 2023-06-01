@@ -1,0 +1,107 @@
+.product-detail {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    &__container-title {
+        background-color: $primary-color;
+        width: 100%;
+        padding: 0 25px;
+    }
+
+    &__title {
+      margin: 20px;
+      color: white;
+    }
+
+    &__rating {
+        margin-top: 15px;
+        padding: 0 25px;
+    }
+
+    &__image-grid {
+        --gap: 25px;
+        --num-cols: 4;
+        --row-height: 180px;
+        width: 100%;
+        margin: 0 auto;
+        display: grid;
+        box-sizing: border-box;
+        padding: var(--gap);
+        gap: var(--gap);
+        grid-template-columns: repeat(var(--num-cols), 1fr);
+        grid-auto-rows: var(--row-height);
+
+        @media (max-width: 800px) {
+            --num-cols: 2;
+            --row-height: 80px;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 3%;
+            cursor: pointer;
+            border: 1px solid $gray;
+         }
+    }
+
+    &__main-image {
+        grid-column: span 2;
+        grid-row: span 2;
+        cursor: default !important;
+    }
+
+    &__description {
+        margin-top: 25px;
+        margin-bottom: 25px;
+        margin-left: 15px;
+        font-size: 16px;
+        color: $gray-dark;
+        padding: 0 25px;
+    }
+
+    &__features-container {
+        padding: 25px;
+        background-color: $gray;
+        margin: 25px;
+        border-radius: 8px;
+
+        h4 {
+            margin-bottom: 25px;
+        }
+    }
+
+    &__features {
+        display: flex;
+        gap: 30px;
+
+        @media (max-width: 800px) {
+            flex-direction: column;
+            gap: 0;
+        }
+
+        div {
+            flex: 1;
+        }
+
+        p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    }
+
+    &__price {
+        font-size: 28px;
+        margin: 25px 0;
+        color: $primary-color-light;
+        padding: 0 25px;
+    }
+
+    &__image-selected {
+        border: 2px solid $secondary-color-dark !important;
+    }
+}

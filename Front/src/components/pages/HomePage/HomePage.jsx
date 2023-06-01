@@ -4,11 +4,9 @@ import Search from "../../common/Search";
 import { useContext, useEffect, useState } from "react";
 import { getProducts, getCategories } from "../../../services";
 import { AppContext } from "../../../context";
-import SuccessMessage from "../../common/SuccessMessage";
-import ErrorMessage from "./../../common/ErrorMessage";
 
 const Home = () => {
-  const { success, error, setError } = useContext(AppContext);
+  const { setError } = useContext(AppContext);
 
   const [categories, setCategories] = useState(null);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
@@ -43,10 +41,11 @@ const Home = () => {
     <div>
       <Search />
       <Categories categories={categories} loading={categoriesLoading} />
-      <h2>Productos Recomendados</h2>
-      <Products products={products} loading={productsLoading} />
-      {success && <SuccessMessage />}
-      {error && <ErrorMessage />}
+      <Products
+        products={products}
+        loading={productsLoading}
+        title="Productos recomendados"
+      />
     </div>
   );
 };

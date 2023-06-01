@@ -17,8 +17,6 @@ import { AppContext } from "../../../context";
 import axios from "axios";
 import { LoadingButton } from "@mui/lab";
 import CreateCategoryForm from "../../common/CreateCategoryForm";
-import ErrorMessage from "../../common/ErrorMessage";
-import SuccessMessage from "../../common/SuccessMessage";
 import { Link } from "react-router-dom";
 import { getCategories } from "../../../services";
 
@@ -43,7 +41,7 @@ const FORM_FILE_STRING_CONST = "imageFile";
 const FORM_OBJECT_STRING_CONST = "productoDto";
 
 const AdminCreateProduct = () => {
-  const { success, setSuccess, error, setError } = useContext(AppContext);
+  const { setSuccess, setError } = useContext(AppContext);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
 
@@ -439,8 +437,6 @@ const AdminCreateProduct = () => {
         isFormOpen={isFormOpen}
         setIsFormOpen={setIsFormOpen}
       />
-      {success && <SuccessMessage />}
-      {error && <ErrorMessage />}
     </div>
   );
 };
