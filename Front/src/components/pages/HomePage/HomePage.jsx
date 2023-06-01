@@ -19,8 +19,9 @@ const Home = () => {
       .then((response) => {
         setCategories(response.data);
       })
-      .catch(() => {
-        setError("Ha ocurrido un error en el servidor");
+      .catch((error) => {
+        const errorMsg = error?.response?.data?.description;
+        setError(errorMsg || "Ha ocurrido un error.");
       })
       .finally(() => setCategoriesLoading(false));
   }, [setError]);
@@ -31,8 +32,9 @@ const Home = () => {
       .then((response) => {
         setProducts(response.data);
       })
-      .catch(() => {
-        setError("Ha ocurrido un error en el servidor");
+      .catch((error) => {
+        const errorMsg = error?.response?.data?.description;
+        setError(errorMsg || "Ha ocurrido un error.");
       })
       .finally(() => setProductsLoading(false));
   }, [setError]);

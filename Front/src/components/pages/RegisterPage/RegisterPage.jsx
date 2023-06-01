@@ -73,10 +73,8 @@ const RegisterPage = () => {
         navigateTo("/ingreso");
       })
       .catch((error) => {
-        const errorMsg =
-          error?.response?.data?.description ||
-          "Ha ocurrido un error en el servidor";
-        setError(errorMsg);
+        const errorMsg = error?.response?.data?.description;
+        setError(errorMsg || "Ha ocurrido un error.");
       })
       .finally(() => setSending(false));
   };
