@@ -75,7 +75,8 @@ const LoginPage = () => {
         console.log('Credenciales inválidas');
       }
     } catch (error) {
-      setError("Email y/o contraseña incorrectos");
+      const errorMsg = error?.response?.data?.description;
+      setError(errorMsg || "Ha ocurrido un error.");
       setSending(false);
       console.error("Error al iniciar sesión", error);
     }

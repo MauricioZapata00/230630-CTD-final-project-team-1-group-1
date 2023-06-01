@@ -8,7 +8,7 @@ export const createUser = (data) => {
 
 export const validateUser = (data) => {
   return axios.post(`${baseUrl}/usuarios/auth`, data);
-}
+};
 
 export const getProducts = () => {
   return axios.get(`${baseUrl}/productos/`);
@@ -23,5 +23,9 @@ export const getCategories = () => {
 };
 
 export const getCategoryDetail = (id) => {
-  return axios.get(`${baseUrl}/productos/categoriaId/${id}`)
-}
+  return axios.get(`${baseUrl}/productos/categoriaId/${id}`);
+};
+
+export const deleteProduct = (id) => {
+  return axios.delete(`${baseUrl}/productos/${id}`);
+};
