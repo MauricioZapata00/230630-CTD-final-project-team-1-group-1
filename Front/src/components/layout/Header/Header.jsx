@@ -30,6 +30,9 @@ const Header = () => {
     setLogedUser(false);
   };
 
+  const handleGoToUser = () => {
+    navigateTo("/usuario");
+  };
   return (
     <>
       <div className="header">
@@ -55,8 +58,9 @@ const Header = () => {
                 </Button>
               </div>
             )}
-            <Avatar sx={{ bgcolor: "#67D671" }}>{logedUser.avatar}</Avatar>
-            <span>{logedUser.userName}</span>
+
+              <Avatar sx={{ bgcolor: "#67D671" }}>{logedUser.avatar}</Avatar>
+              <div style={{ cursor: 'pointer' }} onClick={handleGoToUser}>{logedUser.userName}</div>
             <Button onClick={handleLogOut}>Cerrar sesión</Button>
           </div>
         )}

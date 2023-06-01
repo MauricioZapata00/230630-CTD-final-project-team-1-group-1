@@ -9,6 +9,7 @@ import { ThemeContextProvider } from "./theme/ThemeContextProvider";
 import AdminListProducts from "./components/pages/AdminListProducts/AdminListProducts";
 import AdminCreateProduct from "./components/pages/AdminCreateProduct/AdminCreateProduct";
 import CategoryPage from "./components/pages/CategoryPage/CategoryPage";
+import UserPage from "./components/pages/UserPage/UserPage";
 
 const App = () => {
   return (
@@ -28,8 +29,8 @@ const App = () => {
                   element={<AdminCreateProduct />}
                 />
                 <Route path="/categoria/:id" element={<CategoryPage />} />
-              </Route>
-              
+                <Route path="/usuario" element ={<UserPage/>}/>
+              </Route> 
             </Routes>
           </BrowserRouter>
         </AppContextProvider>
