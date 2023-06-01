@@ -23,9 +23,9 @@ const Header = ({ admin = false }) => {
     navigateTo("/ingreso");
   };
 
-  /* const handleGoToAdmin = () => {
+  const handleGoToAdmin = () => {
     navigateTo("/admin");
-  }; */
+  };
 
   const handleGoToSite = () => {
     navigateTo("/");
@@ -42,6 +42,12 @@ const Header = ({ admin = false }) => {
       setLogedUser(JSON.parse(logedUserData));
     }
   }, [setLogedUser]);
+
+  useEffect(() => {
+    if (admin && logedUser?.rolName !== "ADMIN") {
+      navigateTo("/");
+    }
+  }, [admin, logedUser, navigateTo]);
 
   return (
     <>
@@ -63,11 +69,11 @@ const Header = ({ admin = false }) => {
             <Button onClick={handleGoToSite}>Ir al Sitio</Button>
           </div>
         )}
-        {/* {!admin && (
+        {!admin && logedUser?.rolName === "ADMIN" && (
           <div>
             <Button onClick={handleGoToAdmin}>Administrar</Button>
           </div>
-        )} */}
+        )}
         {!logedUser ? (
           !admin && (
             <div className="header__buttons">

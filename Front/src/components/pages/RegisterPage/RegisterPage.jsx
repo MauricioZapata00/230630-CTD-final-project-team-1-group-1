@@ -67,7 +67,7 @@ const RegisterPage = () => {
     }
 
     setSending(true);
-    createUser(data)
+    createUser({ ...data, rolName: "USER" })
       .then(() => {
         setSuccess("La cuenta se creó correctamente");
         navigateTo("/ingreso");
