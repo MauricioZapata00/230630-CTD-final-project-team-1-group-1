@@ -1,12 +1,14 @@
 import { useContext } from "react";
 import { AppContext } from "../../../context";
 import { Input } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const UserPage = () => {
-    const {userData } = useContext(AppContext);
+  const { userData } = useContext(AppContext);
+  const navigateTo = useNavigate();
 
     if (!userData) {
-        return null;
+        navigateTo("/");
       }    
 
     console.log(userData);

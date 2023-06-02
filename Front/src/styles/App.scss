@@ -20,6 +20,8 @@
 @import "./common/productsList";
 @import "./common/productItem";
 @import "./common/productDetail";
+@import "./common/carousel";
+
 
 
 * {
@@ -36,7 +38,7 @@
     padding-top: 60px;
 
     @media (max-width: 800px) {
-        padding-top: 115px;
+        padding-top: 155px;
     }
 }
 

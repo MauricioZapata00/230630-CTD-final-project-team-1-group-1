@@ -1,6 +1,7 @@
 import { CircularProgress } from "@mui/material";
 import Product from "../Product/Product";
 import PropTypes, { shape } from "prop-types";
+import Carousel from "../Carousel";
 
 const Products = ({ products, loading, title }) => {
   return (
@@ -14,9 +15,11 @@ const Products = ({ products, loading, title }) => {
       {!loading && products && (
         <div className="products__container">
           {products.length > 0 ? (
-            products.map((product) => (
-              <Product key={product.id} product={product} />
-            ))
+            <Carousel>
+              {products.map((product) => (
+                <Product key={product.id} product={product} />
+              ))}
+            </Carousel>
           ) : (
             <div className="products__empty">
               No hay productos para mostrar.
