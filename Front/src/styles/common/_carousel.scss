@@ -1,0 +1,56 @@
+.carousel {
+    display: flex;
+    gap: 20px;
+    padding-left: 20px;
+    width: fit-content;
+    transform: translateX(--translate);
+    z-index: 99;
+    transition: all 0.5s ease-out;
+
+    &__container {
+        width: 100%;
+        padding-right: 20px;
+        overflow: hidden;
+        position: relative;
+    }
+      
+    
+    &__item {
+        background: transparent;
+        color: black;
+        height: 280px;
+        padding: 5px 0;
+    }
+      
+    &__btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 999;
+        opacity: 0.7;
+        transition: all 0.3s;
+        box-shadow: $card-box-shadow;
+        -webkit-box-shadow: $card-box-shadow;
+        -moz-box-shadow: $card-box-shadow;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+      
+    &__btn--prev {
+        left: 0;
+    }
+      
+    &__btn--next {
+        right: 0;
+    }
+}
