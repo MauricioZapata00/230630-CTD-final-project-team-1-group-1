@@ -36,6 +36,10 @@ const Header = ({ admin = false }) => {
     setLogedUser(false);
   };
 
+  const handleUserPage = ()=>{
+    navigateTo("/usuario");
+  }
+
   useEffect(() => {
     const logedUserData = localStorage.getItem("logedUser");
     if (logedUserData) {
@@ -88,7 +92,7 @@ const Header = ({ admin = false }) => {
         ) : (
           <div className="header__user-info">
             <Avatar sx={{ bgcolor: "#67D671" }}>{logedUser.avatar}</Avatar>
-            <span>{logedUser.userName}</span>
+            <span onClick={handleUserPage} style={{ cursor: 'pointer' }}>{logedUser.userName}</span>
             <Button onClick={handleLogOut}>Cerrar sesión</Button>
           </div>
         )}

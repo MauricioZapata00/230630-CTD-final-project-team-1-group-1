@@ -8,7 +8,7 @@ import ErrorMessage from "../../common/ErrorMessage";
 
 const LoginPage = () => {
   const navigateTo = useNavigate();
-  const { setLogedUser, error, setError } = useContext(AppContext);
+  const { setLogedUser, error, setError, setUserData } = useContext(AppContext);
 
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
@@ -56,7 +56,7 @@ const LoginPage = () => {
 
       console.log({ response });
 
-      const userData = response?.data || {};
+      setUserData(response.data)
 
       const firstLetter = email.charAt(0).toUpperCase();
       const username = email.split("@")[0];
@@ -64,7 +64,7 @@ const LoginPage = () => {
         userName: username,
         avatar: firstLetter,
         isAdmin: true,
-        ...userData,
+      
       };
 
       setLogedUser(logedUser);
