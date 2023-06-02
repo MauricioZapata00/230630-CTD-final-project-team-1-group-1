@@ -1,16 +1,26 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AppContext } from "../../../context";
 import { Input } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const UserPage = () => {
-  const { userData } = useContext(AppContext);
-  const navigateTo = useNavigate();
+    const { userData, setUserData } = useContext(AppContext);
+    const navigateTo = useNavigate();
+
+    
+
+    useEffect(() => {
+
+            const parsedData = JSON.parse(sessionStorage.getItem('userData') || '[]');
+           
+            setUserData(parsedData);
+            console.log(setUserData);
+    
+    }, []);
 
     if (!userData) {
-        navigateTo("/");
-      }    
-
+        return null;
+    }
     console.log(userData);
     const { nombre, apellido, email } = userData;
     return (
