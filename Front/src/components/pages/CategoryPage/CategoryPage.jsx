@@ -34,12 +34,14 @@ const CategoryPage = () => {
   };
 
   return (
-    <div className="register-page">
+    <div className="category-page">
       <h2>
         Productos de la categoría{" "}
         {products.length > 0 ? products[0].nombreCategoria : ""}
       </h2>
-      <Products products={visibleProducts} title="" />
+      <div className="category-page__products">
+        <Products products={visibleProducts} title="" />
+      </div>
       {!showAllProducts && (
         <Button variant="contained" onClick={handleShowAllProducts}>
           Ver más
