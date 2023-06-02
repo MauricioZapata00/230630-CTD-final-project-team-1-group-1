@@ -1,0 +1,56 @@
+stages:
+  - build_front
+  - deploy_front
+  - build_back
+  - deploy_back
+
+build_frontend:
+  stage: build_front
+  image: node:latest
+  script:
+    - echo "Starting building frontend app ..."
+    - cd Front/
+    - npm install --save-dev
+    - npm run build
+    - echo "Frontend Build successfully!  :D"
+  only:
+    - release
+
+deploy_application_frontend:
+  stage: deploy_front
+  needs: [build_front]
+  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+  script:
+    - echo "deploying frontend app ..."
+    - cd Front/
+    - aws s3 cp -r dist/* s3://equipo1-c1-bucket-frontend
+    - echo "Frontend deploy successfully!  :D"
+  only:
+    - release
+
+build_backend:
+  stage: build_back
+  image: maven:3.8.6-openjdk-18
+  script:
+    - cd Back/catering
+    - echo "Building app..."
+    - mvn clean
+    - mvn clean install
+    - echo "Finished building backend app :D"
+  artifacts:
+    paths:
+      - BackEnd/Proyecto_Integrador_G2/target/Proyecto_Integrador_G2-0.0.1-SNAPSHOT.jar
+  only:
+    - release
+
+deploy_Backend:
+  stage: deploy_back
+  needs: [build_back]
+  image: alpine:3.11
+  script:
+    - ssh -i catering-key-c1.pem ubuntu@18.188.200.107 "cd backendApp/ pkill -f catering-0.0.1-SNAPSHOT.jar rm -rf catering-0.0.1-SNAPSHOT.jar"
+    - scp -i catering-key-c1.pem ../Back/catering/target/catering-0.0.1-SNAPSHOT.jar ubuntu@18.188.200.107:/home/ubuntu/backendApp
+    - ssh -i catering-key-c1.pem ubuntu@18.188.200.107 cd backendApp/ java -jar catering-0.0.1-SNAPSHOT.jar &"
+    - echo "Finished deploying backend app :D"
+  only:
+    - release
