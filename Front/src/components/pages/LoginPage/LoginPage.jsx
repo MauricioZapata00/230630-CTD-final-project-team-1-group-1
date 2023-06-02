@@ -8,7 +8,7 @@ import ErrorMessage from "../../common/ErrorMessage";
 
 const LoginPage = () => {
   const navigateTo = useNavigate();
-  const { setLogedUser, error, setError } = useContext(AppContext);
+  const { setLogedUser, error, setError, userData, setUserData } = useContext(AppContext);
 
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
@@ -55,8 +55,9 @@ const LoginPage = () => {
       const response = await validateUser({ email, contrasena });
 
       console.log({ response });
-
+      
       const userData = response?.data || {};
+      setUserData(response.data)
 
       const firstLetter = email.charAt(0).toUpperCase();
       const username = email.split("@")[0];
@@ -66,7 +67,7 @@ const LoginPage = () => {
         isAdmin: true,
         ...userData,
       };
-
+      console.log(userData);
       setLogedUser(logedUser);
       localStorage.setItem("logedUser", JSON.stringify(logedUser));
       setSending(false);

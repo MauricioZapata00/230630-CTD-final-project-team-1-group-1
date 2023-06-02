@@ -9,7 +9,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 const Header = ({ admin = false }) => {
   const navigateTo = useNavigate();
 
-  const { logedUser, setLogedUser } = useContext(AppContext);
+  const { logedUser, setLogedUser, userData } = useContext(AppContext);
 
   const handleLogoClick = () => {
     !admin ? navigateTo("/") : navigateTo("/admin");
@@ -35,6 +35,10 @@ const Header = ({ admin = false }) => {
     localStorage.removeItem("logedUser");
     setLogedUser(false);
   };
+
+  const handleUserPage = ()=>{
+    navigateTo("/usuario");
+  }
 
   useEffect(() => {
     const logedUserData = localStorage.getItem("logedUser");
@@ -88,7 +92,7 @@ const Header = ({ admin = false }) => {
         ) : (
           <div className="header__user-info">
             <Avatar sx={{ bgcolor: "#67D671" }}>{logedUser.avatar}</Avatar>
-            <span>{logedUser.userName}</span>
+            <span onClick={handleUserPage} style={{ cursor: 'pointer' }}>{logedUser.userName}</span>
             <Button onClick={handleLogOut}>Cerrar sesión</Button>
           </div>
         )}
