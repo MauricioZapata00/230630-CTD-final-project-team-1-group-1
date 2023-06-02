@@ -3,8 +3,12 @@ import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
 import StarIcon from "@mui/icons-material/Star";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
+import { useState } from "react";
+import { Button, Dialog, DialogActions } from "@mui/material";
 
 const ProductDetail = ({ productDetail }) => {
+  const [showModal, setShowModal] = useState(false)
+
   const {
     imagenUrl,
     nombre,
@@ -16,6 +20,9 @@ const ProductDetail = ({ productDetail }) => {
     requierePagoAnticipado,
   } = productDetail;
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
   return (
     <div className="product-detail">
       <div className="product-detail__container-title">
@@ -55,6 +62,36 @@ const ProductDetail = ({ productDetail }) => {
           alt=""
         />
       </div>
+      {showModal && (
+        <Dialog open={showModal} onClose={handleCloseModal}>
+          <DialogActions>
+          <Button onClick={handleCloseModal}>Cerrar</Button>
+        </DialogActions>
+        <div className="product-detail__image-grid">
+        
+        <img className="product-detail__main-image" src={imagenUrl} alt="" />
+        <img
+          src={imagenUrl}
+          className="product-detail__image-selected"
+          alt=""
+        />
+        <img
+          src="https://www.cgmiami.org/wp-content/uploads/2022/07/1658328558_catchy-catering-company-names-1024x682.jpg"
+          alt=""
+        />
+        <img
+          src="https://cdn0.casamientos.com.ar/vendor/9059/3_2/960/jpeg/processed-881be620-6327-4a62-af51-2f777c6e6340-9hxm7mfx_7_159059-163484209376997.jpeg"
+          alt=""
+        />
+        <img
+          src="https://definicion.de/wp-content/uploads/2016/08/catering-1.jpg"
+          alt=""
+        />
+      </div>
+        </Dialog>
+      )}
+      <Button onClick={() => setShowModal(true)}>Ver mas</Button>
+
       <div>
         <p className="product-detail__description">{descripcion}</p>
         <div className="product-detail__features-container">
