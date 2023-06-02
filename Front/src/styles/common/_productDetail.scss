@@ -17,6 +17,8 @@
     &__rating {
         margin-top: 15px;
         padding: 0 25px;
+        display: flex;
+        justify-content:space-between;
     }
 
     &__image-grid {

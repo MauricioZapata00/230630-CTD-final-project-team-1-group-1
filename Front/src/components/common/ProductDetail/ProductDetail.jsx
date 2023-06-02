@@ -3,8 +3,16 @@ import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
 import StarIcon from "@mui/icons-material/Star";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
+import { IconButton } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useNavigate } from "react-router-dom";
 
 const ProductDetail = ({ productDetail }) => {
+  const navigate = useNavigate();
+  const goBack = () => {
+    navigate(-1);
+  };
+
   const {
     imagenUrl,
     nombre,
@@ -34,6 +42,9 @@ const ProductDetail = ({ productDetail }) => {
             }
           />
         </Stack>
+        <IconButton onClick={goBack} aria-label="volver">
+          <ArrowBackIcon />
+        </IconButton>
       </div>
       <div className="product-detail__image-grid">
         <img className="product-detail__main-image" src={imagenUrl} alt="" />
