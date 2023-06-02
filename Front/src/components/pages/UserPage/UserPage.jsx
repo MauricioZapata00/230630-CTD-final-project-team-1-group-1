@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { AppContext } from "../../../context";
+import { Input } from "@mui/material";
 
 const UserPage = () => {
     const {userData } = useContext(AppContext);
-
 
     if (!userData) {
         return null;
@@ -12,12 +12,12 @@ const UserPage = () => {
     console.log(userData);
     const { nombre, apellido, email } = userData;
     return (
-        <div>
-            <div className="">
-                <h2>Información del usuario:</h2>
-                <label >Nombre:</label> <input type="text" value={nombre} />
-                <p><label >Apellido:</label> <input type="text" value={apellido} /></p>
-                <p><label >Email:</label> <input type="text" value={email} /></p>
+        <div className="user-page">
+            <div className="user-page__info">
+                <h2>MI PERFIL</h2>
+                <p><label >Nombre</label> <Input fullWidth type="text" value={nombre} /></p>
+                <p><label >Apellido</label> <Input fullWidth type="text" value={apellido} /></p>
+                <p><label >Email</label> <Input fullWidth type="text" value={email} /></p>
             </div>
         </div>
     )
