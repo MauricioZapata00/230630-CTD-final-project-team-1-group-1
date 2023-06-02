@@ -8,7 +8,7 @@ import ErrorMessage from "../../common/ErrorMessage";
 
 const LoginPage = () => {
   const navigateTo = useNavigate();
-  const { setLogedUser, error, setError, setUserData } = useContext(AppContext);
+  const { setLogedUser, error, setError, userData, setUserData } = useContext(AppContext);
 
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
@@ -64,7 +64,7 @@ const LoginPage = () => {
         userName: username,
         avatar: firstLetter,
         isAdmin: true,
-      
+        ...userData,
       };
 
       setLogedUser(logedUser);
