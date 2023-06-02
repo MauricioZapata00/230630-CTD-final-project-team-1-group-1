@@ -9,7 +9,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 const Header = ({ admin = false }) => {
   const navigateTo = useNavigate();
 
-  const { logedUser, setLogedUser } = useContext(AppContext);
+  const { logedUser, setLogedUser, userData } = useContext(AppContext);
 
   const handleLogoClick = () => {
     !admin ? navigateTo("/") : navigateTo("/admin");

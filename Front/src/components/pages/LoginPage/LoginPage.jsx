@@ -55,7 +55,8 @@ const LoginPage = () => {
       const response = await validateUser({ email, contrasena });
 
       console.log({ response });
-
+      
+      const userData = response?.data || {};
       setUserData(response.data)
 
       const firstLetter = email.charAt(0).toUpperCase();
@@ -66,7 +67,7 @@ const LoginPage = () => {
         isAdmin: true,
         ...userData,
       };
-
+      console.log(userData);
       setLogedUser(logedUser);
       localStorage.setItem("logedUser", JSON.stringify(logedUser));
       setSending(false);
