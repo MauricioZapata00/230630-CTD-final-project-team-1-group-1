@@ -53,7 +53,7 @@ const Carousel = ({ children }) => {
     if (pageWidth < 1400) {
       const width = pageWidth / 3;
       setItemsPerPage(3);
-      setMovement(width - 30);
+      setMovement(width - 32);
       setItemProps({ width: `${width - 52}px` });
       return;
     }
