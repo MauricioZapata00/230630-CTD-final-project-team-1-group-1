@@ -1,10 +1,11 @@
-import { Avatar, Button } from "@mui/material";
+import { Avatar, Button, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Logo1 from "../../../assets/Imagen2.png";
 import { useContext, useEffect } from "react";
 import { AppContext } from "../../../context";
 import PropTypes from "prop-types";
 import SettingsIcon from "@mui/icons-material/Settings";
+import LoginIcon from "@mui/icons-material/Login";
 
 const Header = ({ admin = false }) => {
   const navigateTo = useNavigate();
@@ -96,7 +97,9 @@ const Header = ({ admin = false }) => {
             <span onClick={handleUserPage} style={{ cursor: "pointer" }}>
               {logedUser.userName}
             </span>
-            <Button onClick={handleLogOut}>Cerrar sesión</Button>
+            <IconButton onClick={handleLogOut} aria-label="cerrar sesión">
+              <LoginIcon />
+            </IconButton>
           </div>
         )}
       </div>

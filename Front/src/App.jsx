@@ -25,7 +25,7 @@ const App = () => {
                 <Route path="/ingreso" element={<LoginPage />} />
                 <Route path="/detalle/:id" element={<DetailPage />} />
                 <Route path="/categoria/:id" element={<CategoryPage />} />
-                <Route path="/usuario" element ={<UserPage/>}/>
+                <Route path="/usuario" element={<UserPage />} />
               </Route>
               <Route element={<AdminLayout />}>
                 <Route path="/admin" element={<AdminListProducts />} />
@@ -33,8 +33,7 @@ const App = () => {
                   path="/admin/crear-producto"
                   element={<AdminCreateProduct />}
                 />
-               
-              </Route> 
+              </Route>
             </Routes>
           </BrowserRouter>
         </AppContextProvider>
