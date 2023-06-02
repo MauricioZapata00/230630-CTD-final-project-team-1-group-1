@@ -10,6 +10,7 @@ import AdminListProducts from "./components/pages/AdminListProducts/AdminListPro
 import AdminCreateProduct from "./components/pages/AdminCreateProduct/AdminCreateProduct";
 import AdminLayout from "./components/layout/AdminLayout";
 import CategoryPage from "./components/pages/CategoryPage/CategoryPage";
+import UserPage from "./components/pages/UserPage/UserPage";
 
 const App = () => {
   return (
@@ -23,6 +24,8 @@ const App = () => {
                 <Route path="/registro" element={<RegisterPage />} />
                 <Route path="/ingreso" element={<LoginPage />} />
                 <Route path="/detalle/:id" element={<DetailPage />} />
+                <Route path="/categoria/:id" element={<CategoryPage />} />
+                <Route path="/usuario" element ={<UserPage/>}/>
               </Route>
               <Route element={<AdminLayout />}>
                 <Route path="/admin" element={<AdminListProducts />} />
@@ -30,9 +33,8 @@ const App = () => {
                   path="/admin/crear-producto"
                   element={<AdminCreateProduct />}
                 />
-                <Route path="/categoria/:id" element={<CategoryPage />} />
-              </Route>
-              
+               
+              </Route> 
             </Routes>
           </BrowserRouter>
         </AppContextProvider>

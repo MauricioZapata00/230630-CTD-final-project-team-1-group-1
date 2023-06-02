@@ -3,7 +3,7 @@ package com.dh.catering.service;
 import com.dh.catering.domain.CategoriaProducto;
 import com.dh.catering.domain.Producto;
 import com.dh.catering.dto.CategoriaProductoDto;
-import com.dh.catering.exceptions.CategoriaAsignadaException;
+import com.dh.catering.exceptions.AsignacionException;
 import com.dh.catering.exceptions.NombreDuplicadoException;
 import com.dh.catering.exceptions.RecursoNoEncontradoException;
 import com.dh.catering.repository.CategoriaProductoRepository;
@@ -82,14 +82,14 @@ public class CategoriaProductoService {
         return Optional.ofNullable(categoriaProductoDto);
     }
 
-    public Optional<String> deleteById(Long id) throws RecursoNoEncontradoException, CategoriaAsignadaException {
+    public Optional<String> deleteById(Long id) throws RecursoNoEncontradoException, AsignacionException {
         String mensaje = null;
         Optional<CategoriaProductoDto> optionalCategoriaProductoDto = this.getById(id);
         if (optionalCategoriaProductoDto.isPresent()){
             List<Producto> productos = productoRepository.findAllByCategoriaId(id);
             if (productos.size()>=1){
                 log.error("No se puede eliminar la categoria porque esta asignada a " + productos.size() + " producto(s)");
-                throw new CategoriaAsignadaException("No se puede eliminar la categoria porque esta asignada a " + productos.size() + " producto(s)");
+                throw new AsignacionException("No se puede eliminar la categoria porque esta asignada a " + productos.size() + " producto(s)");
             }
             categoriaProductoRepository.deleteById(id);
             mensaje = "Se elimino corrctamente la categoria con id " + id;
@@ -98,7 +98,7 @@ public class CategoriaProductoService {
         return Optional.ofNullable(mensaje);
     }
 
-    public Optional<String> updateById(Long id, CategoriaProductoDto categoriaProductoDto, MultipartFile multipartFile) throws RecursoNoEncontradoException, CategoriaAsignadaException, NombreDuplicadoException {
+    public Optional<String> updateById(Long id, CategoriaProductoDto categoriaProductoDto, MultipartFile multipartFile) throws RecursoNoEncontradoException, AsignacionException, NombreDuplicadoException {
         String mensaje = null;
         this.deleteById(id);
         this.save(categoriaProductoDto,multipartFile);

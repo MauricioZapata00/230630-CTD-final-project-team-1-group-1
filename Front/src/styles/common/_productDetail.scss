@@ -6,6 +6,7 @@
     &__container-title {
         background-color: $primary-color;
         width: 100%;
+        padding: 0 25px;
     }
 
     &__title {
@@ -15,10 +16,11 @@
 
     &__rating {
         margin-top: 15px;
+        padding: 0 25px;
     }
 
     &__image-grid {
-        --gap: 16px;
+        --gap: 25px;
         --num-cols: 4;
         --row-height: 180px;
         width: 100%;
@@ -41,6 +43,7 @@
             object-fit: cover;
             border-radius: 3%;
             cursor: pointer;
+            border: 1px solid $gray;
          }
     }
 
@@ -56,12 +59,13 @@
         margin-left: 15px;
         font-size: 16px;
         color: $gray-dark;
+        padding: 0 25px;
     }
 
     &__features-container {
         padding: 25px;
         background-color: $gray;
-        margin: 25px 0;
+        margin: 25px;
         border-radius: 8px;
 
         h4 {
@@ -72,6 +76,11 @@
     &__features {
         display: flex;
         gap: 30px;
+
+        @media (max-width: 800px) {
+            flex-direction: column;
+            gap: 0;
+        }
 
         div {
             flex: 1;
@@ -89,5 +98,10 @@
         font-size: 28px;
         margin: 25px 0;
         color: $primary-color-light;
+        padding: 0 25px;
+    }
+
+    &__image-selected {
+        border: 2px solid $secondary-color-dark !important;
     }
 }

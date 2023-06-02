@@ -38,8 +38,8 @@ public class GlobalExceptions {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mensajeError);
     }
 
-    @ExceptionHandler({CategoriaAsignadaException.class})
-    public ResponseEntity<MensajeError> procesarCategoriaAsdignada(CategoriaAsignadaException e){
+    @ExceptionHandler({AsignacionException.class})
+    public ResponseEntity<MensajeError> procesarCategoriaAsdignada(AsignacionException e){
         MensajeError mensajeError = new MensajeError();
         mensajeError.setMessage("Lo sentimos, ha ocurrido un error!");
         mensajeError.setDescription(e.getMessage());

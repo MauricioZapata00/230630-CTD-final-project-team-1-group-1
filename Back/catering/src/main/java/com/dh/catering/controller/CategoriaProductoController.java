@@ -1,7 +1,7 @@
 package com.dh.catering.controller;
 
 import com.dh.catering.dto.CategoriaProductoDto;
-import com.dh.catering.exceptions.CategoriaAsignadaException;
+import com.dh.catering.exceptions.AsignacionException;
 import com.dh.catering.exceptions.NombreDuplicadoException;
 import com.dh.catering.exceptions.RecursoNoEncontradoException;
 import com.dh.catering.service.CategoriaProductoService;
@@ -41,7 +41,7 @@ public class CategoriaProductoController {
     }
 
     @GetMapping("/")
-    @Operation(summary = "Listar todos las categorias")
+    @Operation(summary = "Listar todas las categorias")
     public ResponseEntity<List<CategoriaProductoDto>> listarTodos(){
         return ResponseEntity.ok(categoriaProductoService.findAll());
     }
@@ -64,7 +64,7 @@ public class CategoriaProductoController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Eliminar una categoria por su id")
-    public ResponseEntity<String> eliminarPorId(@PathVariable Long id) throws RecursoNoEncontradoException, CategoriaAsignadaException {
+    public ResponseEntity<String> eliminarPorId(@PathVariable Long id) throws RecursoNoEncontradoException, AsignacionException {
         return categoriaProductoService.deleteById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
@@ -72,7 +72,7 @@ public class CategoriaProductoController {
 
     @PutMapping(value = "/{id}", consumes = {"multipart/form-data", "application/octet-stream"})
     @Operation(summary = "Actualizar una categoria por su id")
-    public ResponseEntity<String> actualizarPorId(@PathVariable Long id,@RequestParam("categoriaDto") String categoriaDto,@RequestParam("imgFile") MultipartFile file) throws JsonProcessingException, RecursoNoEncontradoException, CategoriaAsignadaException, NombreDuplicadoException {
+    public ResponseEntity<String> actualizarPorId(@PathVariable Long id,@RequestParam("categoriaDto") String categoriaDto,@RequestParam("imgFile") MultipartFile file) throws JsonProcessingException, RecursoNoEncontradoException, AsignacionException, NombreDuplicadoException {
         CategoriaProductoDto categoriaProductoDto = mapper.readValue(categoriaDto, CategoriaProductoDto.class);
         return categoriaProductoService.updateById(id,categoriaProductoDto,file)
                 .map(ResponseEntity::ok)

@@ -56,12 +56,15 @@ const LoginPage = () => {
 
       console.log({ response });
 
+      const userData = response?.data || {};
+
       const firstLetter = email.charAt(0).toUpperCase();
       const username = email.split("@")[0];
       const logedUser = {
         userName: username,
         avatar: firstLetter,
         isAdmin: true,
+        ...userData,
       };
 
       setLogedUser(logedUser);

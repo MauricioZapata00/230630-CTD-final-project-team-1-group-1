@@ -4,11 +4,9 @@ import Search from "../../common/Search";
 import { useContext, useEffect, useState } from "react";
 import { getProducts, getCategories } from "../../../services";
 import { AppContext } from "../../../context";
-import SuccessMessage from "../../common/SuccessMessage";
-import ErrorMessage from "./../../common/ErrorMessage";
 
 const Home = () => {
-  const { success, error, setError } = useContext(AppContext);
+  const { setError } = useContext(AppContext);
 
   const [categories, setCategories] = useState(null);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
@@ -21,8 +19,9 @@ const Home = () => {
       .then((response) => {
         setCategories(response.data);
       })
-      .catch(() => {
-        setError("Ha ocurrido un error en el servidor");
+      .catch((error) => {
+        const errorMsg = error?.response?.data?.description;
+        setError(errorMsg || "Ha ocurrido un error.");
       })
       .finally(() => setCategoriesLoading(false));
   }, [setError]);
@@ -33,8 +32,9 @@ const Home = () => {
       .then((response) => {
         setProducts(response.data);
       })
-      .catch(() => {
-        setError("Ha ocurrido un error en el servidor");
+      .catch((error) => {
+        const errorMsg = error?.response?.data?.description;
+        setError(errorMsg || "Ha ocurrido un error.");
       })
       .finally(() => setProductsLoading(false));
   }, [setError]);
@@ -48,8 +48,6 @@ const Home = () => {
         loading={productsLoading}
         title="Productos recomendados"
       />
-      {success && <SuccessMessage />}
-      {error && <ErrorMessage />}
     </div>
   );
 };

@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -20,12 +21,29 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
     @Column(nullable = false)
     private String nombre;
+
     @Column(nullable = false)
     private String apellido;
+
     @Column(nullable = false)
     private String contrasena;
+
     @Column(unique = true, nullable = false)
     private String email;
+
+    @ManyToOne
+    @JoinColumn(name = "rol_id")
+    private Rol rol;
+
+    public Usuario(String nombre, String apellido, String contrasena, String email, Rol rol) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.contrasena = contrasena;
+        this.email = email;
+        this.rol = rol;
+    }
+
 }
