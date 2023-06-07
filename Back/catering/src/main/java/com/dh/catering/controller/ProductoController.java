@@ -14,13 +14,14 @@ import org.apache.tomcat.util.json.JSONParser;
 import org.apache.tomcat.util.json.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin
 @RequestMapping("/productos")
 @Tag(name = "Productos")
 @Slf4j
@@ -33,6 +34,7 @@ public class ProductoController {
 
     @PostMapping(value = "/registrar", consumes = {"multipart/form-data", "application/octet-stream"})
     @Operation(summary = "Registrar un producto")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> registrar(@RequestParam("productoDto") String productoDto,
                                             @RequestParam("imageFile")MultipartFile archivoImagen) throws NombreDuplicadoException, JsonProcessingException, ParseException, RecursoNoEncontradoException {
         log.info("ProductoDTO recibido: " + productoDto);
@@ -42,7 +44,7 @@ public class ProductoController {
                 .orElse(ResponseEntity.internalServerError().build());
     }
 
-    @GetMapping("/")
+    @GetMapping("/todos")
     @Operation(summary = "Listar todos los productos")
     public ResponseEntity<List<ProductoDto>> listarTodos(
         @RequestParam(defaultValue = "0") Integer numeroPagina,
@@ -75,16 +77,18 @@ public class ProductoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/eliminar/{id}")
     @Operation(summary = "Eliminar un producto por id")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> eliminarPorId(@PathVariable Long id) throws RecursoNoEncontradoException{
         return productoService.deleteById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
     }
 
-    @PutMapping(value = "/{id}", consumes = {"multipart/form-data", "application/octet-stream"})
+    @PutMapping(value = "/actualizar/{id}", consumes = {"multipart/form-data", "application/octet-stream"})
     @Operation(summary = "Actualizar un producto por su id")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> actualizarPorId(@PathVariable Long id,@RequestParam("productoDto") String productoDto, @RequestParam("imageFile")MultipartFile archivoImagen) throws NombreDuplicadoException, RecursoNoEncontradoException, JsonProcessingException {
         ProductoDto dtoObtenido = mapper.readValue(productoDto, ProductoDto.class);
         return productoService.updateById(id,dtoObtenido,archivoImagen)

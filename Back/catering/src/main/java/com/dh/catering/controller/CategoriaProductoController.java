@@ -12,13 +12,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin
 @RequestMapping("/categorias")
 @Tag(name = "Categorias")
 @Slf4j
@@ -32,6 +33,7 @@ public class CategoriaProductoController {
 
     @PostMapping(value = "/registrar", consumes = {"multipart/form-data", "application/octet-stream"})
     @Operation(summary = "Registrar una categoria")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> registrar(@RequestParam("categoriaDto")String categoriaProductoDto,
                                             @RequestParam("imgFile")MultipartFile multipartFile) throws JsonProcessingException, NombreDuplicadoException {
         CategoriaProductoDto dtoObtenido = mapper.readValue(categoriaProductoDto,CategoriaProductoDto.class);
@@ -40,7 +42,7 @@ public class CategoriaProductoController {
                 .orElse(ResponseEntity.internalServerError().build());
     }
 
-    @GetMapping("/")
+    @GetMapping("/todos")
     @Operation(summary = "Listar todas las categorias")
     public ResponseEntity<List<CategoriaProductoDto>> listarTodos(){
         return ResponseEntity.ok(categoriaProductoService.findAll());
@@ -62,16 +64,18 @@ public class CategoriaProductoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/eliminar/{id}")
     @Operation(summary = "Eliminar una categoria por su id")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> eliminarPorId(@PathVariable Long id) throws RecursoNoEncontradoException, AsignacionException {
         return categoriaProductoService.deleteById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
     }
 
-    @PutMapping(value = "/{id}", consumes = {"multipart/form-data", "application/octet-stream"})
+    @PutMapping(value = "/actualizar/{id}", consumes = {"multipart/form-data", "application/octet-stream"})
     @Operation(summary = "Actualizar una categoria por su id")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> actualizarPorId(@PathVariable Long id,@RequestParam("categoriaDto") String categoriaDto,@RequestParam("imgFile") MultipartFile file) throws JsonProcessingException, RecursoNoEncontradoException, AsignacionException, NombreDuplicadoException {
         CategoriaProductoDto categoriaProductoDto = mapper.readValue(categoriaDto, CategoriaProductoDto.class);
         return categoriaProductoService.updateById(id,categoriaProductoDto,file)

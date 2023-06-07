@@ -9,13 +9,13 @@ import com.dh.catering.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 @Slf4j
 @Service
@@ -26,9 +26,18 @@ public class UsuarioService {
     private static final String MSJ_ERROR = "El correo '%s' ya se encuentra registrado en el sistema";
     private static final String MSJ_NO_ENCONTRADO = "No existe un usuario con el correo: %s";
     private static final String MSJ_NO_VALIDO = "La contrase\u00f1a es incorrecta, intentelo de nuevo.";
+
+    @Autowired
     private final UsuarioRepository usuarioRepository;
+
+    @Autowired
     private final RolRepository rolRepository;
+
+    @Autowired
     private final ObjectMapper mapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
   
     public Optional<String> save(UsuarioDto dto) throws DuplicadoException {
         if (usuarioRepository.findByEmail(dto.getEmail()).isPresent()) {
@@ -36,7 +45,7 @@ public class UsuarioService {
         }
         Usuario usuario = mapper.convertValue(dto, Usuario.class);
         usuario.setRol(rolRepository.getByNombre(dto.getRolName()).get());
-        usuario.setContrasena(encode(usuario.getContrasena()));
+        usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
         usuarioRepository.save(usuario);
         log.info(MSJ_EXITO);
         return Optional.of(MSJ_EXITO);
@@ -109,13 +118,14 @@ public class UsuarioService {
     }
 
 
+   /*
     public UsuarioDto auth(String email, String contrasena) throws RecursoNoEncontradoException {
         Optional<Usuario> usuarioOp = usuarioRepository.findByEmail(email);
         if (usuarioOp.isEmpty()) {
             throw new RecursoNoEncontradoException(MSJ_NO_ENCONTRADO.formatted(email));
         } else {
             Usuario usuario = usuarioOp.get();
-            if (usuario.getContrasena().equals(encode(contrasena))) {
+            if (usuario.getContrasena().equals(passwordEncoder.encode(contrasena))) {
                 UsuarioDto usuarioDto = mapper.convertValue(usuario, UsuarioDto.class);
                 usuarioDto.setRolName(usuario.getRol().getNombre());
                 return usuarioDto;
@@ -124,10 +134,6 @@ public class UsuarioService {
             }
         }
     }
-
-    private String encode(String valor) {
-        return Base64.getEncoder().encodeToString(
-                valor.getBytes(StandardCharsets.UTF_8));
-    }
+    */
   
 }
