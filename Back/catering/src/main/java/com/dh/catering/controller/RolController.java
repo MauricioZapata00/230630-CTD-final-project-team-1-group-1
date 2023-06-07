@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/roles")
 @Tag(name = "Roles")
 @Slf4j
