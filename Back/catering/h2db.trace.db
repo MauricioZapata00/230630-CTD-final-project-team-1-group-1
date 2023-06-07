@@ -1647,3 +1647,11 @@ Caused by: org.h2.mvstore.MVStoreException: The file is locked: C:/Users/Dell/De
 	at org.h2.mvstore.FileStore.open(FileStore.java:128)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:452)
 	... 57 more
+2023-06-07 13:35:19 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "DELETE[*]* FROM USUARIO"; se esperaba "identifier"
+Syntax error in SQL statement "DELETE[*]* FROM USUARIO"; expected "identifier"; SQL statement:
+DELETE* FROM USUARIO [42001-214]
+2023-06-07 13:35:34 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "DELETE [*]* FROM USUARIO"; se esperaba "identifier"
+Syntax error in SQL statement "DELETE [*]* FROM USUARIO"; expected "identifier"; SQL statement:
+DELETE * FROM USUARIO [42001-214]

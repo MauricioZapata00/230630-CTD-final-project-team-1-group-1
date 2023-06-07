@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/categorias")
 @Tag(name = "Categorias")
 @Slf4j
