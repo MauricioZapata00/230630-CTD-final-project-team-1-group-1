@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = "http://localhost:8080";
+const baseUrl = import.meta.env.VITE_BASE_URI;
 
 export const createUser = (data) => {
   return axios.post(`${baseUrl}/usuarios/`, data);
@@ -11,7 +11,7 @@ export const validateUser = (data) => {
 };
 
 export const getProducts = () => {
-  return axios.get(`${baseUrl}/productos/`);
+  return axios.get(`${baseUrl}/productos/todos`);
 };
 
 export const getProductDetail = (id) => {
@@ -19,7 +19,7 @@ export const getProductDetail = (id) => {
 };
 
 export const getCategories = () => {
-  return axios.get(`${baseUrl}/categorias/`);
+  return axios.get(`${baseUrl}/categorias/todos`);
 };
 
 export const getCategoryDetail = (id) => {
