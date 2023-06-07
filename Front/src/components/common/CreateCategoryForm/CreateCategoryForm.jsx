@@ -122,7 +122,7 @@ const CreateCategoryForm = ({ isFormOpen, setIsFormOpen }) => {
     setSending(true);
 
     axios
-      .post("http://localhost:8080/categorias/registrar", formData, {
+      .post(import.meta.env.VITE_CREATE_CATEGORY_URI, formData, {
         headers: {
           "Content-Type": `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`,
         },

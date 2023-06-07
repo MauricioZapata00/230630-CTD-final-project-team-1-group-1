@@ -191,7 +191,7 @@ const AdminCreateProduct = () => {
     setSending(true);
 
     axios
-      .post("http://localhost:8080/productos/registrar", formData, {
+      .post(import.meta.env.VITE_CREATE_PRODUCT_URI, formData, {
         headers: {
           "Content-Type": `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`,
         },
