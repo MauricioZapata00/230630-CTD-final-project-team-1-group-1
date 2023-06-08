@@ -11,6 +11,7 @@ import AdminCreateProduct from "./components/pages/AdminCreateProduct/AdminCreat
 import AdminLayout from "./components/layout/AdminLayout";
 import CategoryPage from "./components/pages/CategoryPage/CategoryPage";
 import UserPage from "./components/pages/UserPage/UserPage";
+import AdminEditProduct from "./components/pages/AdminEditProduct/AdminEditProduct";
 
 const App = () => {
   return (
@@ -32,6 +33,10 @@ const App = () => {
                 <Route
                   path="/admin/crear-producto"
                   element={<AdminCreateProduct />}
+                />
+                <Route
+                  path="/admin/editar-producto/:id"
+                  element={<AdminEditProduct />}
                 />
               </Route>
             </Routes>

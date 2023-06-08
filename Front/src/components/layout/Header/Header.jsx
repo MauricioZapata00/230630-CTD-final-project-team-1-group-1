@@ -49,11 +49,11 @@ const Header = ({ admin = false }) => {
     }
   }, [setLogedUser]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (admin && logedUser?.rolName !== "ADMIN") {
       navigateTo("/");
     }
-  }, [admin, logedUser, navigateTo]);
+  }, [admin, logedUser, navigateTo]); */
 
   return (
     <>
@@ -75,8 +75,8 @@ const Header = ({ admin = false }) => {
             <Button onClick={handleGoToSite}>Ir al Sitio</Button>
           </div>
         )}
-        {!admin && logedUser?.rolName === "ADMIN" && (
-          <div>
+        {!admin && (
+          /* logedUser?.rolName === "ADMIN" && */ <div>
             <Button onClick={handleGoToAdmin}>Administrar</Button>
           </div>
         )}
