@@ -1,13 +1,10 @@
 package com.dh.catering.controller;
 
-import com.dh.catering.dto.ProductoDto;
 import com.dh.catering.dto.UsuarioDto;
 import com.dh.catering.exceptions.DuplicadoException;
-import com.dh.catering.exceptions.NombreDuplicadoException;
 import com.dh.catering.exceptions.RecursoNoEncontradoException;
 import com.dh.catering.service.JwtService;
 import com.dh.catering.service.UsuarioService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.dh.catering.dto.LoginDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,17 +12,19 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -68,7 +67,7 @@ public class UsuarioController {
 
     @GetMapping("/id/{id}")
     @Operation(summary = "buscar un usuario por su id")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    //@PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public ResponseEntity<UsuarioDto> buscarPorId(@PathVariable Long id) throws RecursoNoEncontradoException {
         return usuarioService.getById(id)
                 .map(ResponseEntity::ok)
@@ -77,7 +76,7 @@ public class UsuarioController {
 
     @GetMapping("/email/{email}")
     @Operation(summary = "buscar un usuario por su email")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    //@PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public ResponseEntity<UsuarioDto> buscarPorEmail(@PathVariable String email) throws RecursoNoEncontradoException {
         return usuarioService.getByEmail(email)
                 .map(ResponseEntity::ok)
@@ -104,12 +103,21 @@ public class UsuarioController {
 
     @PostMapping("/auth")
     @Operation(summary = "autentica un usuario")
-    public String authenticateAndGetToken(@RequestBody LoginDto loginDto) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getContrasena()));
-        if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(loginDto.getEmail());
-        } else {
-            throw new UsernameNotFoundException("Credenciales incorrectas!");
+    public ResponseEntity<Map<String,String>> authenticateAndGetToken(@RequestBody LoginDto loginDto) throws RecursoNoEncontradoException {
+        Map<String, String> respuesta = new HashMap<>();
+        try {
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getContrasena()));
+            if (authentication.isAuthenticated()) {
+                String token = jwtService.generateToken(loginDto.getEmail());
+                String dto = usuarioService.getByEmail(loginDto.getEmail()).get().toString();
+                respuesta.put("jwt", token);
+                respuesta.put("dto", dto);
+                return ResponseEntity.ok(respuesta);
+            } else {
+                throw new BadCredentialsException("Credenciales incorrectas!");
+            }
+        } catch (AuthenticationException ex) {
+            throw new BadCredentialsException("Credenciales incorrectas!");
         }
     }
 }

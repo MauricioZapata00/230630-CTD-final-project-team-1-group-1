@@ -52,4 +52,16 @@ public class UsuarioDto {
         this.email = email;
         this.rolName = rolName;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                ", contrasena='" + contrasena + '\'' +
+                ", email='" + email + '\'' +
+                ", rolName='" + rolName + '\'' +
+                '}';
+    }
 }

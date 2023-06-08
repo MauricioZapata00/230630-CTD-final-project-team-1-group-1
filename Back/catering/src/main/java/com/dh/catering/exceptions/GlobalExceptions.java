@@ -2,6 +2,7 @@ package com.dh.catering.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -44,6 +45,16 @@ public class GlobalExceptions {
         mensajeError.setMessage("Lo sentimos, ha ocurrido un error!");
         mensajeError.setDescription(e.getMessage());
         mensajeError.setStatusCode(1004);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mensajeError);
+    }
+
+    @ExceptionHandler({BadCredentialsException.class})
+    public ResponseEntity<MensajeError> procesarCredencialesIncorrectas(BadCredentialsException e){
+        MensajeError mensajeError = new MensajeError();
+        mensajeError.setMessage("Lo sentimos, ha ocurrido un error!");
+        mensajeError.setDescription(e.getMessage());
+        mensajeError.setStatusCode(1005);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mensajeError);
     }
