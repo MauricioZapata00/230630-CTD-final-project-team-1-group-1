@@ -38,9 +38,9 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**",
                         "/usuarios/registrar","/usuarios/auth","/usuarios/id/{id}","/usuarios/email/{email}",
                         "/productos/todos","/productos/nombre/{nombre}","/productos/id/{id}","/productos/categoriaId/{id}",
-                        "/categorias/todos","/categorias/nombre/{nombre}","/categorias/id/{id}").permitAll()
+                        "/categorias/todos","/categorias/nombre/{nombre}","/categorias/id/{id}", "/puntuaciones/**").permitAll()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/usuarios/**","/roles/**","/productos/**","/categorias/**")
+                .authorizeHttpRequests().requestMatchers("/usuarios/**","/roles/**","/productos/**","/categorias/**", "/puntuaciones/**")
                 .authenticated().and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
