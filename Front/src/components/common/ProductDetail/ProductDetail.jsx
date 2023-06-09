@@ -8,6 +8,7 @@ import { Button, Dialog, DialogActions } from "@mui/material";
 import { IconButton } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
+import ProductRating from "../ProductRating";
 
 const ProductDetail = ({ productDetail }) => {
   const [showModal, setShowModal] = useState(false);
@@ -16,6 +17,8 @@ const ProductDetail = ({ productDetail }) => {
     navigate(-1);
   };
 
+  const productRatings = [4, 5, 3, 4, 5, 2, 3, 4, 5, 5, 5];
+  console.log(productRatings);
   const {
     imagenUrl,
     nombre,
@@ -36,21 +39,10 @@ const ProductDetail = ({ productDetail }) => {
         <h1 className="product-detail__title">{nombre}</h1>
       </div>
       <div className="product-detail__rating">
-        <Stack spacing={1}>
-          <Rating
-            size="large"
-            name="half-rating"
-            defaultValue={3.5}
-            precision={0.5}
-            readOnly
-            emptyIcon={
-              <StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />
-            }
-          />
-        </Stack>
         <IconButton onClick={goBack} aria-label="volver">
           <ArrowBackIcon />
         </IconButton>
+        <ProductRating ratings={productRatings} />
       </div>
       <div className="product-detail__image-grid">
         <img className="product-detail__main-image" src={imagenUrl} alt="" />
