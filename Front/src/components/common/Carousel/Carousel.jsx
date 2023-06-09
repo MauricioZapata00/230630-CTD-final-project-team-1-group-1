@@ -22,10 +22,6 @@ const Carousel = ({ children }) => {
     setPage(page + 1);
   };
 
-  console.log({ page });
-
-  console.log(`translateX(${movement * page * -1}px)`);
-
   useEffect(() => {
     const handleResize = () => setPageWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
