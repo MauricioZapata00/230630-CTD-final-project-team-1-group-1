@@ -1,11 +1,9 @@
 stages:
-  - build_front
-  - deploy_front
-  - build_back
-  - deploy_back
+  - build
+  - deploy
 
 build_frontend:
-  stage: build_front
+  stage: build
   image: node:latest
   script:
     - echo "Starting building frontend app ..."
@@ -16,20 +14,8 @@ build_frontend:
   only:
     - release
 
-deploy_application_frontend:
-  stage: deploy_front
-  needs: [build_front]
-  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
-  script:
-    - echo "deploying frontend app ..."
-    - cd Front/
-    - aws s3 cp -r dist/* s3://equipo1-c1-bucket-frontend
-    - echo "Frontend deploy successfully!  :D"
-  only:
-    - release
-
 build_backend:
-  stage: build_back
+  stage: build
   image: maven:3.8.6-openjdk-18
   script:
     - cd Back/catering
@@ -43,9 +29,23 @@ build_backend:
   only:
     - release
 
+deploy_application_frontend:
+  stage: deploy_front
+  needs: [build]
+  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+  script:
+    - echo "deploying frontend app ..."
+    - cd Front/
+    - aws s3 cp -r dist/* s3://equipo1-c1-bucket-frontend
+    - echo "Frontend deploy successfully!  :D"
+  only:
+    - release
+
+
+
 deploy_Backend:
   stage: deploy_back
-  needs: [build_back]
+  needs: [build]
   image: alpine:3.11
   script:
     - ssh -i catering-key-c1.pem ubuntu@18.188.200.107 "cd backendApp/ pkill -f catering-0.0.1-SNAPSHOT.jar rm -rf catering-0.0.1-SNAPSHOT.jar"
