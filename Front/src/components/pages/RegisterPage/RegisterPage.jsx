@@ -4,6 +4,7 @@ import { useContext, useState } from "react";
 import { createUser } from "../../../services";
 import { AppContext } from "../../../context";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
 const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -146,6 +147,7 @@ const RegisterPage = () => {
         >
           <span>Crear Cuenta</span>
         </LoadingButton>
+        <p className="register-page__form-container__link">¿Ya tienes una cuenta? <Link to={`/ingreso`}>Inicia Sesión</Link></p>
       </div>
     </div>
   );

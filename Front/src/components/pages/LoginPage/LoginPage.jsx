@@ -1,6 +1,6 @@
 import LoadingButton from "@mui/lab/LoadingButton/LoadingButton";
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "../../../context";
 import { validateUser } from "../../../services";
 import { TextField } from "@mui/material";
@@ -124,6 +124,7 @@ const LoginPage = () => {
           >
             <span>Ingresar</span>
           </LoadingButton>
+          <p className="login-page__form-container__link">¿Aún no tienes cuenta? <Link to={`/registro`}> Registrate </Link></p>
         </form>
         {error && <ErrorMessage />}
       </div>
