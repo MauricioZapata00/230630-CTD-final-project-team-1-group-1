@@ -8,11 +8,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin
 @RestController
 @RequestMapping("/puntuaciones")
 @Tag(name = "Puntuaciones")
@@ -20,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PuntuacionController {
 
+    @Autowired
     private final PuntuacionService puntuacionService;
 
     @PostMapping("/")

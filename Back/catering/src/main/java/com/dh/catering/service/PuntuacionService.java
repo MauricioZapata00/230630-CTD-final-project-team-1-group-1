@@ -10,6 +10,7 @@ import com.dh.catering.repository.PuntuacionRepository;
 import com.dh.catering.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,9 +20,11 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PuntuacionService {
-
+    @Autowired
     private final ProductoRepository productoRepository;
+    @Autowired
     private final UsuarioRepository usuarioRepository;
+    @Autowired
     private final PuntuacionRepository puntuacionRepository;
 
     public Optional<String> save(PuntuacionDto dto) throws RecursoNoEncontradoException {

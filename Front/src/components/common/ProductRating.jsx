@@ -5,7 +5,7 @@ import halfStarImage from '../../assets/halfEstrella.png';
 import emptyStarImage from '../../assets/emptyEstrella.png';
 import { submitRating } from "../../services";
 import { AppContext } from "../../context";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ProductRating = ({ ratings }) => {
     const {id}  = useParams()
@@ -13,7 +13,6 @@ const ProductRating = ({ ratings }) => {
     const [selectedRating, setSelectedRating] = useState(0)
     const { setError } = useContext(AppContext);
     
-
     const calculateAverageRating = () => {
 
         const totalRatings = ratings.length;
@@ -55,7 +54,7 @@ const ProductRating = ({ ratings }) => {
         setShowModal(false);
         setSelectedRating(0);
     };
-    ;
+    
     const handleSubmitRating = (rating, productoId) => {
         const data = {
             usuarioId: 1902,
@@ -66,6 +65,7 @@ const ProductRating = ({ ratings }) => {
             .then(() => {
                 console.log('Puntuación enviada:', rating);
                 handleCloseModal();
+                window.location.reload()
                 console.log(data);
             })
             .catch((error) => {
