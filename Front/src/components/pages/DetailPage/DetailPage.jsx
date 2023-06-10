@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { AppContext } from "../../../context";
 import { useContext, useEffect, useState } from "react";
 import ProductDetail from "../../common/ProductDetail";
-import { getProductDetail } from "../../../services";
+import { getProductDetail, getRatingProduct } from "../../../services";
 import ErrorMessage from "../../common/ErrorMessage";
 import { CircularProgress } from "@mui/material";
 
@@ -13,6 +13,7 @@ const DetailPage = () => {
 
   const [productDetail, setProductDetail] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [rating, setRating] = useState([]);
 
   useEffect(() => {
     setLoading(true);
@@ -27,6 +28,20 @@ const DetailPage = () => {
         setLoading(false);
       })
       .finally(() => setLoading(false));
+
+    getRatingProduct(id)
+    .then((response) => {
+      setRating(response.data);
+      console.log(response.data);
+    })
+    .catch((error) => {
+      const errorMsg = error?.response?.data?.description;
+      setError(errorMsg || "Ha ocurrido un error.");
+      setLoading(false);
+    })
+    .finally(() => setLoading(false));
+
+    
   }, [id, setError]);
 
   return (
@@ -35,7 +50,7 @@ const DetailPage = () => {
         {loading && <CircularProgress />}
       </div>
       {productDetail && (
-        <ProductDetail productDetail={productDetail} loading={loading} />
+        <ProductDetail productDetail={productDetail} loading={loading} rating={rating} />
       )}
       {!loading && !productDetail && (
         <div className="detail-page__empty">

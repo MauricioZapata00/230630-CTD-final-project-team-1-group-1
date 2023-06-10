@@ -29,3 +29,11 @@ export const getCategoryDetail = (id) => {
 export const deleteProduct = (id) => {
   return axios.delete(`${baseUrl}/productos/${id}`);
 };
+
+export const getRatingProduct = (id) => {
+  return axios.get(`${baseUrl}/puntuaciones/productos/${id}`);
+};
+
+export const submitRating = (data) => {
+  return axios.post(`${baseUrl}/puntuaciones/`, data);
+};

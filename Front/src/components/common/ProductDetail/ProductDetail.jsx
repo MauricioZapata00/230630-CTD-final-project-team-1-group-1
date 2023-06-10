@@ -10,16 +10,17 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 import ProductRating from "../ProductRating";
 
-const ProductDetail = ({ productDetail }) => {
+const ProductDetail = ({ productDetail , rating}) => {
 
   const [showModal, setShowModal] = useState(false)
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1);
   };
-
-  const productRatings = [4, 5, 3, 4, 5, 2, 3, 4, 5, 5, 5];
-  console.log(productRatings);
+  
+  //const productRatings = [4, 5, 3, 4, 5, 2, 3, 4, 5, 5, 5];
+  //console.log(productRatings);
+  console.log(rating);
   const {
     imagenUrl,
     nombre,
@@ -44,7 +45,8 @@ const ProductDetail = ({ productDetail }) => {
         <IconButton onClick={goBack} aria-label="volver">
           <ArrowBackIcon />
         </IconButton>
-        <ProductRating ratings={productRatings} />
+        
+        <ProductRating ratings={rating} />
       </div>
       <div className="product-detail__image-grid">
         <img className="product-detail__main-image" src={imagenUrl} alt="" />
