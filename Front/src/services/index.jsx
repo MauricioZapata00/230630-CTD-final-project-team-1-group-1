@@ -3,7 +3,7 @@ import axios from "axios";
 const baseUrl = import.meta.env.VITE_BASE_URI;
 
 export const createUser = (data) => {
-  return axios.post(`${baseUrl}/usuarios/`, data);
+  return axios.post(`${baseUrl}/usuarios/registrar`, data);
 };
 
 export const validateUser = (data) => {
