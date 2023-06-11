@@ -18,7 +18,7 @@ build_frontend:
 
 deploy_application_frontend:
   stage: deploy_front
-  needs: [build_front]
+  needs: [build_frontend]
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
   script:
     - echo "deploying frontend app ..."
@@ -45,7 +45,7 @@ build_backend:
 
 deploy_Backend:
   stage: deploy_back
-  needs: [build_back]
+  needs: [build_backend]
   image: alpine:3.11
   script:
     - ssh -i catering-key-c1.pem ubuntu@18.188.200.107 "cd backendApp/ pkill -f catering-0.0.1-SNAPSHOT.jar rm -rf catering-0.0.1-SNAPSHOT.jar"

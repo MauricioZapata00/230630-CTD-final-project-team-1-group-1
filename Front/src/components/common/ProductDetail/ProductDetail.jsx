@@ -1,7 +1,4 @@
 import PropTypes from "prop-types";
-import Rating from "@mui/material/Rating";
-import Stack from "@mui/material/Stack";
-import StarIcon from "@mui/icons-material/Star";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 import { useState } from "react";
 import { Button, Dialog, DialogActions } from "@mui/material";
@@ -10,15 +7,16 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 import ProductRating from "../ProductRating";
 
-const ProductDetail = ({ productDetail }) => {
+const ProductDetail = ({ productDetail, rating }) => {
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1);
   };
 
-  const productRatings = [4, 5, 3, 4, 5, 2, 3, 4, 5, 5, 5];
-  console.log(productRatings);
+  //const productRatings = [4, 5, 3, 4, 5, 2, 3, 4, 5, 5, 5];
+  //console.log(productRatings);
+  console.log(rating);
   const {
     imagenUrl,
     nombre,
@@ -42,7 +40,8 @@ const ProductDetail = ({ productDetail }) => {
         <IconButton onClick={goBack} aria-label="volver">
           <ArrowBackIcon />
         </IconButton>
-        <ProductRating ratings={productRatings} />
+
+        <ProductRating ratings={rating} />
       </div>
       <div className="product-detail__image-grid">
         <img className="product-detail__main-image" src={imagenUrl} alt="" />
@@ -151,6 +150,7 @@ ProductDetail.propTypes = {
     permiteCambios: PropTypes.bool.isRequired,
     requierePagoAnticipado: PropTypes.bool.isRequired,
   }).isRequired,
+  rating: PropTypes.arrayOf(PropTypes.number),
 };
 
 export default ProductDetail;
