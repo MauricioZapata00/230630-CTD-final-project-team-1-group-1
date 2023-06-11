@@ -8,11 +8,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/puntuaciones")
@@ -21,7 +21,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PuntuacionController {
 
-    @Autowired
     private final PuntuacionService puntuacionService;
 
     @PostMapping("/")
@@ -40,13 +39,13 @@ public class PuntuacionController {
 
     @GetMapping("/usuarios/{id}")
     @Operation(summary = "lista todas las puntuaciones del usuario")
-    public ResponseEntity<List<PuntuacionDto>> listarPorUsuario(@PathVariable Long id) {
+    public ResponseEntity<List<Integer>> listarPorUsuario(@PathVariable Long id) {
         return ResponseEntity.ok(puntuacionService.findAllByUsuarioId(id));
     }
 
     @GetMapping("/productos/{id}")
     @Operation(summary = "lista todas las puntuaciones del producto")
-    public ResponseEntity<List<PuntuacionDto>> listarPorProducto(@PathVariable Long id) {
+    public ResponseEntity<List<Integer>> listarPorProducto(@PathVariable Long id) {
         return ResponseEntity.ok(puntuacionService.findAllByProductoId(id));
     }
 }
