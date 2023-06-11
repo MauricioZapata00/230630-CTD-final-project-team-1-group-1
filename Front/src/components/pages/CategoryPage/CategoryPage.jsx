@@ -1,12 +1,16 @@
-import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { AppContext } from "../../../context";
-import { getCategoryDetail, getProductDetail } from "../../../services";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { getCategoryDetail } from "../../../services";
 import Products from "../../common/Products";
-import ErrorMessage from "../../common/ErrorMessage";
-import { Button, CircularProgress } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const CategoryPage = () => {
+  const navigate = useNavigate();
+  const goBack = () => {
+    navigate(-1);
+  };
+
   const [products, setProducts] = useState([]);
   const params = useParams();
   const [showAllProducts, setShowAllProducts] = useState(false);
@@ -35,10 +39,16 @@ const CategoryPage = () => {
 
   return (
     <div className="category-page">
-      <h2>
-        Productos de la categoría{" "}
-        {products.length > 0 ? products[0].nombreCategoria : ""}
-      </h2>
+      <div className="category-page__title">
+        <h2>
+          <span>Productos de la categoría</span>
+          <span>{products.length > 0 ? products[0].nombreCategoria : ""}</span>
+        </h2>
+
+        <IconButton onClick={goBack} aria-label="volver">
+          <ArrowBackIcon />
+        </IconButton>
+      </div>
       <div className="category-page__products">
         <Products products={visibleProducts} title="" />
       </div>
