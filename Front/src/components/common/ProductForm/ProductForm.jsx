@@ -1,4 +1,5 @@
 import {
+  Button,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -10,11 +11,12 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { useContext, useState } from "react";
 import { AppContext } from "../../../context";
 import axios from "axios";
 import { LoadingButton } from "@mui/lab";
-import { getCategories } from "../../../services";
+import { useNavigate } from "react-router-dom";
 
 const defaultProductData = {
   nombre: "",
@@ -36,10 +38,13 @@ const FORM_FILE_STRING_CONST = "imageFile";
 
 const FORM_OBJECT_STRING_CONST = "productoDto";
 
-const ProductForm = ({ productId = null, categories }) => {
-  const { setSuccess, setError } = useContext(AppContext);
+const ProductForm = ({ selectedProduct, categories }) => {
+  const { setSuccess, setError, logedUser } = useContext(AppContext);
+  const navigate = useNavigate();
 
-  const [product, setProduct] = useState(defaultProductData);
+  console.log({ logedUser });
+
+  const [product, setProduct] = useState(selectedProduct || defaultProductData);
   const [productImageURL, setProductImageURL] = useState("");
   const [file, setFile] = useState(null);
   const [stringImageUrl, setStringImageUrl] = useState("");
@@ -57,7 +62,7 @@ const ProductForm = ({ productId = null, categories }) => {
       return;
     }
 
-    if (name === "precio" && isProductPriceCorrect(event.target.value)) {
+    if (name === "precio" && isProductPriceCorrect(target.value)) {
       setProduct({ ...product, [name]: value });
       return;
     }
@@ -160,7 +165,7 @@ const ProductForm = ({ productId = null, categories }) => {
       });
     }
 
-    if (stringImageUrl.length === 0) {
+    if (!selectedProduct && stringImageUrl.length === 0) {
       newErrors.push({
         name: "imagenURL",
         message: "Debe cargar una imágen.",
@@ -173,30 +178,54 @@ const ProductForm = ({ productId = null, categories }) => {
       return;
     }
 
-    const data = { ...product, imagenUrl: stringImageUrl };
-    const formData = new FormData();
+    if (!selectedProduct) {
+      const data = { ...product, imagenUrl: stringImageUrl };
+      const formData = new FormData();
 
-    formData.append(FORM_FILE_STRING_CONST, file, stringImageUrl);
-    formData.append(FORM_OBJECT_STRING_CONST, JSON.stringify(data));
+      formData.append(FORM_FILE_STRING_CONST, file, stringImageUrl);
+      formData.append(FORM_OBJECT_STRING_CONST, JSON.stringify(data));
 
-    setSending(true);
-
-    axios
-      .post(import.meta.env.VITE_CREATE_PRODUCT_URI, formData, {
-        headers: {
-          "Content-Type": `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`,
-        },
-      })
-      .then(() => {
-        setSending(false);
-        resetData();
-        setSuccess("El producto se guardó correctamente.");
-      })
-      .catch((error) => {
-        setSending(false);
-        const errorMsg = error?.response?.data?.description;
-        setError(errorMsg || "Ha ocurrido un error.");
-      });
+      setSending(true);
+      axios
+        .post(import.meta.env.VITE_CREATE_PRODUCT_URI, formData, {
+          headers: {
+            "Content-Type": `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`,
+            Authorization: `Bearer ${logedUser.jwt}`,
+          },
+        })
+        .then(() => {
+          setSending(false);
+          resetData();
+          setSuccess("El producto se guardó correctamente.");
+        })
+        .catch((error) => {
+          setSending(false);
+          const errorMsg = error?.response?.data?.description;
+          setError(errorMsg || "Ha ocurrido un error.");
+        });
+    } else {
+      axios
+        .put(
+          `${import.meta.env.VITE_EDIT_PRODUCT_URI}/${selectedProduct.id}`,
+          product,
+          {
+            headers: {
+              // "Content-Type": `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`,
+              Authorization: `Bearer ${logedUser.jwt}`,
+            },
+          }
+        )
+        .then(() => {
+          setSending(false);
+          resetData();
+          setSuccess("El producto se guardó correctamente.");
+        })
+        .catch((error) => {
+          setSending(false);
+          const errorMsg = error?.response?.data?.description;
+          setError(errorMsg || "Ha ocurrido un error.");
+        });
+    }
   };
 
   return (
@@ -347,37 +376,55 @@ const ProductForm = ({ productId = null, categories }) => {
               />
             </FormGroup>
           </div>
-          <div className="form-control">
-            <InputLabel>Cargar imágen</InputLabel>
-            <input
-              className="input-file"
-              type="file"
-              id="input-product-image-id"
-              accept="image/png, image/jpeg"
-              value={productImageURL}
-              onChange={handleproductImageURLChage}
-            />
+          {!selectedProduct && (
+            <div className="form-control">
+              <InputLabel>Cargar imágen</InputLabel>
+              <input
+                className="input-file"
+                type="file"
+                id="input-product-image-id"
+                accept="image/png, image/jpeg"
+                value={productImageURL}
+                onChange={handleproductImageURLChage}
+              />
 
-            {!!hasError("imagenURL") && (
-              <p className="error">{hasError("imagenURL")}</p>
-            )}
+              {!!hasError("imagenURL") && (
+                <p className="error">{hasError("imagenURL")}</p>
+              )}
 
-            <div id={imageContainerId} className="preview"></div>
-          </div>
+              <div id={imageContainerId} className="preview"></div>
+            </div>
+          )}
         </div>
       </div>
-      <div className="form-control">
+      <div className="product-form__actions">
         <LoadingButton
           onClick={handleSubmit}
           loading={sending}
           variant="contained"
           disabled={sending}
         >
-          <span>Crear Producto</span>
+          <span> {selectedProduct ? "Editar" : "Crear"} Producto</span>
         </LoadingButton>
+        <Button onClick={() => navigate(-1)}>Cancelar</Button>
       </div>
     </div>
   );
+};
+
+ProductForm.propTypes = {
+  selectedProduct: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    imagenUrl: PropTypes.string.isRequired,
+    nombre: PropTypes.string.isRequired,
+    precio: PropTypes.number.isRequired,
+    descripcion: PropTypes.string.isRequired,
+    cantMin: PropTypes.number.isRequired,
+    minDiasReservaPrevia: PropTypes.number.isRequired,
+    permiteCambios: PropTypes.bool.isRequired,
+    requierePagoAnticipado: PropTypes.bool.isRequired,
+  }).isRequired,
+  categories: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 export default ProductForm;

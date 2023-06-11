@@ -10,7 +10,6 @@ const AdminCreateProduct = () => {
   const { setError } = useContext(AppContext);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
-
   const [categories, setCategories] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -48,7 +47,7 @@ const AdminCreateProduct = () => {
         )}
 
         {!loading && categories?.length > 0 && (
-          <ProductForm categories={categories} />
+          <ProductForm categories={categories} selectedProduct={null} />
         )}
 
         {!loading && categories?.length === 0 && (

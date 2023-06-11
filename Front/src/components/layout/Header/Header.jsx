@@ -6,7 +6,6 @@ import { AppContext } from "../../../context";
 import PropTypes from "prop-types";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LoginIcon from "@mui/icons-material/Login";
-import { buildUserData } from "../../../helpers/buidlUserDAta";
 
 const Header = ({ admin = false }) => {
   const navigateTo = useNavigate();
@@ -47,16 +46,13 @@ const Header = ({ admin = false }) => {
     const logedUserData = localStorage.getItem("logedUser");
     if (logedUserData) {
       const userData = JSON.parse(logedUserData);
-      buildUserData(userData.dto);
-      setLogedUser(JSON.parse(logedUserData));
+      setLogedUser(userData);
+      console.log(userData);
+      if (admin && userData?.rolName !== "ADMIN") {
+        navigateTo("/");
+      }
     }
-  }, [setLogedUser]);
-
-  useEffect(() => {
-    if (admin && logedUser?.rolName !== "ADMIN") {
-      navigateTo("/");
-    }
-  }, [admin, logedUser, navigateTo]);
+  }, [admin, navigateTo, setLogedUser]);
 
   return (
     <>
