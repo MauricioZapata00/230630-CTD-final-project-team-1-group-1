@@ -7,6 +7,7 @@ import com.dh.catering.service.JwtService;
 import com.dh.catering.service.UsuarioService;
 import com.dh.catering.dto.LoginDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,13 +36,13 @@ import java.util.Map;
 public class UsuarioController {
 
     @Autowired
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
     @Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
 
     @PostMapping("/registrar")
     @Operation(summary = "registrar un usuario")
@@ -52,14 +53,14 @@ public class UsuarioController {
     }
 
     @GetMapping("/todos")
-    @Operation(summary = "Listar todos los usuarios")
+    @Operation(summary = "Listar todos los usuarios", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<UsuarioDto>> listar() {
         return ResponseEntity.ok(usuarioService.listar());
     }
 
     @GetMapping("/rolId/{id}")
-    @Operation(summary = "Listar todos los usuarios por el id de su rol")
+    @Operation(summary = "Listar todos los usuarios por el id de su rol", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<UsuarioDto>> listarTodosPorRolId(@PathVariable Long id) {
         return ResponseEntity.ok(usuarioService.findAllByRolId(id));
@@ -84,7 +85,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/eliminar/{id}")
-    @Operation(summary = "Eliminar un usuario por su id")
+    @Operation(summary = "Eliminar un usuario por su id", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public ResponseEntity<String> eliminarPorId(@PathVariable Long id) throws RecursoNoEncontradoException {
         return usuarioService.deleteById(id)
@@ -93,7 +94,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/actualizar/{id}")
-    @Operation(summary = "Actualizar un usuario por su id")
+    @Operation(summary = "Actualizar un usuario por su id", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public ResponseEntity<String> actualizarPorId(@PathVariable Long id,@RequestBody UsuarioDto usuarioDto) throws RecursoNoEncontradoException, DuplicadoException {
         return usuarioService.updateById(id,usuarioDto)

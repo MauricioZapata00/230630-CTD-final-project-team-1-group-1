@@ -10,6 +10,7 @@ import com.dh.catering.service.RolService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class RolController {
     private ObjectMapper mapper;
 
     @PostMapping("/registrar")
-    @Operation(summary = "Registrar un rol")
+    @Operation(summary = "Registrar un rol", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> registrar(@RequestBody RolDto rolDto) throws NombreDuplicadoException {
         return rolService.save(rolDto)
@@ -43,14 +44,14 @@ public class RolController {
     }
 
     @GetMapping("/todos")
-    @Operation(summary = "Listar todos los roles")
+    @Operation(summary = "Listar todos los roles", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<RolDto>> listarTodos(){
         return ResponseEntity.ok(rolService.findAll());
     }
 
     @GetMapping("/id/{id}")
-    @Operation(summary = "buscar rol por su id")
+    @Operation(summary = "buscar rol por su id", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<RolDto> buscarPorId(@PathVariable Long id) throws RecursoNoEncontradoException {
         return rolService.getById(id)
@@ -59,7 +60,7 @@ public class RolController {
     }
 
     @GetMapping("/nombre/{nombre}")
-    @Operation(summary = "buscar rol por su nombre")
+    @Operation(summary = "buscar rol por su nombre", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<RolDto> buscarPorNombre(@PathVariable String nombre) throws RecursoNoEncontradoException {
         return rolService.getByNombre(nombre)
@@ -68,7 +69,7 @@ public class RolController {
     }
 
     @DeleteMapping("/eliminar/{id}")
-    @Operation(summary = "Eliminar un rol por su id")
+    @Operation(summary = "Eliminar un rol por su id", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> eliminarPorId(@PathVariable Long id) throws RecursoNoEncontradoException, AsignacionException {
         return rolService.deleteById(id)
@@ -77,7 +78,7 @@ public class RolController {
     }
 
     @PutMapping("/eliminar/{id}")
-    @Operation(summary = "Actualizar un rol por su id")
+    @Operation(summary = "Actualizar un rol por su id", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> actualizarPorId(@PathVariable Long id,@RequestBody RolDto rolDto) throws RecursoNoEncontradoException, NombreDuplicadoException, AsignacionException {
         return rolService.updateById(id,rolDto)

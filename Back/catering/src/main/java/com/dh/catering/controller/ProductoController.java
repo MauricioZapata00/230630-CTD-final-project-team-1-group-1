@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.json.JSONParser;
@@ -33,7 +34,7 @@ public class ProductoController {
     ObjectMapper mapper = new ObjectMapper();
 
     @PostMapping(value = "/registrar", consumes = {"multipart/form-data", "application/octet-stream"})
-    @Operation(summary = "Registrar un producto")
+    @Operation(summary = "Registrar un producto", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> registrar(@RequestParam("productoDto") String productoDto,
                                             @RequestParam("imageFile")MultipartFile archivoImagen) throws NombreDuplicadoException, JsonProcessingException, ParseException, RecursoNoEncontradoException {
@@ -78,7 +79,7 @@ public class ProductoController {
     }
 
     @DeleteMapping("/eliminar/{id}")
-    @Operation(summary = "Eliminar un producto por id")
+    @Operation(summary = "Eliminar un producto por id", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> eliminarPorId(@PathVariable Long id) throws RecursoNoEncontradoException{
         return productoService.deleteById(id)
@@ -87,7 +88,7 @@ public class ProductoController {
     }
 
     @PutMapping(value = "/actualizar/{id}", consumes = {"multipart/form-data", "application/octet-stream"})
-    @Operation(summary = "Actualizar un producto por su id")
+    @Operation(summary = "Actualizar un producto por su id", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> actualizarPorId(@PathVariable Long id,@RequestParam("productoDto") String productoDto, @RequestParam("imageFile")MultipartFile archivoImagen) throws NombreDuplicadoException, RecursoNoEncontradoException, JsonProcessingException {
         ProductoDto dtoObtenido = mapper.readValue(productoDto, ProductoDto.class);
