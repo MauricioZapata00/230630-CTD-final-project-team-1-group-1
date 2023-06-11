@@ -6,7 +6,7 @@ import { deleteProduct } from "../../../services";
 import { useContext, useState } from "react";
 import { AppContext } from "../../../context";
 
-// import { useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 const ProductItem = ({ product }) => {
   const { setError, setSuccess } = useContext(AppContext);
@@ -15,10 +15,10 @@ const ProductItem = ({ product }) => {
   const [itemDeleted, setItemDeleted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  const handleClickNavigate = () => {
-    // navigate(`/detalle/${id}`);
+  const handleClickEdit = () => {
+    navigate(`/admin/editar-producto/${id}`);
   };
 
   const handleClickDelete = () => {
@@ -37,16 +37,20 @@ const ProductItem = ({ product }) => {
   };
 
   return !itemDeleted ? (
-    <div onClick={handleClickNavigate} className="product-item">
+    <div className="product-item">
       <div className="product-item__image-container">
         <img src={imagenUrl} alt={nombre} />
       </div>
       <div className="product-item__info">
-        <p>{nombre}</p>
-        <p>$ {precio}</p>
+        <p className="product-item__name">{nombre}</p>
+        <p className="product-item__price">$ {precio}</p>
       </div>
       <div className="product-item__actions">
-        <IconButton aria-label="Editar" color="primary">
+        <IconButton
+          onClick={handleClickEdit}
+          aria-label="Editar"
+          color="primary"
+        >
           <EditIcon />
         </IconButton>
         <IconButton

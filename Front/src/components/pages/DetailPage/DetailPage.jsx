@@ -12,12 +12,10 @@ const DetailPage = () => {
   const { error, setError } = useContext(AppContext);
 
   const [productDetail, setProductDetail] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [rating, setRating] = useState([]);
 
   useEffect(() => {
-    setLoading(true);
-
     getProductDetail(id)
       .then((response) => {
         setProductDetail(response.data);
@@ -30,18 +28,16 @@ const DetailPage = () => {
       .finally(() => setLoading(false));
 
     getRatingProduct(id)
-    .then((response) => {
-      setRating(response.data);
-      console.log(response.data);
-    })
-    .catch((error) => {
-      const errorMsg = error?.response?.data?.description;
-      setError(errorMsg || "Ha ocurrido un error.");
-      setLoading(false);
-    })
-    .finally(() => setLoading(false));
-
-    
+      .then((response) => {
+        setRating(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        const errorMsg = error?.response?.data?.description;
+        setError(errorMsg || "Ha ocurrido un error.");
+        setLoading(false);
+      })
+      .finally(() => setLoading(false));
   }, [id, setError]);
 
   return (
@@ -50,7 +46,11 @@ const DetailPage = () => {
         {loading && <CircularProgress />}
       </div>
       {productDetail && (
-        <ProductDetail productDetail={productDetail} loading={loading} rating={rating} />
+        <ProductDetail
+          productDetail={productDetail}
+          loading={loading}
+          rating={rating}
+        />
       )}
       {!loading && !productDetail && (
         <div className="detail-page__empty">

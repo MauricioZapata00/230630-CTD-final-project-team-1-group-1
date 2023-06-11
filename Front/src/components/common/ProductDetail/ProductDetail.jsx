@@ -1,7 +1,4 @@
 import PropTypes from "prop-types";
-import Rating from "@mui/material/Rating";
-import Stack from "@mui/material/Stack";
-import StarIcon from "@mui/icons-material/Star";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 import { useState } from "react";
 import { Button, Dialog, DialogActions } from "@mui/material";
@@ -10,14 +7,13 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 import ProductRating from "../ProductRating";
 
-const ProductDetail = ({ productDetail , rating}) => {
-
-  const [showModal, setShowModal] = useState(false)
+const ProductDetail = ({ productDetail, rating }) => {
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1);
   };
-  
+
   //const productRatings = [4, 5, 3, 4, 5, 2, 3, 4, 5, 5, 5];
   //console.log(productRatings);
   console.log(rating);
@@ -41,11 +37,10 @@ const ProductDetail = ({ productDetail , rating}) => {
         <h1 className="product-detail__title">{nombre}</h1>
       </div>
       <div className="product-detail__rating">
-
         <IconButton onClick={goBack} aria-label="volver">
           <ArrowBackIcon />
         </IconButton>
-        
+
         <ProductRating ratings={rating} />
       </div>
       <div className="product-detail__image-grid">
@@ -74,8 +69,11 @@ const ProductDetail = ({ productDetail , rating}) => {
             <Button onClick={handleCloseModal}>Cerrar</Button>
           </DialogActions>
           <div className="product-detail__image-grid">
-
-            <img className="product-detail__main-image" src={imagenUrl} alt="" />
+            <img
+              className="product-detail__main-image"
+              src={imagenUrl}
+              alt=""
+            />
             <img
               src={imagenUrl}
               className="product-detail__image-selected"
@@ -96,7 +94,14 @@ const ProductDetail = ({ productDetail , rating}) => {
           </div>
         </Dialog>
       )}
-      <Button onClick={() => setShowModal(true)}>Ver mas</Button>
+
+      <Button
+        variant="contained"
+        className="product-detail__button-verMas"
+        onClick={() => setShowModal(true)}
+      >
+        Ver mas
+      </Button>
 
       <div>
         <p className="product-detail__description">{descripcion}</p>
@@ -145,6 +150,7 @@ ProductDetail.propTypes = {
     permiteCambios: PropTypes.bool.isRequired,
     requierePagoAnticipado: PropTypes.bool.isRequired,
   }).isRequired,
+  rating: PropTypes.arrayOf(PropTypes.number),
 };
 
 export default ProductDetail;

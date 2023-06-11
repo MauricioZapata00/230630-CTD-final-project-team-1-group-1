@@ -51,24 +51,16 @@ public class PuntuacionService {
                         .build()).toList();
     }
 
-    public List<PuntuacionDto> findAllByUsuarioId(Long usuarioId) {
+    public List<Integer> findAllByUsuarioId(Long usuarioId) {
         return puntuacionRepository.findAllByUsuarioId(usuarioId)
                 .stream()
-                .map(puntuacion -> PuntuacionDto.builder()
-                        .usuarioId(puntuacion.getUsuario().getId())
-                        .productoId(puntuacion.getProducto().getId())
-                        .nota(puntuacion.getNota())
-                        .build()).toList();
+                .map(Puntuacion::getNota).toList();
     }
 
-    public List<PuntuacionDto> findAllByProductoId(Long productoId) {
+    public List<Integer> findAllByProductoId(Long productoId) {
         return puntuacionRepository.findAllByProductoId(productoId)
                 .stream()
-                .map(puntuacion -> PuntuacionDto.builder()
-                        .usuarioId(puntuacion.getUsuario().getId())
-                        .productoId(puntuacion.getProducto().getId())
-                        .nota(puntuacion.getNota())
-                        .build()).toList();
+                .map(Puntuacion::getNota).toList();
     }
 }
 

@@ -9,7 +9,8 @@
 @import "./pages/adminListProducts";
 @import "./pages/adminCreateProduct";
 @import "./pages/categoryPage";
-@import "./pages/userPage";   
+@import "./pages/userPage";  
+@import "./pages/adminEditProduct";  
 //COMMON   
 @import "./common/search";
 @import "./common/categories";
@@ -23,6 +24,7 @@
 @import "./common/productDetail";
 @import "./common/carousel";
 @import "./common/pagination";
+@import "./common/productForm";
 
 
 
