@@ -19,7 +19,7 @@ const AdminListProducts = () => {
 
   useEffect(() => {
     setLoading(true);
-    getProducts()
+    getProducts(1)
       .then((response) => {
         setProducts(response.data);
       })
