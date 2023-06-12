@@ -12,7 +12,7 @@ const ProductRating = ({ ratings }) => {
   const { id } = useParams();
   const [showModal, setShowModal] = useState(false);
   const [selectedRating, setSelectedRating] = useState(0);
-  const { setError } = useContext(AppContext);
+  const { setError ,logedUser, setLogedUser } = useContext(AppContext);
 
   const calculateAverageRating = () => {
     const totalRatings = ratings? ratings.length : 0;
@@ -97,7 +97,9 @@ const ProductRating = ({ ratings }) => {
   return (
     <div>
       <div>
-        <Button onClick={() => setShowModal(true)}>Calificar</Button>{" "}
+        {logedUser && (
+            <Button onClick={() => setShowModal(true)}>Calificar</Button>
+        )}
         {averageRating}
       </div>
       <span>{starRating}</span>
