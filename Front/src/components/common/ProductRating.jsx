@@ -15,9 +15,9 @@ const ProductRating = ({ ratings }) => {
   const { setError } = useContext(AppContext);
 
   const calculateAverageRating = () => {
-    const totalRatings = ratings.length;
-    const sumRatings = ratings.reduce((acc, rating) => acc + rating, 0);
-    const averageRating = (sumRatings / totalRatings).toFixed(1);
+    const totalRatings = ratings? ratings.length : 0;
+    const sumRatings = ratings? ratings.reduce((acc, rating) => acc + rating, 0) : 0;
+    const averageRating = ratings? (sumRatings / totalRatings).toFixed(1) : '';
 
     return { averageRating, totalRatings };
   };

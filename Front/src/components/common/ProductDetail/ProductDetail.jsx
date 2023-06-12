@@ -1,13 +1,15 @@
 import PropTypes from "prop-types";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Dialog, DialogActions } from "@mui/material";
 import { IconButton } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 import ProductRating from "../ProductRating";
+import { AppContext } from "../../../context";
 
-const ProductDetail = ({ productDetail, rating }) => {
+const ProductDetail = ({ productDetail}) => {
+  const { rating} = useContext(AppContext);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const goBack = () => {
