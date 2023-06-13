@@ -176,7 +176,6 @@ public class UsuarioService {
 
         mensaje = "Se habilito exitosamente al usuario!";
 
-        //ToDo: enviar correo de confirmacion.
         emailService.send(optionalTokenConfirmacionCorreo.get().getUsuario().getEmail(),
                 confirmEmail(optionalTokenConfirmacionCorreo.get().getUsuario().getNombre()));
 
