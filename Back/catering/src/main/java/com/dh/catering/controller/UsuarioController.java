@@ -121,4 +121,11 @@ public class UsuarioController {
             throw new BadCredentialsException("Credenciales incorrectas!");
         }
     }
+
+    @GetMapping("/confirmar/{token}")
+    public ResponseEntity<String> confirmarUsuario(@PathVariable String token) throws RecursoNoEncontradoException, DuplicadoException {
+        return usuarioService.confirmarToken(token)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.badRequest().build());
+    }
 }

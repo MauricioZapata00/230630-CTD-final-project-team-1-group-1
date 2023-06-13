@@ -38,6 +38,9 @@ public class Usuario {
     @JoinColumn(name = "rol_id")
     private Rol rol;
 
+    @Column
+    private Boolean estaHabilitado = false;
+
     public Usuario(String nombre, String apellido, String contrasena, String email, Rol rol) {
         this.nombre = nombre;
         this.apellido = apellido;
