@@ -210,8 +210,7 @@ const ProductForm = ({ selectedProduct, categories }) => {
         .put(`${baseUrl}/productos/actualizar/${selectedProduct.id}`, product, {
           headers: {
             // "Content-Type": `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`,
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbmlzdHJhZG9yQGdtYWlsLmNvbSIsImlhdCI6MTY4NjY1ODIxNiwiZXhwIjoxNjg2NjYwMDE2fQ.4ZSBP0rllyCsnd7WLmLm76PBYL4wWZpln-PE93XSIX4",
+            Authorization: `Bearer ${logedUser.jwt}`,
           },
         })
         .then(() => {

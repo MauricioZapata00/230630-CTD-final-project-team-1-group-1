@@ -12,7 +12,7 @@ const AdminListProducts = () => {
   const navigateTo = useNavigate();
 
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [currentPageAdm, setCurrentPageAdm] = useState(0);
 
   const handleAddProductClick = () => {
@@ -20,7 +20,6 @@ const AdminListProducts = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
     getProducts(currentPageAdm)
       .then((response) => {
         setProducts(response.data);

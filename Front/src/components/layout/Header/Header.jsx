@@ -47,7 +47,6 @@ const Header = ({ admin = false }) => {
     if (logedUserData) {
       const userData = JSON.parse(logedUserData);
       setLogedUser(userData);
-      console.log(userData);
       if (admin && userData?.rolName !== "ADMIN") {
         navigateTo("/");
       }
