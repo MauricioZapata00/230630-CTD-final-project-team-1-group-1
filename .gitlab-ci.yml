@@ -11,9 +11,6 @@ build_frontend:
     - npm install --save-dev
     - npm run build
     - echo "Frontend Build successfully!  :D"
-  rules:
-    - changes:
-      - Front/*
   only:
     - release
     - fix/broken-pipelines
@@ -30,9 +27,6 @@ build_backend:
   artifacts:
     paths:
       - Back/catering/target/catering-0.0.1-SNAPSHOT.jar
-  rules:
-    - changes:
-      - Back/**/*
   only:
     - release
     - fix/broken-pipelines
@@ -46,15 +40,12 @@ deploy_application_frontend:
     - cd Front/
     - aws s3 cp -r dist/* s3://equipo1-c1-bucket-frontend
     - echo "Frontend deploy successfully!  :D"
-  rules:
-    - changes:
-      - Front/*
   only:
     - release
     - fix/broken-pipelines
 
 deploy_Backend:
-  stage: deploy_back
+  stage: deploy
   needs: [build]
   image: alpine:3.11
   script:
