@@ -9,6 +9,7 @@ import com.dh.catering.repository.RolRepository;
 import com.dh.catering.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +24,8 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class UsuarioService {
-
-    private static final String MSJ_NO_ENCONTRADO = "No existe un usuario con el correo: %s";
-    private static final String MSJ_NO_VALIDO = "La contrase\u00f1a es incorrecta, intentelo de nuevo.";
 
     @Autowired
     private final UsuarioRepository usuarioRepository;

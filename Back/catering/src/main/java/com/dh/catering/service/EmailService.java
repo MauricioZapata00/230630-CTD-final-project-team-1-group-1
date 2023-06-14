@@ -25,12 +25,12 @@ public class EmailService {
                     new MimeMessageHelper(mimeMessage, "utf-8");
             helper.setText(email, true);
             helper.setTo(to);
-            helper.setSubject("Confirma tu email");
-            helper.setFrom("validacion@catering.com");
+            helper.setSubject("Confirmacion de email");
+            helper.setFrom("cateringapplicationservice@gmail.com");
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             log.error("fallo el envio de email", e);
-            throw new IllegalStateException("fallo el envio de email");
+            throw new IllegalStateException("fallo el envio de email", e);
         }
 
     }

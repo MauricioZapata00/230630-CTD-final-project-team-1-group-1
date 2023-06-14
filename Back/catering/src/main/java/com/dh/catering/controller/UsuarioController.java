@@ -123,6 +123,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/confirmar/{token}")
+    @Operation(summary = "activar usuario")
     public ResponseEntity<String> confirmarUsuario(@PathVariable String token) throws RecursoNoEncontradoException, DuplicadoException {
         return usuarioService.confirmarToken(token)
                 .map(ResponseEntity::ok)

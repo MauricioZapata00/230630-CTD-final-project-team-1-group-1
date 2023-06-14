@@ -1,5 +1,7 @@
 package com.dh.catering.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +13,8 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Entity
+@Table(name = "tokenConfirmacionCorreo")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 public class TokenConfirmacionCorreo {
 
     @Id
@@ -29,7 +33,7 @@ public class TokenConfirmacionCorreo {
     private LocalDateTime confirmedAt;
 
     @ManyToOne
-    @JoinColumn(nullable = false, name = "usuario_id")
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
     public TokenConfirmacionCorreo(String token, LocalDateTime createdAt, LocalDateTime expiresAt, Usuario usuario) {

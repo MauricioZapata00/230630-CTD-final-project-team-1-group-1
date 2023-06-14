@@ -3,6 +3,7 @@ package com.dh.catering.service;
 import com.dh.catering.domain.TokenConfirmacionCorreo;
 import com.dh.catering.repository.TokenConfirmacionCorreoRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -12,7 +13,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class TokenConfirmacionCorreoService {
 
-    private final TokenConfirmacionCorreoRepository tokenConfirmacionCorreoRepository;
+    @Autowired
+    private TokenConfirmacionCorreoRepository tokenConfirmacionCorreoRepository;
 
     public void saveConfirmationToken(TokenConfirmacionCorreo token) {
         tokenConfirmacionCorreoRepository.save(token);
