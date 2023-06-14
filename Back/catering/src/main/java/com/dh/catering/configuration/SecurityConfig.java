@@ -40,7 +40,7 @@ public class SecurityConfig {
                         "/productos/todos","/productos/nombre/{nombre}","/productos/id/{id}","/productos/categoriaId/{id}",
                         "/categorias/todos","/categorias/nombre/{nombre}","/categorias/id/{id}", "/puntuaciones/**").permitAll()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/usuarios/**","/roles/**","/productos/**","/categorias/**", "/puntuaciones/**")
+                .authorizeHttpRequests().requestMatchers("/usuarios/**","/roles/**","/productos/**","/categorias/**")
                 .authenticated().and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

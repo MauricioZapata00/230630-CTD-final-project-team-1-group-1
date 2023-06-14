@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/puntuaciones")
 @Tag(name = "Puntuaciones")
@@ -38,13 +39,13 @@ public class PuntuacionController {
 
     @GetMapping("/usuarios/{id}")
     @Operation(summary = "lista todas las puntuaciones del usuario")
-    public ResponseEntity<List<PuntuacionDto>> listarPorUsuario(@PathVariable Long id) {
+    public ResponseEntity<List<Integer>> listarPorUsuario(@PathVariable Long id) {
         return ResponseEntity.ok(puntuacionService.findAllByUsuarioId(id));
     }
 
     @GetMapping("/productos/{id}")
     @Operation(summary = "lista todas las puntuaciones del producto")
-    public ResponseEntity<List<PuntuacionDto>> listarPorProducto(@PathVariable Long id) {
+    public ResponseEntity<List<Integer>> listarPorProducto(@PathVariable Long id) {
         return ResponseEntity.ok(puntuacionService.findAllByProductoId(id));
     }
 }

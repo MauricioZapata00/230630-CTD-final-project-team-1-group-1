@@ -4,14 +4,16 @@ import { useNavigate } from "react-router";
 import { getProducts } from "../../../services";
 import { AppContext } from "../../../context";
 import ProductsList from "../../common/ProductsList";
+import Pagination from "../../common/Pagination";
 
 const AdminListProducts = () => {
   const { setError } = useContext(AppContext);
 
   const navigateTo = useNavigate();
 
-  const [products, setProducts] = useState(null);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [currentPageAdm, setCurrentPageAdm] = useState(0);
 
   const handleAddProductClick = () => {
     navigateTo("/admin/crear-producto");
@@ -19,7 +21,7 @@ const AdminListProducts = () => {
 
   useEffect(() => {
     setLoading(true);
-    getProducts()
+    getProducts(currentPageAdm)
       .then((response) => {
         setProducts(response.data);
       })
@@ -28,7 +30,15 @@ const AdminListProducts = () => {
         setError(errorMsg || "Ha ocurrido un error.");
       })
       .finally(() => setLoading(false));
-  }, [setError]);
+  }, [currentPageAdm, setError]);
+
+  const handleNextPage = () => {
+    setCurrentPageAdm((prevPage) => prevPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPageAdm((prevPage) => prevPage - 1);
+  };
 
   return (
     <div className="admin-list-products">
@@ -40,6 +50,11 @@ const AdminListProducts = () => {
           </Button>
         </div>
         <ProductsList products={products} loading={loading} />
+        <Pagination
+          currentPage={currentPageAdm}
+          handleNextPage={handleNextPage}
+          handlePrevPage={handlePrevPage}
+        />
       </div>
     </div>
   );

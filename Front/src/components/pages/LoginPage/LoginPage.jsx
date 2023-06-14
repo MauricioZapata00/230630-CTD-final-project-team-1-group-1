@@ -1,14 +1,15 @@
 import LoadingButton from "@mui/lab/LoadingButton/LoadingButton";
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "../../../context";
 import { validateUser } from "../../../services";
 import { TextField } from "@mui/material";
 import ErrorMessage from "../../common/ErrorMessage";
+import { buildUserData } from "../../../helpers/buidlUserData";
 
 const LoginPage = () => {
   const navigateTo = useNavigate();
-  const { setLogedUser, error, setError, userData, setUserData } = useContext(AppContext);
+  const { setLogedUser, error, setError } = useContext(AppContext);
 
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
@@ -54,29 +55,25 @@ const LoginPage = () => {
     try {
       const response = await validateUser({ email, contrasena });
 
-      console.log({ response });
-      
-      const userData = response?.data || {};
-      setUserData(response.data)
+      const responseData = response?.data || {};
+      const userData = buildUserData(responseData.dto);
 
       const firstLetter = email.charAt(0).toUpperCase();
       const username = email.split("@")[0];
       const logedUser = {
         userName: username,
         avatar: firstLetter,
-        isAdmin: true,
         ...userData,
+        ...responseData,
       };
-      console.log(userData);
+      console.log({ logedUser });
       setLogedUser(logedUser);
       localStorage.setItem("logedUser", JSON.stringify(logedUser));
       setSending(false);
       navigateTo("/");
-      console.log("Inicio de sesión exitoso");
     } catch (error) {
       setError("Email y/o contraseña incorrectos");
       setSending(false);
-      console.error("Error al iniciar sesión", error);
     }
   };
 
@@ -124,6 +121,9 @@ const LoginPage = () => {
           >
             <span>Ingresar</span>
           </LoadingButton>
+          <p className="login-page__form-container__link">
+            ¿Aún no tienes cuenta? <Link to={`/registro`}> Registrate </Link>
+          </p>
         </form>
         {error && <ErrorMessage />}
       </div>

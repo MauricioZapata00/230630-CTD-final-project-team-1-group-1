@@ -1,0 +1,30 @@
+.pagination{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: $primary-font;
+    margin: 0.8rem 0 ;
+
+    button{
+        padding: 0.5rem;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+
+        &:hover{
+            background-color: #cccccca6 ;
+        }
+    }
+
+    span{
+        padding: 0.5rem;
+        border-color: beige;
+        background-color: rgba(0,0,0,.04);
+        color: rgba(0, 0, 0, 0.63);
+        font-weight: 600;
+        border-radius:1px;
+        margin: 0 0.2rem
+    }
+
+    
+}

@@ -5,6 +5,7 @@
     width: 100%;
     padding: 10px;
     border-bottom: 1px solid silver;
+    gap: 20px;
 
     &:hover {
         background-color: $gray;
@@ -30,6 +31,22 @@
         @media (max-width: 800px) {
             flex-direction: column;
             gap: 10px;
+        }
+    }
+
+    &__name {
+        flex: 1;
+    }
+
+    &__price {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        width: 100px;
+
+        @media (max-width: 800px) {
+            flex: 1;
+            width: unset;
         }
     }
 
