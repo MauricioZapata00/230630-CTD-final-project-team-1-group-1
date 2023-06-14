@@ -11,24 +11,16 @@ build_frontend:
     - npm install --save-dev
     - npm run build
     - echo "Frontend Build successfully!  :D"
+  rules:
+    - changes:
+      - Front/*
   only:
     - release
-
-deploy_application_frontend:
-  stage: deploy_front
-  needs: [build_frontend]
-  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
-  script:
-    - echo "deploying frontend app ..."
-    - cd Front/
-    - aws s3 cp -r dist/* s3://equipo1-c1-bucket-frontend
-    - echo "Frontend deploy successfully!  :D"
-  only:
-    - release
+    - fix/broken-pipelines
 
 build_backend:
   stage: build
-  image: maven:3.8.6-openjdk-18
+  image: maven:3.8.3-openjdk-17
   script:
     - cd Back/catering
     - echo "Building app..."
@@ -37,9 +29,29 @@ build_backend:
     - echo "Finished building backend app :D"
   artifacts:
     paths:
-      - BackEnd/Proyecto_Integrador_G2/target/Proyecto_Integrador_G2-0.0.1-SNAPSHOT.jar
+      - Back/catering/target/catering-0.0.1-SNAPSHOT.jar
+  rules:
+    - changes:
+      - Back/**/*
   only:
     - release
+    - fix/broken-pipelines
+
+deploy_application_frontend:
+  stage: deploy
+  needs: [build]
+  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+  script:
+    - echo "deploying frontend app ..."
+    - cd Front/
+    - aws s3 cp -r dist/* s3://equipo1-c1-bucket-frontend
+    - echo "Frontend deploy successfully!  :D"
+  rules:
+    - changes:
+      - Front/*
+  only:
+    - release
+    - fix/broken-pipelines
 
 deploy_Backend:
   stage: deploy_back
@@ -52,3 +64,4 @@ deploy_Backend:
     - echo "Finished deploying backend app :D"
   only:
     - release
+    - fix/broken-pipelines
