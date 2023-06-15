@@ -209,7 +209,7 @@ const ProductForm = ({ selectedProduct, categories }) => {
       axios
         .put(`${baseUrl}/productos/actualizar/${selectedProduct.id}`, product, {
           headers: {
-            // "Content-Type": `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`,
+            "Content-Type": `multipart/form-data; charset=utf-8`,
             Authorization: `Bearer ${logedUser.jwt}`,
           },
         })
