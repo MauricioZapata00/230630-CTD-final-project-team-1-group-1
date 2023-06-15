@@ -212,7 +212,7 @@ const ProductForm = ({ selectedProduct, categories }) => {
       formData.append(FORM_FILE_STRING_CONST, file, stringImageUrl);
       formData.append(FORM_OBJECT_STRING_CONST, JSON.stringify(data));
       axios
-        .put(`${baseUrl}/productos/actualizar/${selectedProduct.id}`, product, {
+        .put(`${baseUrl}/productos/actualizar/${selectedProduct.id}`, formData, {
           headers: {
             "Content-Type": `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`,
             Authorization: `Bearer ${logedUser.jwt}`,
