@@ -17,6 +17,8 @@ public class UserEntityToUserDetails implements UserDetails {
     private String password;
     private List<GrantedAuthority> authorities;
 
+    private Boolean estaHabilitado;
+
     private List<String> roles = new ArrayList<>();
     public UserEntityToUserDetails(Usuario usuario) {
         email= usuario.getEmail();
@@ -25,6 +27,7 @@ public class UserEntityToUserDetails implements UserDetails {
         authorities= roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
+        estaHabilitado= usuario.getEstaHabilitado();
     }
 
     @Override
@@ -59,6 +62,6 @@ public class UserEntityToUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return estaHabilitado;
     }
 }

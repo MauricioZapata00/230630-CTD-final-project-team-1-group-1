@@ -8,6 +8,7 @@ import com.dh.catering.service.CategoriaProductoService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class CategoriaProductoController {
     private ObjectMapper mapper;
 
     @PostMapping(value = "/registrar", consumes = {"multipart/form-data", "application/octet-stream"})
-    @Operation(summary = "Registrar una categoria")
+    @Operation(summary = "Registrar una categoria", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> registrar(@RequestParam("categoriaDto")String categoriaProductoDto,
                                             @RequestParam("imgFile")MultipartFile multipartFile) throws JsonProcessingException, NombreDuplicadoException {
@@ -64,7 +65,7 @@ public class CategoriaProductoController {
     }
 
     @DeleteMapping("/eliminar/{id}")
-    @Operation(summary = "Eliminar una categoria por su id")
+    @Operation(summary = "Eliminar una categoria por su id", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> eliminarPorId(@PathVariable Long id) throws RecursoNoEncontradoException, AsignacionException {
         return categoriaProductoService.deleteById(id)
@@ -73,7 +74,7 @@ public class CategoriaProductoController {
     }
 
     @PutMapping(value = "/actualizar/{id}", consumes = {"multipart/form-data", "application/octet-stream"})
-    @Operation(summary = "Actualizar una categoria por su id")
+    @Operation(summary = "Actualizar una categoria por su id", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> actualizarPorId(@PathVariable Long id,@RequestParam("categoriaDto") String categoriaDto,@RequestParam("imgFile") MultipartFile file) throws JsonProcessingException, RecursoNoEncontradoException, AsignacionException, NombreDuplicadoException {
         CategoriaProductoDto categoriaProductoDto = mapper.readValue(categoriaDto, CategoriaProductoDto.class);
