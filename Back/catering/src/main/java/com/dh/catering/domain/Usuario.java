@@ -8,11 +8,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Data
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "usuario")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
@@ -37,6 +38,12 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "rol_id")
     private Rol rol;
+
+    @OneToMany(mappedBy = "usuario")
+    private Set<TokenConfirmacionCorreo> tokens = new HashSet<>();
+
+    @Column
+    private Boolean estaHabilitado = false;
 
     public Usuario(String nombre, String apellido, String contrasena, String email, Rol rol) {
         this.nombre = nombre;

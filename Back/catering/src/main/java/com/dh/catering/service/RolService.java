@@ -1,9 +1,7 @@
 package com.dh.catering.service;
 
-import com.dh.catering.domain.Producto;
 import com.dh.catering.domain.Rol;
 import com.dh.catering.domain.Usuario;
-import com.dh.catering.dto.CategoriaProductoDto;
 import com.dh.catering.dto.RolDto;
 import com.dh.catering.exceptions.AsignacionException;
 import com.dh.catering.exceptions.NombreDuplicadoException;
@@ -14,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
