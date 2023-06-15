@@ -19,9 +19,9 @@ const ProductRating = ({ ratings }) => {
   const calculateAverageRating = () => {
     const totalRatings = ratings ? ratings.length : 0;
     const sumRatings = ratings ? ratings.reduce((acc, rating) => acc + rating, 0) : 0;
-    const averageRating = ratings ? (sumRatings / totalRatings).toFixed(1) : '';
-
-    return { averageRating, totalRatings };
+    const averageRating = ratings ? (sumRatings / totalRatings).toFixed(1) : 0;
+    const validAverageRating = isNaN(averageRating) ? 0 : averageRating;
+    return { averageRating: validAverageRating, totalRatings };
   };
 
   const renderStarRating = (averageRating) => {
@@ -91,7 +91,7 @@ const ProductRating = ({ ratings }) => {
   const handleSubmitRating = (rating, productoId, dataId) => {
     
     const data = {
-      usuarioId: dataId,
+      usuarioId: 1902,
       productoId: productoId,
       nota: rating,
     };
@@ -99,7 +99,7 @@ const ProductRating = ({ ratings }) => {
       .then(() => {
         console.log("Puntuación enviada:", rating);
         handleCloseModal();
-      
+        window.location.reload();
         console.log(data);
        ;
       })
