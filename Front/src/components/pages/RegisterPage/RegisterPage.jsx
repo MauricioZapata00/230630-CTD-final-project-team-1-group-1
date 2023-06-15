@@ -161,10 +161,10 @@ const RegisterPage = () => {
           <div className="calification">
             <p style={{ fontWeight: "600" }}>¡Listo! Revisa tu correo</p>
             <div>
-              La registración requiere una verificación de correo. Por favor,
+              El registro requiere una verificación de correo. Por favor,
               revisa tu buzón de correo y sigue las instrucciones enviadas.{" "}
               <br />
-              El correo fue enviado a:{" "}
+              Recuerde que posee una hora. El correo fue enviado a:{" "}
               <p style={{ textAlign: "center", padding: "2rem" }}>
                 {data.email}
               </p>
