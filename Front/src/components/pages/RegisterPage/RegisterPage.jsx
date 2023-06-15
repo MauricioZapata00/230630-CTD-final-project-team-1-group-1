@@ -166,7 +166,7 @@ const RegisterPage = () => {
             </div>
             
           </div>
-          <DialogActions style={{justifyContent: 'center'}} >
+          <DialogActions style={{justifyContent: 'center', marginBottom: '1rem'}} >
             <Button variant="contained" onClick={handleCloseModal} >OK</Button>
           </DialogActions>
         </Dialog>
