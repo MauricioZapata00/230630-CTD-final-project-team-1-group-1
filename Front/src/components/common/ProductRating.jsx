@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import starImage from "../../assets/estrella.png";
 import halfStarImage from "../../assets/halfEstrella.png";
 import emptyStarImage from "../../assets/emptyEstrella.png";
@@ -12,12 +12,14 @@ const ProductRating = ({ ratings }) => {
   const { id } = useParams();
   const [showModal, setShowModal] = useState(false);
   const [selectedRating, setSelectedRating] = useState(0);
-  const { setError ,logedUser, setLogedUser } = useContext(AppContext);
+  const { setError, logedUser } = useContext(AppContext);
+  const [isImageFocused, setIsImageFocused] = useState('');
+  const[dataId, setDataId]=useState(null)
 
   const calculateAverageRating = () => {
-    const totalRatings = ratings? ratings.length : 0;
-    const sumRatings = ratings? ratings.reduce((acc, rating) => acc + rating, 0) : 0;
-    const averageRating = ratings? (sumRatings / totalRatings).toFixed(1) : '';
+    const totalRatings = ratings ? ratings.length : 0;
+    const sumRatings = ratings ? ratings.reduce((acc, rating) => acc + rating, 0) : 0;
+    const averageRating = ratings ? (sumRatings / totalRatings).toFixed(1) : '';
 
     return { averageRating, totalRatings };
   };
@@ -26,7 +28,6 @@ const ProductRating = ({ ratings }) => {
     const fullStars = Math.floor(averageRating);
     const halfStars = Math.ceil(averageRating - fullStars);
     const emptyStars = 5 - fullStars - halfStars;
-
     const stars = [];
 
     for (let i = 0; i < fullStars; i++) {
@@ -71,14 +72,26 @@ const ProductRating = ({ ratings }) => {
   const { averageRating, totalRatings } = calculateAverageRating();
   const starRating = renderStarRating(averageRating);
 
+  
+  useEffect(() => {
+    const logedUserData = localStorage.getItem("logedUser");
+    if (logedUserData) {
+      const userData = JSON.parse(logedUserData)
+      setDataId(userData.id)
+      console.log(userData.id);
+     console.log(dataId);
+    }
+  }, [setDataId]);
+
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedRating(0);
   };
-
-  const handleSubmitRating = (rating, productoId) => {
+  
+  const handleSubmitRating = (rating, productoId, dataId) => {
+    
     const data = {
-      usuarioId: 1902,
+      usuarioId: dataId,
       productoId: productoId,
       nota: rating,
     };
@@ -86,30 +99,36 @@ const ProductRating = ({ ratings }) => {
       .then(() => {
         console.log("Puntuación enviada:", rating);
         handleCloseModal();
-        window.location.reload();
+      
         console.log(data);
+       ;
       })
       .catch((error) => {
         const errorMsg = error?.response?.data?.description;
         setError(errorMsg || "Ha ocurrido un error.");
       });
   };
+
+  const handleImageClick = (index) => {
+    setIsImageFocused(index +1);
+  };
   return (
     <div>
-      <div>
+      <div className="rating">
+        <div>
         {logedUser && (
-            <Button onClick={() => setShowModal(true)}>Calificar</Button>
+          <Button onClick={() => setShowModal(true)}>Calificar</Button>
         )}
-        {averageRating}
+        <span className="rating__average">{averageRating}</span>
+        </div>
+        <p>{starRating}<span>({totalRatings})</span></p>
       </div>
-      <span>{starRating}</span>
-      <span>({totalRatings})</span>
       {showModal && (
         <Dialog open={showModal} onClose={handleCloseModal}>
           <DialogActions>
             <Button onClick={handleCloseModal}>Cerrar</Button>
           </DialogActions>
-          <div>
+          <div className="calification">
             <p>¿Qué te ha parecido el producto?</p>
             <div>
               {[...Array(5)].map((_, index) => (
@@ -119,16 +138,17 @@ const ProductRating = ({ ratings }) => {
                   style={{ cursor: "pointer" }}
                 >
                   <img
-                    style={{ cursor: "pointer", width: "40px", height: "40px" }}
+                    className={isImageFocused === index + 1 ? 'focused' : ''}
                     src={starImage}
                     alt=""
+                    onClick={() => handleImageClick(index)}
                   />
                 </span>
               ))}
             </div>
           </div>
           <DialogActions>
-            <Button onClick={() => handleSubmitRating(selectedRating, id)}>
+            <Button onClick={() => handleSubmitRating(selectedRating, id , dataId)}>
               Enviar puntuación
             </Button>
           </DialogActions>

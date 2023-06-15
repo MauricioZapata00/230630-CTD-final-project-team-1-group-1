@@ -6,13 +6,11 @@ import { AppContext } from "../../../context";
 
 const Product = ({ product }) => {
   const { imagenUrl, nombre, precio, id } = product;
-  const {rating } = useContext(AppContext);
   const navigate = useNavigate();
 
   const handleClickNavigate = () => {
     navigate(`/detalle/${id}`);
   };
-  console.log(rating);
   return (
     <div onClick={handleClickNavigate} className="product">
       <div className="product__image-container">
@@ -20,7 +18,7 @@ const Product = ({ product }) => {
       </div>
       <h3>{nombre}</h3>
       <p>$ {precio}</p>
-      <ProductRating ratings={rating} />
+    
     </div>
   );
 };
