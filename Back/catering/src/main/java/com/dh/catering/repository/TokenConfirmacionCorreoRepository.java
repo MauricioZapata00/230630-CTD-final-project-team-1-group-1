@@ -16,6 +16,10 @@ public interface TokenConfirmacionCorreoRepository extends JpaRepository<TokenCo
 
     Optional<TokenConfirmacionCorreo> findByToken(String token);
 
+    @Modifying
+    @Transactional
+    void deleteByToken(String token);
+
     @Transactional
     @Modifying
     @Query("UPDATE TokenConfirmacionCorreo t " +

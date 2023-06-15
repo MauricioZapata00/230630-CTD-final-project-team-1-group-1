@@ -6,6 +6,7 @@ import com.dh.catering.dto.UsuarioDto;
 import com.dh.catering.exceptions.DuplicadoException;
 import com.dh.catering.exceptions.RecursoNoEncontradoException;
 import com.dh.catering.repository.RolRepository;
+import com.dh.catering.repository.TokenConfirmacionCorreoRepository;
 import com.dh.catering.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
@@ -41,6 +42,9 @@ public class UsuarioService {
 
     @Autowired
     private TokenConfirmacionCorreoService tokenConfirmacionCorreoService;
+
+    @Autowired
+    private TokenConfirmacionCorreoRepository tokenConfirmacionCorreoRepository;
 
     @Autowired
     private EmailService emailService;
@@ -178,6 +182,8 @@ public class UsuarioService {
                 confirmEmail(optionalTokenConfirmacionCorreo.get().getUsuario().getNombre()));
 
         log.info(mensaje);
+
+        tokenConfirmacionCorreoRepository.deleteByToken(token);
 
         return Optional.ofNullable(mensaje);
 
