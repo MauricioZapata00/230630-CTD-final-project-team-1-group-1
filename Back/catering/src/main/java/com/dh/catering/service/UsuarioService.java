@@ -56,8 +56,8 @@ public class UsuarioService {
         Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(dto.getEmail());
         if (optionalUsuario.isPresent()) {
             if (optionalUsuario.get().getEstaHabilitado()==true){
-                log.error("El usuarioc on email: " + dto.getEmail() + " ya existe y esta confirmado");
-                throw new DuplicadoException("El usuarioc on email: " + dto.getEmail() + " ya existe y esta confirmado");
+                log.error("El usuario con email: " + dto.getEmail() + " ya existe y esta confirmado");
+                throw new DuplicadoException("El usuario con email: " + dto.getEmail() + " ya existe y esta confirmado");
             }
 
             emailService.send(dto.getEmail(), buildEmail(dto.getNombre(), link));
@@ -80,7 +80,7 @@ public class UsuarioService {
 
         emailService.send(dto.getEmail(),buildEmail(dto.getNombre(), link));
 
-        mensaje = "Muy bien! Se ha enviado un correo para confirmar su email, favro revisar su bandeja de entrada.";
+        mensaje = "Muy bien! Se ha enviado un correo para confirmar su email, favor revisar su bandeja de entrada. Recuerde que tiene 1 hora para activar su usuario";
 
         log.info(mensaje);
         return Optional.ofNullable(mensaje);
