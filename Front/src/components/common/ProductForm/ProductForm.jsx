@@ -18,6 +18,8 @@ import axios from "axios";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
 
+const baseUrl = import.meta.env.VITE_BASE_URI;
+
 const defaultProductData = {
   nombre: "",
   descripcion: "",
@@ -187,7 +189,7 @@ const ProductForm = ({ selectedProduct, categories }) => {
 
       setSending(true);
       axios
-        .post(import.meta.env.VITE_CREATE_PRODUCT_URI, formData, {
+        .post(`${baseUrl}/productos/registrar`, formData, {
           headers: {
             "Content-Type": `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`,
             Authorization: `Bearer ${logedUser.jwt}`,
@@ -205,16 +207,12 @@ const ProductForm = ({ selectedProduct, categories }) => {
         });
     } else {
       axios
-        .put(
-          `${import.meta.env.VITE_EDIT_PRODUCT_URI}/${selectedProduct.id}`,
-          product,
-          {
-            headers: {
-              // "Content-Type": `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`,
-              Authorization: `Bearer ${logedUser.jwt}`,
-            },
-          }
-        )
+        .put(`${baseUrl}/productos/actualizar/${selectedProduct.id}`, product, {
+          headers: {
+            // "Content-Type": `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`,
+            Authorization: `Bearer ${logedUser.jwt}`,
+          },
+        })
         .then(() => {
           setSending(false);
           resetData();

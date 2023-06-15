@@ -5,7 +5,7 @@ import { AppContext } from "../../../context";
 import { validateUser } from "../../../services";
 import { TextField } from "@mui/material";
 import ErrorMessage from "../../common/ErrorMessage";
-import { buildUserData } from "../../../helpers/buidlUserDAta";
+import { buildUserData } from "../../../helpers/buidlUserData";
 
 const LoginPage = () => {
   const navigateTo = useNavigate();
@@ -121,7 +121,9 @@ const LoginPage = () => {
           >
             <span>Ingresar</span>
           </LoadingButton>
-          <p className="login-page__form-container__link">¿Aún no tienes cuenta? <Link to={`/registro`}> Registrate </Link></p>
+          <p className="login-page__form-container__link">
+            ¿Aún no tienes cuenta? <Link to={`/registro`}> Registrate </Link>
+          </p>
         </form>
         {error && <ErrorMessage />}
       </div>

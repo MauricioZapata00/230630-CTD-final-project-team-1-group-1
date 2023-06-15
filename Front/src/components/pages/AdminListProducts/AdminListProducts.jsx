@@ -12,16 +12,14 @@ const AdminListProducts = () => {
   const navigateTo = useNavigate();
 
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [currentPageAdm, setCurrentPageAdm] = useState(0);
-
 
   const handleAddProductClick = () => {
     navigateTo("/admin/crear-producto");
   };
 
   useEffect(() => {
-    setLoading(true);
     getProducts(currentPageAdm)
       .then((response) => {
         setProducts(response.data);
@@ -33,7 +31,6 @@ const AdminListProducts = () => {
       .finally(() => setLoading(false));
   }, [currentPageAdm, setError]);
 
-  
   const handleNextPage = () => {
     setCurrentPageAdm((prevPage) => prevPage + 1);
   };
@@ -53,10 +50,10 @@ const AdminListProducts = () => {
         </div>
         <ProductsList products={products} loading={loading} />
         <Pagination
-       currentPage={currentPageAdm}
-       handleNextPage={handleNextPage}
-       handlePrevPage={handlePrevPage}
-       />
+          currentPage={currentPageAdm}
+          handleNextPage={handleNextPage}
+          handlePrevPage={handlePrevPage}
+        />
       </div>
     </div>
   );
