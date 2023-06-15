@@ -45,15 +45,13 @@ const Header = ({ admin = false }) => {
   useEffect(() => {
     const logedUserData = localStorage.getItem("logedUser");
     if (logedUserData) {
-      setLogedUser(JSON.parse(logedUserData));
+      const userData = JSON.parse(logedUserData);
+      setLogedUser(userData);
+      if (admin && userData?.rolName !== "ADMIN") {
+        navigateTo("/");
+      }
     }
-  }, [setLogedUser]);
-
-  useEffect(() => {
-    if (admin && logedUser?.rolName !== "ADMIN") {
-      navigateTo("/");
-    }
-  }, [admin, logedUser, navigateTo]);
+  }, [admin, navigateTo, setLogedUser]);
 
   return (
     <>

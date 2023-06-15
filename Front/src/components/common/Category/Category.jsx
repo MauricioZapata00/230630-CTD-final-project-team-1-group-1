@@ -6,12 +6,12 @@ const Category = ({ category }) => {
 
   const navigateTo = useNavigate();
 
-  const handleCategory = ()=>{
-    navigateTo(`/categoria/${id}`)
-  }
+  const handleCategory = () => {
+    navigateTo(`/categoria/${id}`);
+  };
 
   return (
-    <div  className="category">
+    <div className="category">
       <div className="category__image-container">
         <img onClick={handleCategory} src={imgUrl} alt={nombre} />
       </div>
@@ -24,6 +24,7 @@ Category.propTypes = {
   category: PropTypes.shape({
     imgUrl: PropTypes.string.isRequired,
     nombre: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
   }).isRequired,
 };
 

@@ -10,8 +10,10 @@ export const validateUser = (data) => {
   return axios.post(`${baseUrl}/usuarios/auth`, data);
 };
 
-export const getProducts = () => {
-  return axios.get(`${baseUrl}/productos/todos`);
+export const getProducts = (currentPage) => {
+  return axios.get(
+    `${baseUrl}/productos/todos?numeroPagina=${currentPage}&tamanioPagina=10`
+  );
 };
 
 export const getProductDetail = (id) => {
@@ -26,8 +28,12 @@ export const getCategoryDetail = (id) => {
   return axios.get(`${baseUrl}/productos/categoriaId/${id}`);
 };
 
-export const deleteProduct = (id) => {
-  return axios.delete(`${baseUrl}/productos/${id}`);
+export const deleteProduct = (id, jwt) => {
+  return axios.delete(`${baseUrl}/productos/${id}`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  });
 };
 
 export const getRatingProduct = (id) => {

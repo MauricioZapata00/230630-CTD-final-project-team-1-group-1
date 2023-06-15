@@ -1,0 +1,62 @@
+.rating {
+    div {
+        display: flex;
+        justify-content: flex-end;
+        margin: 0.3rem;
+    }
+
+    &__average {
+        color: white;
+        font-weight: 600;
+        font-family: $primary-font;
+        background-color: rgb(34, 145, 43);
+        border-radius: 0.7rem;
+        padding: 0.5rem;
+        text-align: center;
+    }
+
+    p {
+        display: flex;
+        justify-content: space-evenly;
+        text-align: center;
+        align-items: center;
+
+        span {
+            font-weight: 300;
+            font-family: $primary-font;
+        }
+    }
+}
+
+.calification {
+    padding: 2rem 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    p {
+        font-family: $primary-font;
+        padding-bottom: 2rem;
+    }
+
+    img {
+        cursor: pointer;
+        margin: 0.3rem;
+        width: 40px;
+        height: 40px;
+        &:hover {
+            border: 0.5px solid rgb(189, 189, 189);
+            border-radius: 0.2rem;
+            background-color: rgb(245, 244, 244);
+        }
+    }
+
+    
+  
+}
+.focused{
+   outline: 3px solid #BABDC2;
+   border-radius: 0.4rem;
+   background-color: rgb(245, 244, 244);
+}

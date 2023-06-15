@@ -2,8 +2,10 @@ import { CircularProgress } from "@mui/material";
 import Product from "../Product/Product";
 import PropTypes, { shape } from "prop-types";
 import Carousel from "../Carousel";
+import Pagination from "../Pagination";
 
 const Products = ({ products, loading, title }) => {
+ 
   return (
     <div className="products">
       {title?.length > 0 && <h2>{title}</h2>}
@@ -15,11 +17,10 @@ const Products = ({ products, loading, title }) => {
       {!loading && products && (
         <div className="products__container">
           {products.length > 0 ? (
-            <Carousel>
-              {products.map((product) => (
+              products.map((product) => (
                 <Product key={product.id} product={product} />
-              ))}
-            </Carousel>
+              ))
+      
           ) : (
             <div className="products__empty">
               No hay productos para mostrar.
@@ -32,6 +33,7 @@ const Products = ({ products, loading, title }) => {
           <p>No se pudieron cargar los productos</p>
         </div>
       )}
+       
     </div>
   );
 };

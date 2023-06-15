@@ -1,17 +1,20 @@
 import Categories from "../../common/Categories";
 import Products from "../../common/Products";
 import Search from "../../common/Search";
-import { useContext, useEffect, useState } from "react";
+import React,{ useContext, useEffect, useState } from "react";
 import { getProducts, getCategories } from "../../../services";
 import { AppContext } from "../../../context";
+import Pagination from "../../common/Pagination";
 
 const Home = () => {
   const { setError } = useContext(AppContext);
 
   const [categories, setCategories] = useState(null);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
-  const [products, setProducts] = useState(null);
+  const [products, setProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+
 
   useEffect(() => {
     setCategoriesLoading(true);
@@ -28,7 +31,7 @@ const Home = () => {
 
   useEffect(() => {
     setProductsLoading(true);
-    getProducts()
+    getProducts(currentPage)
       .then((response) => {
         setProducts(response.data);
       })
@@ -37,8 +40,15 @@ const Home = () => {
         setError(errorMsg || "Ha ocurrido un error.");
       })
       .finally(() => setProductsLoading(false));
-  }, [setError]);
+  }, [currentPage,setError]);
 
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => prevPage - 1);
+  };
   return (
     <div>
       <Search />
@@ -48,6 +58,11 @@ const Home = () => {
         loading={productsLoading}
         title="Productos recomendados"
       />
+      <Pagination
+       currentPage={currentPage}
+       handleNextPage={handleNextPage}
+       handlePrevPage={handlePrevPage}
+       />
     </div>
   );
 };
