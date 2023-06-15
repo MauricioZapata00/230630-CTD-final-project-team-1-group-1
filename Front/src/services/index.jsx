@@ -29,7 +29,7 @@ export const getCategoryDetail = (id) => {
 };
 
 export const deleteProduct = (id, jwt) => {
-  return axios.delete(`${baseUrl}/productos/${id}`, {
+  return axios.delete(`${baseUrl}/productos/eliminar/${id}`, {
     headers: {
       Authorization: `Bearer ${jwt}`,
     },
