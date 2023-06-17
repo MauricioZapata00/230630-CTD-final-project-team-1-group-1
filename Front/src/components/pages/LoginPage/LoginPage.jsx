@@ -66,6 +66,8 @@ const LoginPage = () => {
         ...userData,
         ...responseData,
       };
+      console.log(responseData);
+      console.log(userData);
       console.log({ logedUser });
       setLogedUser(logedUser);
       localStorage.setItem("logedUser", JSON.stringify(logedUser));

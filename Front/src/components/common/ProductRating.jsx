@@ -91,7 +91,7 @@ const ProductRating = ({ ratings }) => {
   const handleSubmitRating = (rating, productoId, dataId) => {
     
     const data = {
-      usuarioId: 1902,
+      usuarioId: dataId,
       productoId: productoId,
       nota: rating,
     };
