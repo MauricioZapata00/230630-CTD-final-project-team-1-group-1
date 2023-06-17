@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -46,6 +49,9 @@ public class Producto {
     @ManyToOne
     @JoinColumn(name = "categoria_producto_id")
     private CategoriaProducto categoriaProducto;
+
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.REMOVE)
+    private Set<Puntuacion> puntuaciones = new HashSet<>();
 
     public Producto(String nombre, String descripcion, Double precio, String imagenUrl, Integer cantMin, Boolean requierePagoAnticipado, Integer minDiasReservaPrevia, Boolean permiteCambios, CategoriaProducto categoriaProducto) {
         this.nombre = nombre;
