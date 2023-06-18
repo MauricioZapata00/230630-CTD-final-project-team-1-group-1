@@ -12,6 +12,7 @@ import AdminLayout from "./components/layout/AdminLayout";
 import CategoryPage from "./components/pages/CategoryPage/CategoryPage";
 import UserPage from "./components/pages/UserPage/UserPage";
 import AdminEditProduct from "./components/pages/AdminEditProduct/AdminEditProduct";
+import AdminListUsers from "./components/pages/AdminListUsers/AdminListUsers";
 
 const App = () => {
   return (
@@ -37,6 +38,10 @@ const App = () => {
                 <Route
                   path="/admin/editar-producto/:id"
                   element={<AdminEditProduct />}
+                />
+                <Route
+                  path="/admin/listar-usuarios"
+                  element={<AdminListUsers />}
                 />
               </Route>
             </Routes>

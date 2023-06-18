@@ -3,7 +3,6 @@ import { Button, Dialog, DialogActions, TextField } from "@mui/material";
 import { useContext, useState } from "react";
 import { createUser } from "../../../services";
 import { AppContext } from "../../../context";
-import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import ErrorMessage from "../../common/ErrorMessage";
 
@@ -73,7 +72,7 @@ const RegisterPage = () => {
     createUser({ ...data, rolName: "USER" })
       .then(() => {
         //setSuccess("Valida tu correo");
-        setShowModal(true)
+        setShowModal(true);
       })
       .catch((error) => {
         const errorMsg = error?.response?.data?.description;
@@ -155,7 +154,9 @@ const RegisterPage = () => {
         >
           <span>Crear Cuenta</span>
         </LoadingButton>
-        <p className="register-page__form-container__link">¿Ya tienes una cuenta? <Link to={`/ingreso`}>Inicia Sesión</Link></p>
+        <p className="register-page__form-container__link">
+          ¿Ya tienes una cuenta? <Link to={`/ingreso`}>Inicia Sesión</Link>
+        </p>
       </div>
       {showModal && (
         <Dialog open={showModal} onClose={handleCloseModal}>
@@ -163,13 +164,18 @@ const RegisterPage = () => {
             <Button onClick={handleCloseModal}>Cerrar</Button>
           </DialogActions>
           <div className="calification">
-            <p style={{ fontWeight: '600' }}>¡Listo! Revisa tu correo</p>
+            <p style={{ fontWeight: "600" }}>¡Listo! Revisa tu correo</p>
             <div>
-              La registración requiere una verificación de correo. Por favor, revisa tu buzón de correo y sigue las instrucciones enviadas. <br />El correo fue enviado a: <p style={{ textAlign: 'center', padding: '2rem' }}>{data.email}</p>
+              El registro requiere una verificación de correo. Por favor,
+              revisa tu buzón de correo y sigue las instrucciones enviadas.{" "}
+              <br />
+              Recuerde que posee una hora. El correo fue enviado a:{" "}
+              <p style={{ textAlign: "center", padding: "2rem" }}>
+                {data.email}
+              </p>
             </div>
-
           </div>
-          <DialogActions style={{ justifyContent: 'center' }} >
+          <DialogActions style={{justifyContent: 'center', marginBottom: '1rem'}} >
             <Button variant="contained" onClick={handleCloseModal} >OK</Button>
           </DialogActions>
         </Dialog>

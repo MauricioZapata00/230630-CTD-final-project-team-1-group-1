@@ -58,4 +58,14 @@ public class GlobalExceptions {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mensajeError);
     }
+
+    @ExceptionHandler({IllegalStateException.class})
+    public ResponseEntity<MensajeError> procesarFallaEnvioEmail(IllegalStateException e){
+        MensajeError mensajeError = new MensajeError();
+        mensajeError.setMessage("Lo sentimos, ha ocurrido un error!");
+        mensajeError.setDescription(e.getMessage());
+        mensajeError.setStatusCode(1006);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mensajeError);
+    }
 }

@@ -18,6 +18,8 @@ import axios from "axios";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
 
+const baseUrl = import.meta.env.VITE_BASE_URI;
+
 const defaultProductData = {
   nombre: "",
   descripcion: "",
@@ -42,13 +44,12 @@ const ProductForm = ({ selectedProduct, categories }) => {
   const { setSuccess, setError, logedUser } = useContext(AppContext);
   const navigate = useNavigate();
 
-  console.log({ logedUser });
-
   const [product, setProduct] = useState(selectedProduct || defaultProductData);
   const [productImageURL, setProductImageURL] = useState("");
   const [file, setFile] = useState(null);
   const [stringImageUrl, setStringImageUrl] = useState("");
 
+  console.log({ productImageURL, stringImageUrl });
   const [sending, setSending] = useState(false);
 
   const [errors, setErrors] = useState([]);
@@ -165,7 +166,7 @@ const ProductForm = ({ selectedProduct, categories }) => {
       });
     }
 
-    if (!selectedProduct && stringImageUrl.length === 0) {
+    if (stringImageUrl.length === 0) {
       newErrors.push({
         name: "imagenURL",
         message: "Debe cargar una imágen.",
@@ -178,6 +179,8 @@ const ProductForm = ({ selectedProduct, categories }) => {
       return;
     }
 
+    setSending(true);
+
     if (!selectedProduct) {
       const data = { ...product, imagenUrl: stringImageUrl };
       const formData = new FormData();
@@ -185,9 +188,8 @@ const ProductForm = ({ selectedProduct, categories }) => {
       formData.append(FORM_FILE_STRING_CONST, file, stringImageUrl);
       formData.append(FORM_OBJECT_STRING_CONST, JSON.stringify(data));
 
-      setSending(true);
       axios
-        .post(import.meta.env.VITE_CREATE_PRODUCT_URI, formData, {
+        .post(`${baseUrl}/productos/registrar`, formData, {
           headers: {
             "Content-Type": `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`,
             Authorization: `Bearer ${logedUser.jwt}`,
@@ -204,17 +206,18 @@ const ProductForm = ({ selectedProduct, categories }) => {
           setError(errorMsg || "Ha ocurrido un error.");
         });
     } else {
+      const data = { ...product, imagenUrl: stringImageUrl };
+      const formData = new FormData();
+
+      formData.append(FORM_FILE_STRING_CONST, file, stringImageUrl);
+      formData.append(FORM_OBJECT_STRING_CONST, JSON.stringify(data));
       axios
-        .put(
-          `${import.meta.env.VITE_EDIT_PRODUCT_URI}/${selectedProduct.id}`,
-          product,
-          {
-            headers: {
-              // "Content-Type": `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`,
-              Authorization: `Bearer ${logedUser.jwt}`,
-            },
-          }
-        )
+        .put(`${baseUrl}/productos/actualizar/${selectedProduct.id}`, formData, {
+          headers: {
+            "Content-Type": `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`,
+            Authorization: `Bearer ${logedUser.jwt}`,
+          },
+        })
         .then(() => {
           setSending(false);
           resetData();
@@ -376,25 +379,27 @@ const ProductForm = ({ selectedProduct, categories }) => {
               />
             </FormGroup>
           </div>
-          {!selectedProduct && (
-            <div className="form-control">
-              <InputLabel>Cargar imágen</InputLabel>
-              <input
-                className="input-file"
-                type="file"
-                id="input-product-image-id"
-                accept="image/png, image/jpeg"
-                value={productImageURL}
-                onChange={handleproductImageURLChage}
-              />
 
-              {!!hasError("imagenURL") && (
-                <p className="error">{hasError("imagenURL")}</p>
-              )}
+          <div className="form-control">
+            <InputLabel>
+              {selectedProduct ? "Cargar " : "Editar "} imágen
+            </InputLabel>
+            <input
+              className="input-file"
+              type="file"
+              id="input-product-image-id"
+              accept="image/png, image/jpeg"
+              value={productImageURL}
+              onChange={handleproductImageURLChage}
+            />
 
-              <div id={imageContainerId} className="preview"></div>
-            </div>
-          )}
+            {!!hasError("imagenURL") && (
+              <p className="error">{hasError("imagenURL")}</p>
+            )}
+
+            <div id={imageContainerId} className="preview"></div>
+            <div></div>
+          </div>
         </div>
       </div>
       <div className="product-form__actions">
