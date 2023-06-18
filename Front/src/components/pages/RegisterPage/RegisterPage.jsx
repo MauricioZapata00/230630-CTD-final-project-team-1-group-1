@@ -5,13 +5,14 @@ import { createUser } from "../../../services";
 import { AppContext } from "../../../context";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+import ErrorMessage from "../../common/ErrorMessage";
 
 const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
 const RegisterPage = () => {
   const navigateTo = useNavigate();
 
-  const { setSuccess, setError } = useContext(AppContext);
+  const { setSuccess, error, setError } = useContext(AppContext);
   const [data, setData] = useState({
     nombre: "",
     apellido: "",
@@ -81,10 +82,12 @@ const RegisterPage = () => {
       .finally(() => setSending(false));
   };
 
+ 
+
   const handleCloseModal = () => {
     setShowModal(false);
   };
-  
+
   return (
     <div className="register-page">
       <div className="register-page__form-container">
@@ -155,22 +158,23 @@ const RegisterPage = () => {
         <p className="register-page__form-container__link">¿Ya tienes una cuenta? <Link to={`/ingreso`}>Inicia Sesión</Link></p>
       </div>
       {showModal && (
-        <Dialog  open={showModal} onClose={handleCloseModal}>
+        <Dialog open={showModal} onClose={handleCloseModal}>
           <DialogActions>
             <Button onClick={handleCloseModal}>Cerrar</Button>
           </DialogActions>
           <div className="calification">
-            <p style={{fontWeight: '600'}}>¡Listo! Revisa tu correo</p>
+            <p style={{ fontWeight: '600' }}>¡Listo! Revisa tu correo</p>
             <div>
-            La registración requiere una verificación de correo. Por favor, revisa tu buzón de correo y sigue las instrucciones enviadas. <br />El correo fue enviado a: <p style={{textAlign: 'center', padding: '2rem'}}>{data.email}</p>
+              La registración requiere una verificación de correo. Por favor, revisa tu buzón de correo y sigue las instrucciones enviadas. <br />El correo fue enviado a: <p style={{ textAlign: 'center', padding: '2rem' }}>{data.email}</p>
             </div>
-            
+
           </div>
-          <DialogActions style={{justifyContent: 'center'}} >
+          <DialogActions style={{ justifyContent: 'center' }} >
             <Button variant="contained" onClick={handleCloseModal} >OK</Button>
           </DialogActions>
         </Dialog>
       )}
+      {error && <ErrorMessage />}
     </div>
   );
 };
