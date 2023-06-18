@@ -49,6 +49,14 @@ const Home = () => {
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => prevPage - 1);
   };
+
+  const handleResetPage = () => {
+    setCurrentPage(0);
+  };
+
+  const handleLastPage = () => {
+    setCurrentPage(2);
+  };
   return (
     <div>
       <Search />
@@ -62,6 +70,8 @@ const Home = () => {
        currentPage={currentPage}
        handleNextPage={handleNextPage}
        handlePrevPage={handlePrevPage}
+       handleResetPage ={handleResetPage}
+       handleLastPage={handleLastPage}
        />
     </div>
   );
