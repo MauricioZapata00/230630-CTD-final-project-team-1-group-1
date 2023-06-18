@@ -61,8 +61,8 @@ public class UsuarioService {
             }
 
             emailService.send(dto.getEmail(), buildEmail(dto.getNombre(), link));
-            mensaje = "El usuario con email: " + dto.getEmail() + " ya habia sido creado pero no confirmado. " +
-                    "Enviamos nuevamente el correo de confirmacion, recuerda que tienes 1 hora para confirmar tu correo.";
+            mensaje = "El usuario con email: " + dto.getEmail() + " ya ha sido creado pero no confirmado. " +
+                    "Enviamos nuevamente el correo de confirmación, recuerda que tienes 1 hora para confirmar tu correo.";
             log.info(mensaje);
             return Optional.ofNullable(mensaje);
 
@@ -80,7 +80,7 @@ public class UsuarioService {
 
         emailService.send(dto.getEmail(),buildEmail(dto.getNombre(), link));
 
-        mensaje = "Muy bien! Se ha enviado un correo para confirmar su email, favor revisar su bandeja de entrada. Recuerde que tiene 1 hora para activar su usuario";
+        mensaje = "Se ha enviado un correo para confirmar su email, favor revisar su bandeja de entrada. Recuerde que posee 1 hora para activar su usuario. El correo fue enviado a : " + dto.getEmail() ;
 
         log.info(mensaje);
         return Optional.ofNullable(mensaje);
