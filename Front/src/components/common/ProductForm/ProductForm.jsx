@@ -208,8 +208,14 @@ const ProductForm = ({ selectedProduct, categories }) => {
     } else {
       const data = { ...product, imagenUrl: '' };
       const formData = new FormData();
-     
-      formData.append(FORM_FILE_STRING_CONST, file);
+      console.log(stringImageUrl);
+      if(stringImageUrl){
+        data.imagenUrl  = stringImageUrl
+        formData.append(FORM_FILE_STRING_CONST, file,stringImageUrl);
+      }else{
+        formData.append(FORM_FILE_STRING_CONST, file);
+      }
+      
       formData.append(FORM_OBJECT_STRING_CONST, JSON.stringify(data));
       axios
         .put(`${baseUrl}/productos/actualizar/${selectedProduct.id}`, formData, {
