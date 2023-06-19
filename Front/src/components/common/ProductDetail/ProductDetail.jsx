@@ -11,7 +11,7 @@ import ImageGallery from "../ImageGallery";
 import { LoadingButton } from "@mui/lab";
 
 const ProductDetail = ({ productDetail }) => {
-  const { rating , logedUser } = useContext(AppContext);
+  const { rating , logedUser, error, setError } = useContext(AppContext);
   const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
