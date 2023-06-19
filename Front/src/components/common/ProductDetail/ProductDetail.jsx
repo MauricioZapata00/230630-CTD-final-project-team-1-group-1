@@ -8,9 +8,10 @@ import { useNavigate } from "react-router-dom";
 import ProductRating from "../ProductRating";
 import { AppContext } from "../../../context";
 import ImageGallery from "../ImageGallery";
+import { LoadingButton } from "@mui/lab";
 
-const ProductDetail = ({ productDetail}) => {
-  const { rating} = useContext(AppContext);
+const ProductDetail = ({ productDetail }) => {
+  const { rating , logedUser } = useContext(AppContext);
   const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
@@ -18,8 +19,6 @@ const ProductDetail = ({ productDetail}) => {
     navigate(-1);
   };
 
-  //const productRatings = [4, 5, 3, 4, 5, 2, 3, 4, 5, 5, 5];
-  //console.log(productRatings);
   console.log(rating);
   const {
     imagenUrl,
@@ -32,6 +31,13 @@ const ProductDetail = ({ productDetail}) => {
     requierePagoAnticipado,
   } = productDetail;
 
+  const handleGoToBooking =()=>{
+    if(!logedUser){
+      navigate('/ingreso')
+    }else{
+      navigate(`/reservas/${productDetail._id}`)
+    }
+  }
   return (
     <div className="product-detail">
       <div className="product-detail__container-title">
@@ -41,10 +47,8 @@ const ProductDetail = ({ productDetail}) => {
         <IconButton onClick={goBack} aria-label="volver">
           <ArrowBackIcon />
         </IconButton>
-
         <ProductRating ratings={rating} />
       </div>
-
       <ImageGallery
         galleryID="product-detail-gallery"
         images={[
@@ -71,7 +75,6 @@ const ProductDetail = ({ productDetail}) => {
           },
         ]}
       />
-
       <div>
         <p className="product-detail__description">{descripcion}</p>
         <div className="product-detail__features-container">
@@ -102,7 +105,10 @@ const ProductDetail = ({ productDetail}) => {
             </div>
           </div>
         </div>
-        <p className="product-detail__price">${precio.toFixed(2)}</p>
+        <p className="product-detail__price">
+          <LoadingButton onClick={handleGoToBooking} variant="contained">Realizar reserva</LoadingButton>
+          ${precio.toFixed(2)}
+        </p>
       </div>
     </div>
   );
