@@ -166,7 +166,7 @@ const ProductForm = ({ selectedProduct, categories }) => {
       });
     }
 
-    if (stringImageUrl.length === 0) {
+    if (!selectedProduct && stringImageUrl.length === 0 && product.imagenUrl !== selectedProduct.imagenUrl) {
       newErrors.push({
         name: "imagenURL",
         message: "Debe cargar una imágen.",
@@ -206,10 +206,10 @@ const ProductForm = ({ selectedProduct, categories }) => {
           setError(errorMsg || "Ha ocurrido un error.");
         });
     } else {
-      const data = { ...product, imagenUrl: stringImageUrl };
+      const data = { ...product, imagenUrl: '' };
       const formData = new FormData();
-
-      formData.append(FORM_FILE_STRING_CONST, file, stringImageUrl);
+     
+      formData.append(FORM_FILE_STRING_CONST, file);
       formData.append(FORM_OBJECT_STRING_CONST, JSON.stringify(data));
       axios
         .put(`${baseUrl}/productos/actualizar/${selectedProduct.id}`, formData, {
