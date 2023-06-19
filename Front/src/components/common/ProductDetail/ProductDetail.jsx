@@ -11,7 +11,7 @@ import ImageGallery from "../ImageGallery";
 import { LoadingButton } from "@mui/lab";
 
 const ProductDetail = ({ productDetail }) => {
-  const { rating , logedUser, error, setError } = useContext(AppContext);
+  const { rating, logedUser, error, setError } = useContext(AppContext);
   const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
@@ -31,13 +31,20 @@ const ProductDetail = ({ productDetail }) => {
     requierePagoAnticipado,
   } = productDetail;
 
-  const handleGoToBooking =()=>{
-    if(!logedUser){
+  const handleGoToBooking = () => {
+    if (!logedUser) {
       navigate('/ingreso')
-    }else{
-      navigate(`/reservas/${productDetail._id}`)
+    } else {
+      setShowModal(true)
     }
   }
+  const handleContinueBooking = () => {
+    navigate(`/reservas/${productDetail._id}`)
+  }
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   return (
     <div className="product-detail">
       <div className="product-detail__container-title">
@@ -110,6 +117,22 @@ const ProductDetail = ({ productDetail }) => {
           ${precio.toFixed(2)}
         </p>
       </div>
+      {showModal && (
+        <Dialog open={showModal} onClose={handleCloseModal}>
+          <DialogActions>
+            <Button style={{ fontWeight: "600" }} onClick={handleCloseModal}>X</Button>
+          </DialogActions>
+          <div className="calification">
+            <p style={{ fontWeight: "600" }}>Elige la fecha que deseas reservar este producto</p>
+            <div>
+              <p>calendario</p>        
+            </div>
+          </div>
+          <DialogActions style={{justifyContent: 'center', marginBottom: '1rem'}} >
+            <Button variant="contained" onClick={handleContinueBooking} >Continuar reserva</Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </div>
   );
 };
