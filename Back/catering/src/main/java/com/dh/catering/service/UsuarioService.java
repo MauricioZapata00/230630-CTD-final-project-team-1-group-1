@@ -80,7 +80,7 @@ public class UsuarioService {
 
         emailService.send(dto.getEmail(),buildEmail(dto.getNombre(), link));
 
-        mensaje = "Muy bien! Se ha enviado un correo para confirmar su email, favor revisar su bandeja de entrada. Recuerde que tiene 1 hora para activar su usuario";
+        mensaje = "Se ha enviado un correo para confirmar su email, favor revisar su bandeja de entrada. Recuerde que posee 1 hora para activar su usuario. El correo fue enviado a : " + dto.getEmail() ;
 
         log.info(mensaje);
         return Optional.ofNullable(mensaje);
