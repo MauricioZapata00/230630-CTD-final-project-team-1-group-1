@@ -86,7 +86,7 @@ public class ProductoController {
     @PutMapping(value = "/actualizar/{id}", consumes = {"multipart/form-data", "application/octet-stream"})
     @Operation(summary = "Actualizar un producto por su id", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> actualizarPorId(@PathVariable Long id,@RequestParam("productoDto") String productoDto, @RequestParam("imageFile")MultipartFile archivoImagen) throws NombreDuplicadoException, RecursoNoEncontradoException, JsonProcessingException {
+    public ResponseEntity<String> actualizarPorId(@PathVariable Long id,@RequestParam("productoDto") String productoDto, @RequestParam(value = "imageFile", required = false)MultipartFile archivoImagen) throws NombreDuplicadoException, RecursoNoEncontradoException, JsonProcessingException {
         ProductoDto dtoObtenido = mapper.readValue(productoDto, ProductoDto.class);
         return productoService.updateById(id,dtoObtenido,archivoImagen)
                 .map(ResponseEntity::ok)

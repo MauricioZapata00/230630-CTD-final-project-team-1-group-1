@@ -78,4 +78,5 @@ public class GlobalExceptions {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mensajeError);
     }
+
 }
