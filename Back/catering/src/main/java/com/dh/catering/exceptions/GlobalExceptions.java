@@ -68,4 +68,14 @@ public class GlobalExceptions {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mensajeError);
     }
+
+    @ExceptionHandler({DuplicadoException.class})
+    public ResponseEntity<MensajeError> procesarDuplicadoException(DuplicadoException e){
+        MensajeError mensajeError = new MensajeError();
+        mensajeError.setMessage("Lo sentimos, ha ocurrido un error!");
+        mensajeError.setDescription(e.getMessage());
+        mensajeError.setStatusCode(1007);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mensajeError);
+    }
 }
