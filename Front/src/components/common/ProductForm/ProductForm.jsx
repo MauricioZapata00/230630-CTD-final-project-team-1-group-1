@@ -166,7 +166,11 @@ const ProductForm = ({ selectedProduct, categories }) => {
       });
     }
 
-    if (!selectedProduct && stringImageUrl.length === 0 && product.imagenUrl !== selectedProduct.imagenUrl) {
+    if (
+      !selectedProduct &&
+      stringImageUrl.length === 0 &&
+      product.imagenUrl !== selectedProduct.imagenUrl
+    ) {
       newErrors.push({
         name: "imagenURL",
         message: "Debe cargar una imágen.",
@@ -206,28 +210,39 @@ const ProductForm = ({ selectedProduct, categories }) => {
           setError(errorMsg || "Ha ocurrido un error.");
         });
     } else {
-      const data = { ...product, imagenUrl: '' };
+      const data = { ...product, imagenUrl: "" };
       const formData = new FormData();
       console.log(stringImageUrl);
-      if(stringImageUrl){
-        data.imagenUrl  = stringImageUrl
-        formData.append(FORM_FILE_STRING_CONST, file,stringImageUrl);
-      }else{
+      if (stringImageUrl) {
+        data.imagenUrl = stringImageUrl;
+        formData.append(FORM_FILE_STRING_CONST, file, stringImageUrl);
+      } else {
         formData.append(FORM_FILE_STRING_CONST, file);
       }
-      
+
       formData.append(FORM_OBJECT_STRING_CONST, JSON.stringify(data));
       axios
-        .put(`${baseUrl}/productos/actualizar/${selectedProduct.id}`, formData, {
-          headers: {
-            "Content-Type": `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`,
-            Authorization: `Bearer ${logedUser.jwt}`,
-          },
-        })
-        .then(() => {
+        .put(
+          `${baseUrl}/productos/actualizar/${selectedProduct.id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`,
+              Authorization: `Bearer ${logedUser.jwt}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log({ data: response.data });
           setSending(false);
-          resetData();
-          setSuccess("El producto se guardó correctamente.");
+          setSuccess("El producto se actualizó correctamente.");
+          const data = response.data.split("id: ");
+          const newId = data && data[2] ? data[2] : null;
+          if (newId) {
+            navigate(`/admin/editar-producto/${newId}`);
+          } else {
+            navigate("/admin/");
+          }
         })
         .catch((error) => {
           setSending(false);
@@ -415,9 +430,9 @@ const ProductForm = ({ selectedProduct, categories }) => {
           variant="contained"
           disabled={sending}
         >
-          <span> {selectedProduct ? "Editar" : "Crear"} Producto</span>
+          <span> {selectedProduct ? "Guardar cambios" : "Crear Producto"}</span>
         </LoadingButton>
-        <Button onClick={() => navigate(-1)}>Cancelar</Button>
+        <Button onClick={() => navigate("/admin")}>Cancelar</Button>
       </div>
     </div>
   );
