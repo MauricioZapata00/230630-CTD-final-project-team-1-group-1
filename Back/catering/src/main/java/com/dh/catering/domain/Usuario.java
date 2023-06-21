@@ -45,6 +45,9 @@ public class Usuario {
     @Column
     private Boolean estaHabilitado = false;
 
+    @OneToMany(mappedBy = "usuario")
+    private Set<Reserva> reservas = new HashSet<>();
+
     public Usuario(String nombre, String apellido, String contrasena, String email, Rol rol) {
         this.nombre = nombre;
         this.apellido = apellido;
