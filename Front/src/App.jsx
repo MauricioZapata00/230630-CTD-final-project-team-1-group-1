@@ -13,6 +13,8 @@ import CategoryPage from "./components/pages/CategoryPage/CategoryPage";
 import UserPage from "./components/pages/UserPage/UserPage";
 import AdminEditProduct from "./components/pages/AdminEditProduct/AdminEditProduct";
 import AdminListUsers from "./components/pages/AdminListUsers/AdminListUsers";
+import BookingsPage from "./components/pages/BookingsPage/BookingsPage";
+import BookingDetailPage from "./components/pages/BookingDetailPage/BookingDetailPage";
 
 const App = () => {
   return (
@@ -28,6 +30,8 @@ const App = () => {
                 <Route path="/detalle/:id" element={<DetailPage />} />
                 <Route path="/categoria/:id" element={<CategoryPage />} />
                 <Route path="/usuario" element={<UserPage />} />
+                <Route path="/reservas" element={<BookingsPage />} />
+                <Route path="/reservas/:id" element={<BookingDetailPage />} />
               </Route>
               <Route element={<AdminLayout />}>
                 <Route path="/admin" element={<AdminListProducts />} />

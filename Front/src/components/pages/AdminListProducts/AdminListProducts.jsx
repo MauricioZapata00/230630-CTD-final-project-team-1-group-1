@@ -39,6 +39,15 @@ const AdminListProducts = () => {
     setCurrentPageAdm((prevPage) => prevPage - 1);
   };
 
+  
+  const handleResetPage = () => {
+    setCurrentPageAdm(0);
+  };
+
+  const handleLastPage = () => {
+    setCurrentPageAdm(2);
+  };
+
   return (
     <div className="admin-list-products">
       <div className="admin-list-products__container">
@@ -53,6 +62,8 @@ const AdminListProducts = () => {
           currentPage={currentPageAdm}
           handleNextPage={handleNextPage}
           handlePrevPage={handlePrevPage}
+          handleLastPage={handleLastPage}
+          handleResetPage={handleResetPage}
         />
       </div>
     </div>

@@ -1,16 +1,18 @@
 import { Avatar, Button, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Logo1 from "../../../assets/Imagen2.png";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../../context";
 import PropTypes from "prop-types";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LoginIcon from "@mui/icons-material/Login";
+import PopupUser from "../../common/PopupUser";
 
 const Header = ({ admin = false }) => {
   const navigateTo = useNavigate();
 
   const { logedUser, setLogedUser } = useContext(AppContext);
+  const [showPopup, setShowPopup] = useState(false);
 
   const handleLogoClick = () => {
     !admin ? navigateTo("/") : navigateTo("/admin");
@@ -38,10 +40,6 @@ const Header = ({ admin = false }) => {
     navigateTo("/");
   };
 
-  const handleUserPage = () => {
-    navigateTo("/usuario");
-  };
-
   useEffect(() => {
     const logedUserData = localStorage.getItem("logedUser");
     if (logedUserData) {
@@ -52,6 +50,11 @@ const Header = ({ admin = false }) => {
       }
     }
   }, [admin, navigateTo, setLogedUser]);
+  
+
+  const handleUsernameClick = () => {
+    setShowPopup(!showPopup);
+  };
 
   return (
     <>
@@ -92,14 +95,17 @@ const Header = ({ admin = false }) => {
         ) : (
           <div className="header__user-info">
             <Avatar sx={{ bgcolor: "#67D671" }}>{logedUser.avatar}</Avatar>
-            <span onClick={handleUserPage} style={{ cursor: "pointer" }}>
-              {logedUser.userName}
-            </span>
+            <span onClick={handleUsernameClick} style={{ cursor: "pointer" }}>
+              {logedUser.nombre} {logedUser.apellido}
+            </span>         
             <IconButton onClick={handleLogOut} aria-label="cerrar sesión">
               <LoginIcon />
             </IconButton>
+            {showPopup && <PopupUser />} 
           </div>
+          
         )}
+          
       </div>
     </>
   );
