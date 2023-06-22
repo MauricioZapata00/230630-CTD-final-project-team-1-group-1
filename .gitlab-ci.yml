@@ -1,11 +1,9 @@
 stages:
-  - build_front
-  - deploy_front
-  - build_back
-  - deploy_back
+  - build
+  - deploy
 
 build_frontend:
-  stage: build_front
+  stage: build
   image: node:latest
   script:
     - echo "Starting building frontend app ..."
@@ -15,9 +13,26 @@ build_frontend:
     - echo "Frontend Build successfully!  :D"
   only:
     - release
+    - fix/broken-pipelines
+
+build_backend:
+  stage: build
+  image: maven:3.8.3-openjdk-17
+  script:
+    - cd Back/catering
+    - echo "Building app..."
+    - mvn clean
+    - mvn clean install
+    - echo "Finished building backend app :D"
+  artifacts:
+    paths:
+      - Back/catering/target/catering-0.0.1-SNAPSHOT.jar
+  only:
+    - release
+    - fix/broken-pipelines
 
 deploy_application_frontend:
-  stage: deploy_front
+  stage: deploy
   needs: [build_frontend]
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
   script:
@@ -27,30 +42,29 @@ deploy_application_frontend:
     - echo "Frontend deploy successfully!  :D"
   only:
     - release
-
-build_backend:
-  stage: build_back
-  image: maven:3.8.6-openjdk-18
-  script:
-    - cd Back/catering
-    - echo "Building app..."
-    - mvn clean
-    - mvn clean install
-    - echo "Finished building backend app :D"
-  artifacts:
-    paths:
-      - BackEnd/Proyecto_Integrador_G2/target/Proyecto_Integrador_G2-0.0.1-SNAPSHOT.jar
-  only:
-    - release
+    - fix/broken-pipelines
 
 deploy_Backend:
-  stage: deploy_back
+  stage: deploy
   needs: [build_backend]
   image: alpine:3.11
   script:
-    - ssh -i catering-key-c1.pem ubuntu@18.188.200.107 "cd backendApp/ pkill -f catering-0.0.1-SNAPSHOT.jar rm -rf catering-0.0.1-SNAPSHOT.jar"
-    - scp -i catering-key-c1.pem ../Back/catering/target/catering-0.0.1-SNAPSHOT.jar ubuntu@18.188.200.107:/home/ubuntu/backendApp
-    - ssh -i catering-key-c1.pem ubuntu@18.188.200.107 cd backendApp/ java -jar catering-0.0.1-SNAPSHOT.jar &"
+    - export DRIVER_CLASS_NAME=''
+    - export DB_URL=$DB_URL
+    - export USER=$DB_USER
+    - export PASSWORD=$DB_PASSWORD
+    - export DB_PLATFORM=''
+    - export H2_CONSOLE=''
+    - export AccessKey=$AWS_ACCESS_KEY_ID
+    - export SecretKey=$AWS_SECRET_ACCESS_KEY
+    - export BucketName=$BUCKET_NAME
+    - export URL_INSTANCE=$URL_EC2_INSTANCE
+    - export MAIL_USERNAME=$MAIL_USERNAME_EMAIL
+    - export MAIL_PASSWORD=$MAIL_PASSWORD_EMAIL
+    - ssh -i $EC2_PRIVATE_ACCESS_KEY ubuntu@18.188.200.107 "cd backendApp/ pkill -f catering-0.0.1-SNAPSHOT.jar rm -rf catering-0.0.1-SNAPSHOT.jar"
+    - scp -i $EC2_PRIVATE_ACCESS_KEY ../Back/catering/target/catering-0.0.1-SNAPSHOT.jar ubuntu@18.188.200.107:/home/ubuntu/backendApp
+    - ssh -i $EC2_PRIVATE_ACCESS_KEY ubuntu@18.188.200.107 cd backendApp/ java -jar catering-0.0.1-SNAPSHOT.jar &"
     - echo "Finished deploying backend app :D"
   only:
     - release
+    - fix/broken-pipelines

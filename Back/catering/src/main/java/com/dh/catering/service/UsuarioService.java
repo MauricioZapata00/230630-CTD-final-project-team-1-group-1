@@ -11,9 +11,11 @@ import com.dh.catering.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,16 +28,17 @@ import java.util.UUID;
 @Slf4j
 @Service
 @AllArgsConstructor
+@NoArgsConstructor
 public class UsuarioService {
 
     @Autowired
-    private final UsuarioRepository usuarioRepository;
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private final RolRepository rolRepository;
+    private RolRepository rolRepository;
 
     @Autowired
-    private final ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -48,11 +51,14 @@ public class UsuarioService {
 
     @Autowired
     private EmailService emailService;
-  
+
+    @Value("${user.service.url.confirmation}")
+    private String confirmationUrl;
+
     public Optional<String> save(UsuarioDto dto) throws DuplicadoException {
         String mensaje = null;
         String token = UUID.randomUUID().toString();
-        String link = "http://localhost:8080/usuarios/confirmar/" + token;
+        String link = confirmationUrl + "/usuarios/confirmar/" + token;
         Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(dto.getEmail());
         if (optionalUsuario.isPresent()) {
             if (optionalUsuario.get().getEstaHabilitado()==true){
