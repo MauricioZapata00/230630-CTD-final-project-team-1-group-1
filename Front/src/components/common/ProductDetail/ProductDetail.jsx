@@ -9,6 +9,8 @@ import ProductRating from "../ProductRating";
 import { AppContext } from "../../../context";
 import ImageGallery from "../ImageGallery";
 import { LoadingButton } from "@mui/lab";
+import ErrorMessage from "../ErrorMessage";
+import FormBooking from "../FormBooking/FormBooking";
 
 const ProductDetail = ({ productDetail }) => {
   const { rating, logedUser, error, setError } = useContext(AppContext);
@@ -34,12 +36,13 @@ const ProductDetail = ({ productDetail }) => {
   const handleGoToBooking = () => {
     if (!logedUser) {
       navigate('/ingreso')
+      setError('Es necesario iniciar sesión antes de realizar una reserva. Si no posees una cuenta, debes crearte una. ')
     } else {
       setShowModal(true)
     }
   }
   const handleContinueBooking = () => {
-    navigate(`/reservas/${productDetail._id}`)
+    navigate(`/reservas/${productDetail.id}`)
   }
   const handleCloseModal = () => {
     setShowModal(false);
@@ -133,6 +136,10 @@ const ProductDetail = ({ productDetail }) => {
           </DialogActions>
         </Dialog>
       )}
+      {error && <ErrorMessage position="top"/> }
+      <div style={{ display: 'none' }}>
+      <FormBooking productDetail={productDetail} />
+    </div>
     </div>
   );
 };
