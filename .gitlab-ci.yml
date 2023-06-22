@@ -49,12 +49,18 @@ deploy_Backend:
   needs: [build_backend]
   image: alpine:3.11
   script:
+    - export DRIVER_CLASS_NAME=''
     - export DB_URL=$DB_URL
     - export USER=$DB_USER
     - export PASSWORD=$DB_PASSWORD
+    - export DB_PLATFORM=''
+    - export H2_CONSOLE=''
     - export AccessKey=$AWS_ACCESS_KEY_ID
     - export SecretKey=$AWS_SECRET_ACCESS_KEY
     - export BucketName=$BUCKET_NAME
+    - export URL_INSTANCE=$URL_EC2_INSTANCE
+    - export MAIL_USERNAME=$MAIL_USERNAME_EMAIL
+    - export MAIL_PASSWORD=$MAIL_PASSWORD_EMAIL
     - ssh -i $EC2_PRIVATE_ACCESS_KEY ubuntu@18.188.200.107 "cd backendApp/ pkill -f catering-0.0.1-SNAPSHOT.jar rm -rf catering-0.0.1-SNAPSHOT.jar"
     - scp -i $EC2_PRIVATE_ACCESS_KEY ../Back/catering/target/catering-0.0.1-SNAPSHOT.jar ubuntu@18.188.200.107:/home/ubuntu/backendApp
     - ssh -i $EC2_PRIVATE_ACCESS_KEY ubuntu@18.188.200.107 cd backendApp/ java -jar catering-0.0.1-SNAPSHOT.jar &"
