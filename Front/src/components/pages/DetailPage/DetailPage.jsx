@@ -39,7 +39,7 @@ const DetailPage = () => {
         setLoading(false);
       })
       .finally(() => setLoading(false));
-  }, [id, setError]);
+  }, [id, setRating, setError]);
   
 
   return (

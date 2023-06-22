@@ -1,41 +1,30 @@
-const Pagination = ({ currentPage, handlePrevPage, handleNextPage, totalPages, onPageChange }) => {
-  //  const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
-  
-    return (
-     <div>
+import Next from "../../assets/proximo.png";
+import Back from "../../assets/atras.png";
+import ResetPage from "../../assets/resetPage.png";
+import LastPage from "../../assets/lastPage.png";
+
+const Pagination = ({ currentPage, handlePrevPage, handleNextPage, handleResetPage, handleLastPage, totalPages, onPageChange }) => {
+
+
+  return (
+    <div>
       <div className="pagination">
-        <button onClick={handlePrevPage} disabled={currentPage === 0}>
-          &lt; Anterior
+        <button onClick={handleResetPage} disabled={currentPage === 0}>
+          <img src={ResetPage} alt="ResetPage" className={currentPage === 0 ? "opaque-image" : ""} />
         </button>
-        <span>{currentPage}</span>
+        <button onClick={handlePrevPage} disabled={currentPage === 0}>
+          <img src={Back} alt="Back" className={currentPage === 0 ? "opaque-image" : ""} />
+        </button>
+        <span>{currentPage + 1}</span>
         <button onClick={handleNextPage} disabled={currentPage === 2}>
-          Siguiente &gt;
+          <img src={Next} alt="Next" className={currentPage === 2 ? "opaque-image" : ""} />
+        </button>
+        <button onClick={handleLastPage} disabled={currentPage === 2}>
+          <img src={LastPage} alt="LastPage" className={currentPage === 2 ? "opaque-image" : ""} />
         </button>
       </div>
-      {/*<ul className="pagination">
-      {currentPage > 1 && (
-        <li className="pagination-button" onClick={() => onPageChange(currentPage - 1)}>
-          Atrás
-        </li>
-      )}
-      {pages.map((page) => (
-        <li
-          key={page}
-          className={currentPage === page ? 'active' : ''}
-          onClick={() => onPageChange(page)}
-        >
-          {page}
-        </li>
-      ))}
-      {currentPage < totalPages && (
-        <li className="pagination-button" onClick={() => onPageChange(currentPage + 1)}>
-          Adelante
-        </li>
-      )}
-      <li className="current-page">Página {currentPage}</li>
-    </ul>*/}
     </div>
-    );
-  };
+  );
+};
 
 export default Pagination

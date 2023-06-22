@@ -1,17 +1,18 @@
 import { LoadingButton } from "@mui/lab";
-import { TextField } from "@mui/material";
+import { Button, Dialog, DialogActions, TextField } from "@mui/material";
 import { useContext, useState } from "react";
 import { createUser } from "../../../services";
 import { AppContext } from "../../../context";
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import ErrorMessage from "../../common/ErrorMessage";
+import SuccessMessage from "../../common/SuccessMessage";
 
 const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
 const RegisterPage = () => {
   const navigateTo = useNavigate();
 
-  const { setSuccess, setError } = useContext(AppContext);
+  const {success, setSuccess, error, setError } = useContext(AppContext);
   const [data, setData] = useState({
     nombre: "",
     apellido: "",
@@ -20,6 +21,8 @@ const RegisterPage = () => {
   });
   const [sending, setSending] = useState(false);
   const [errors, setErrors] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState('')
 
   const hasError = (name) => {
     const foundError = errors.find((error) => error.name === name);
@@ -69,15 +72,22 @@ const RegisterPage = () => {
 
     setSending(true);
     createUser({ ...data, rolName: "USER" })
-      .then(() => {
-        setSuccess("La cuenta se creó correctamente");
-        navigateTo("/ingreso");
+      .then((response) => {
+        setMessage(response.data);
+        console.log(response.data);
+        setShowModal(true);
       })
       .catch((error) => {
         const errorMsg = error?.response?.data?.description;
+        console.log(error);
         setError(errorMsg || "Ha ocurrido un error.");
       })
       .finally(() => setSending(false));
+  };
+ 
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setMessage('')
   };
 
   return (
@@ -147,8 +157,27 @@ const RegisterPage = () => {
         >
           <span>Crear Cuenta</span>
         </LoadingButton>
-        <p className="register-page__form-container__link">¿Ya tienes una cuenta? <Link to={`/ingreso`}>Inicia Sesión</Link></p>
+        <p className="register-page__form-container__link">
+          ¿Ya tienes una cuenta? <Link to={`/ingreso`}>Inicia Sesión</Link>
+        </p>
       </div>
+      {showModal && (
+        <Dialog open={showModal} onClose={handleCloseModal}>
+          <DialogActions>
+            <Button onClick={handleCloseModal}>Cerrar</Button>
+          </DialogActions>
+          <div className="calification">
+            <p style={{ fontWeight: "600" }}>¡Listo! Revisa tu correo</p>
+            <div>
+              <p>{message}</p>        
+            </div>
+          </div>
+          <DialogActions style={{justifyContent: 'center', marginBottom: '1rem'}} >
+            <Button variant="contained" onClick={handleCloseModal} >OK</Button>
+          </DialogActions>
+        </Dialog>
+      )}
+      {error && <ErrorMessage />}
     </div>
   );
 };

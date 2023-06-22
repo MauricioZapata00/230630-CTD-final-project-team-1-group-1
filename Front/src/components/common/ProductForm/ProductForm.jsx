@@ -44,13 +44,12 @@ const ProductForm = ({ selectedProduct, categories }) => {
   const { setSuccess, setError, logedUser } = useContext(AppContext);
   const navigate = useNavigate();
 
-  console.log({ logedUser });
-
   const [product, setProduct] = useState(selectedProduct || defaultProductData);
   const [productImageURL, setProductImageURL] = useState("");
   const [file, setFile] = useState(null);
   const [stringImageUrl, setStringImageUrl] = useState("");
 
+  console.log({ productImageURL, stringImageUrl });
   const [sending, setSending] = useState(false);
 
   const [errors, setErrors] = useState([]);
@@ -167,7 +166,11 @@ const ProductForm = ({ selectedProduct, categories }) => {
       });
     }
 
-    if (!selectedProduct && stringImageUrl.length === 0) {
+    if (
+      !selectedProduct &&
+      stringImageUrl.length === 0 &&
+      product.imagenUrl !== selectedProduct.imagenUrl
+    ) {
       newErrors.push({
         name: "imagenURL",
         message: "Debe cargar una imágen.",
@@ -180,6 +183,8 @@ const ProductForm = ({ selectedProduct, categories }) => {
       return;
     }
 
+    setSending(true);
+
     if (!selectedProduct) {
       const data = { ...product, imagenUrl: stringImageUrl };
       const formData = new FormData();
@@ -187,7 +192,6 @@ const ProductForm = ({ selectedProduct, categories }) => {
       formData.append(FORM_FILE_STRING_CONST, file, stringImageUrl);
       formData.append(FORM_OBJECT_STRING_CONST, JSON.stringify(data));
 
-      setSending(true);
       axios
         .post(`${baseUrl}/productos/registrar`, formData, {
           headers: {
@@ -206,18 +210,39 @@ const ProductForm = ({ selectedProduct, categories }) => {
           setError(errorMsg || "Ha ocurrido un error.");
         });
     } else {
+      const data = { ...product, imagenUrl: "" };
+      const formData = new FormData();
+      console.log(stringImageUrl);
+      if (stringImageUrl) {
+        data.imagenUrl = stringImageUrl;
+        formData.append(FORM_FILE_STRING_CONST, file, stringImageUrl);
+      } else {
+        formData.append(FORM_FILE_STRING_CONST, file);
+      }
+
+      formData.append(FORM_OBJECT_STRING_CONST, JSON.stringify(data));
       axios
-        .put(`${baseUrl}/productos/actualizar/${selectedProduct.id}`, product, {
-          headers: {
-            // "Content-Type": `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`,
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbmlzdHJhZG9yQGdtYWlsLmNvbSIsImlhdCI6MTY4NjY1ODIxNiwiZXhwIjoxNjg2NjYwMDE2fQ.4ZSBP0rllyCsnd7WLmLm76PBYL4wWZpln-PE93XSIX4",
-          },
-        })
-        .then(() => {
+        .put(
+          `${baseUrl}/productos/actualizar/${selectedProduct.id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": `multipart/form-data; boundary=${formData._boundary}; charset=utf-8`,
+              Authorization: `Bearer ${logedUser.jwt}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log({ data: response.data });
           setSending(false);
-          resetData();
-          setSuccess("El producto se guardó correctamente.");
+          setSuccess("El producto se actualizó correctamente.");
+          const data = response.data.split("id: ");
+          const newId = data && data[2] ? data[2] : null;
+          if (newId) {
+            navigate(`/admin/editar-producto/${newId}`);
+          } else {
+            navigate("/admin/");
+          }
         })
         .catch((error) => {
           setSending(false);
@@ -375,25 +400,27 @@ const ProductForm = ({ selectedProduct, categories }) => {
               />
             </FormGroup>
           </div>
-          {!selectedProduct && (
-            <div className="form-control">
-              <InputLabel>Cargar imágen</InputLabel>
-              <input
-                className="input-file"
-                type="file"
-                id="input-product-image-id"
-                accept="image/png, image/jpeg"
-                value={productImageURL}
-                onChange={handleproductImageURLChage}
-              />
 
-              {!!hasError("imagenURL") && (
-                <p className="error">{hasError("imagenURL")}</p>
-              )}
+          <div className="form-control">
+            <InputLabel>
+              {selectedProduct ? "Cargar " : "Editar "} imágen
+            </InputLabel>
+            <input
+              className="input-file"
+              type="file"
+              id="input-product-image-id"
+              accept="image/png, image/jpeg"
+              value={productImageURL}
+              onChange={handleproductImageURLChage}
+            />
 
-              <div id={imageContainerId} className="preview"></div>
-            </div>
-          )}
+            {!!hasError("imagenURL") && (
+              <p className="error">{hasError("imagenURL")}</p>
+            )}
+
+            <div id={imageContainerId} className="preview"></div>
+            <div></div>
+          </div>
         </div>
       </div>
       <div className="product-form__actions">
@@ -403,9 +430,9 @@ const ProductForm = ({ selectedProduct, categories }) => {
           variant="contained"
           disabled={sending}
         >
-          <span> {selectedProduct ? "Editar" : "Crear"} Producto</span>
+          <span> {selectedProduct ? "Guardar cambios" : "Crear Producto"}</span>
         </LoadingButton>
-        <Button onClick={() => navigate(-1)}>Cancelar</Button>
+        <Button onClick={() => navigate("/admin")}>Cancelar</Button>
       </div>
     </div>
   );

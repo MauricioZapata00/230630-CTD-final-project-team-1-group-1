@@ -12,7 +12,7 @@ const AdminListProducts = () => {
   const navigateTo = useNavigate();
 
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [currentPageAdm, setCurrentPageAdm] = useState(0);
 
   const handleAddProductClick = () => {
@@ -20,7 +20,6 @@ const AdminListProducts = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
     getProducts(currentPageAdm)
       .then((response) => {
         setProducts(response.data);
@@ -40,6 +39,15 @@ const AdminListProducts = () => {
     setCurrentPageAdm((prevPage) => prevPage - 1);
   };
 
+  
+  const handleResetPage = () => {
+    setCurrentPageAdm(0);
+  };
+
+  const handleLastPage = () => {
+    setCurrentPageAdm(2);
+  };
+
   return (
     <div className="admin-list-products">
       <div className="admin-list-products__container">
@@ -54,6 +62,8 @@ const AdminListProducts = () => {
           currentPage={currentPageAdm}
           handleNextPage={handleNextPage}
           handlePrevPage={handlePrevPage}
+          handleLastPage={handleLastPage}
+          handleResetPage={handleResetPage}
         />
       </div>
     </div>

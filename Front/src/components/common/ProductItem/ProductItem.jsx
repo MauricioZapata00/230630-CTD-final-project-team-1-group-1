@@ -23,7 +23,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 
 const ProductItem = ({ product }) => {
-  const { setError, setSuccess } = useContext(AppContext);
+  const { setError, setSuccess, logedUser } = useContext(AppContext);
   const { imagenUrl, nombre, precio, id } = product;
 
   const [itemDeleted, setItemDeleted] = useState(false);
@@ -40,7 +40,7 @@ const ProductItem = ({ product }) => {
 
   const hadleClickConfirm = () => {
     setLoading(true);
-    deleteProduct(id)
+    deleteProduct(id, logedUser.jwt)
       .then(() => {
         setSuccess("Se eliminó el producto correctamente");
         setItemDeleted(true);

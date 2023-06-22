@@ -34,6 +34,8 @@ public class ProductoService {
   @Autowired
   private S3ImageService s3ImageService;
 
+  private String imgUrlActualizacion;
+
   public Optional<String> save(ProductoDto productoDto, MultipartFile archivoAGuardar) throws NombreDuplicadoException, RecursoNoEncontradoException {
     String mensaje = null;
     if (productoDto != null) {
@@ -42,16 +44,15 @@ public class ProductoService {
         throw new NombreDuplicadoException(
             "Ya existe un producto registrado con el nombre: " + productoDto.getNombre());
       }
-      s3ImageService.uploadImage(productoDto.getImagenUrl(), archivoAGuardar);
-      Producto producto = new Producto();
-      producto.setNombre(productoDto.getNombre());
-      producto.setDescripcion(productoDto.getDescripcion());
-      producto.setPrecio(productoDto.getPrecio());
-      producto.setImagenUrl(s3ImageService.getUrlImage(productoDto.getImagenUrl()));
-      producto.setCantMin(productoDto.getCantMin());
-      producto.setRequierePagoAnticipado(productoDto.getRequierePagoAnticipado());
-      producto.setMinDiasReservaPrevia(productoDto.getMinDiasReservaPrevia());
-      producto.setPermiteCambios(productoDto.getPermiteCambios());
+      Producto producto = mapper.convertValue(productoDto,Producto.class);
+
+      if (archivoAGuardar != null){
+        s3ImageService.uploadImage(productoDto.getImagenUrl(), archivoAGuardar);
+        producto.setImagenUrl(s3ImageService.getUrlImage(productoDto.getImagenUrl()));
+      } else {
+        producto.setImagenUrl(imgUrlActualizacion);
+      }
+
       if (categoriaProductoRepository.getByNombre(productoDto.getNombreCategoria()).isEmpty()){
         log.error("No existe una categoria con ese nombreCategoria ingresado");
         throw new RecursoNoEncontradoException("No existe una categoria con ese nombreCategoria ingresado");
@@ -143,6 +144,7 @@ public class ProductoService {
   public Optional<String> updateById(Long id, ProductoDto productoDto, MultipartFile archivoAGuardar)
       throws RecursoNoEncontradoException, NombreDuplicadoException {
     String mensaje = null;
+    imgUrlActualizacion = getById(id).get().getImagenUrl();
     this.deleteById(id);
     this.save(productoDto,archivoAGuardar);
     mensaje = "Se actualizo correctamente el producto que tenia el id: " + id + ". Al producto actualizado se le asigno el id: " + this.getByNombre(productoDto.getNombre()).get().getId();

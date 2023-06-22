@@ -12,6 +12,11 @@ import AdminLayout from "./components/layout/AdminLayout";
 import CategoryPage from "./components/pages/CategoryPage/CategoryPage";
 import UserPage from "./components/pages/UserPage/UserPage";
 import AdminEditProduct from "./components/pages/AdminEditProduct/AdminEditProduct";
+import AdminListUsers from "./components/pages/AdminListUsers/AdminListUsers";
+import BookingsPage from "./components/pages/BookingsPage/BookingsPage";
+import BookingDetailPage from "./components/pages/BookingDetailPage/BookingDetailPage";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
@@ -27,6 +32,8 @@ const App = () => {
                 <Route path="/detalle/:id" element={<DetailPage />} />
                 <Route path="/categoria/:id" element={<CategoryPage />} />
                 <Route path="/usuario" element={<UserPage />} />
+                <Route path="/reservas" element={<BookingsPage />} />
+                <Route path="/reservas/:id" element={<BookingDetailPage />} />
               </Route>
               <Route element={<AdminLayout />}>
                 <Route path="/admin" element={<AdminListProducts />} />
@@ -38,11 +45,16 @@ const App = () => {
                   path="/admin/editar-producto/:id"
                   element={<AdminEditProduct />}
                 />
+                <Route
+                  path="/admin/listar-usuarios"
+                  element={<AdminListUsers />}
+                />
               </Route>
             </Routes>
           </BrowserRouter>
         </AppContextProvider>
       </ThemeContextProvider>
+      <ToastContainer position="top-right" />
     </div>
   );
 };

@@ -7,7 +7,7 @@ const AppContextProvider = ({ children }) => {
   const [logedUser, setLogedUser] = useState(null);
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
-  const [rating, setRating] = useState([]);
+  const [rating, setRating] = useState(0);
 
   const contextValue = {
     logedUser,

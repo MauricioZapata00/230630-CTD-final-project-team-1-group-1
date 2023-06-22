@@ -8,9 +8,12 @@ import { useNavigate } from "react-router-dom";
 import ProductRating from "../ProductRating";
 import { AppContext } from "../../../context";
 import ImageGallery from "../ImageGallery";
+import { LoadingButton } from "@mui/lab";
+import ErrorMessage from "../ErrorMessage";
+import FormBooking from "../FormBooking/FormBooking";
 
-const ProductDetail = ({ productDetail}) => {
-  const { rating} = useContext(AppContext);
+const ProductDetail = ({ productDetail }) => {
+  const { rating, logedUser, error, setError } = useContext(AppContext);
   const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
@@ -18,8 +21,6 @@ const ProductDetail = ({ productDetail}) => {
     navigate(-1);
   };
 
-  //const productRatings = [4, 5, 3, 4, 5, 2, 3, 4, 5, 5, 5];
-  //console.log(productRatings);
   console.log(rating);
   const {
     imagenUrl,
@@ -32,6 +33,21 @@ const ProductDetail = ({ productDetail}) => {
     requierePagoAnticipado,
   } = productDetail;
 
+  const handleGoToBooking = () => {
+    if (!logedUser) {
+      navigate('/ingreso')
+      setError('Es necesario iniciar sesión antes de realizar una reserva. Si no posees una cuenta, debes crearte una. ')
+    } else {
+      setShowModal(true)
+    }
+  }
+  const handleContinueBooking = () => {
+    navigate(`/reservas/${productDetail.id}`)
+  }
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   return (
     <div className="product-detail">
       <div className="product-detail__container-title">
@@ -41,10 +57,8 @@ const ProductDetail = ({ productDetail}) => {
         <IconButton onClick={goBack} aria-label="volver">
           <ArrowBackIcon />
         </IconButton>
-
         <ProductRating ratings={rating} />
       </div>
-
       <ImageGallery
         galleryID="product-detail-gallery"
         images={[
@@ -71,7 +85,6 @@ const ProductDetail = ({ productDetail}) => {
           },
         ]}
       />
-
       <div>
         <p className="product-detail__description">{descripcion}</p>
         <div className="product-detail__features-container">
@@ -102,8 +115,31 @@ const ProductDetail = ({ productDetail}) => {
             </div>
           </div>
         </div>
-        <p className="product-detail__price">${precio.toFixed(2)}</p>
+        <p className="product-detail__price">
+          <LoadingButton onClick={handleGoToBooking} variant="contained">Realizar reserva</LoadingButton>
+          ${precio.toFixed(2)}
+        </p>
       </div>
+      {showModal && (
+        <Dialog open={showModal} onClose={handleCloseModal}>
+          <DialogActions>
+            <Button style={{ fontWeight: "600" }} onClick={handleCloseModal}>X</Button>
+          </DialogActions>
+          <div className="calification">
+            <p style={{ fontWeight: "600" }}>Elige la fecha que deseas reservar este producto</p>
+            <div>
+              <p>calendario</p>        
+            </div>
+          </div>
+          <DialogActions style={{justifyContent: 'center', marginBottom: '1rem'}} >
+            <Button variant="contained" onClick={handleContinueBooking} >Continuar reserva</Button>
+          </DialogActions>
+        </Dialog>
+      )}
+      {error && <ErrorMessage position="top"/> }
+      <div style={{ display: 'none' }}>
+      <FormBooking productDetail={productDetail} />
+    </div>
     </div>
   );
 };
