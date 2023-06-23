@@ -3,8 +3,10 @@ package com.dh.catering.service;
 import com.dh.catering.domain.TokenConfirmacionCorreo;
 import com.dh.catering.domain.Usuario;
 import com.dh.catering.dto.UsuarioDto;
+import com.dh.catering.exceptions.AsignacionException;
 import com.dh.catering.exceptions.DuplicadoException;
 import com.dh.catering.exceptions.RecursoNoEncontradoException;
+import com.dh.catering.repository.ReservaRepository;
 import com.dh.catering.repository.RolRepository;
 import com.dh.catering.repository.TokenConfirmacionCorreoRepository;
 import com.dh.catering.repository.UsuarioRepository;
@@ -48,6 +50,9 @@ public class UsuarioService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private ReservaRepository reservaRepository;
   
     public Optional<String> save(UsuarioDto dto) throws DuplicadoException {
         String mensaje = null;
@@ -132,10 +137,11 @@ public class UsuarioService {
         return  Optional.ofNullable(usuarioDto);
     }
 
-    public Optional<String> deleteById(Long id) throws RecursoNoEncontradoException {
+    public Optional<String> deleteById(Long id) throws RecursoNoEncontradoException, AsignacionException {
         String mensaje = null;
         Optional<UsuarioDto> optionalUsuarioDto = this.getById(id);
         if (optionalUsuarioDto.isPresent()) {
+            validarSiPuedeSerEditado(optionalUsuarioDto.get().getEmail());
             usuarioRepository.deleteById(id);
             mensaje = "Se elimino exitosamente el usuario con id: " + id;
             log.info(mensaje);
@@ -143,7 +149,7 @@ public class UsuarioService {
         return Optional.ofNullable(mensaje);
     }
 
-    public Optional<String> updateById(Long id, UsuarioDto usuarioDto) throws RecursoNoEncontradoException, DuplicadoException {
+    public Optional<String> updateById(Long id, UsuarioDto usuarioDto) throws RecursoNoEncontradoException, DuplicadoException, AsignacionException {
         String mensaje = null;
         this.deleteById(id);
         this.save(usuarioDto);
@@ -191,6 +197,12 @@ public class UsuarioService {
 
     public int habilitarUsuario(String email){
         return usuarioRepository.habilitarUsuario(email);
+    }
+
+    private void validarSiPuedeSerEditado(String email) throws AsignacionException {
+        if (!reservaRepository.findAllByEmail(email).isEmpty()) {
+            throw new AsignacionException("No se puede modificar el usuario porque esta asociado a alguna reserva");
+        }
     }
 
     private String buildEmail(String nombre, String link) {
