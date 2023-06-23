@@ -11,10 +11,23 @@ import ImageGallery from "../ImageGallery";
 import { LoadingButton } from "@mui/lab";
 import ErrorMessage from "../ErrorMessage";
 import FormBooking from "../FormBooking/FormBooking";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import dayjs from "dayjs";
+import "dayjs/locale/es";
 
 const ProductDetail = ({ productDetail }) => {
   const { rating, logedUser, error, setError } = useContext(AppContext);
+
+  const initialDay = dayjs().add(
+    Number(productDetail.minDiasReservaPrevia),
+    "d"
+  );
   const [showModal, setShowModal] = useState(false);
+  const [date, setDate] = useState(initialDay);
+
+  console.log({ date: date.format("YYYY-MM-DD") });
 
   const navigate = useNavigate();
   const goBack = () => {
@@ -35,15 +48,17 @@ const ProductDetail = ({ productDetail }) => {
 
   const handleGoToBooking = () => {
     if (!logedUser) {
-      navigate('/ingreso')
-      setError('Es necesario iniciar sesión antes de realizar una reserva. Si no posees una cuenta, debes crearte una. ')
+      navigate("/ingreso");
+      setError(
+        "Es necesario iniciar sesión antes de realizar una reserva. Si no posees una cuenta, debes crearte una. "
+      );
     } else {
-      setShowModal(true)
+      setShowModal(true);
     }
-  }
+  };
   const handleContinueBooking = () => {
-    navigate(`/reservas/${productDetail.id}`)
-  }
+    navigate(`/reservas/${productDetail.id}`);
+  };
   const handleCloseModal = () => {
     setShowModal(false);
   };
@@ -116,30 +131,52 @@ const ProductDetail = ({ productDetail }) => {
           </div>
         </div>
         <p className="product-detail__price">
-          <LoadingButton onClick={handleGoToBooking} variant="contained">Realizar reserva</LoadingButton>
+          {logedUser && (
+            <LoadingButton onClick={handleGoToBooking} variant="contained">
+              Realizar reserva
+            </LoadingButton>
+          )}
           ${precio.toFixed(2)}
         </p>
       </div>
       {showModal && (
         <Dialog open={showModal} onClose={handleCloseModal}>
           <DialogActions>
-            <Button style={{ fontWeight: "600" }} onClick={handleCloseModal}>X</Button>
+            <Button style={{ fontWeight: "600" }} onClick={handleCloseModal}>
+              X
+            </Button>
           </DialogActions>
           <div className="calification">
-            <p style={{ fontWeight: "600" }}>Elige la fecha que deseas reservar este producto</p>
+            <p style={{ fontWeight: "600" }}>
+              Elige la fecha que deseas reservar este producto
+            </p>
             <div>
-              <p>calendario</p>        
+              <LocalizationProvider
+                dateAdapter={AdapterDayjs}
+                adapterLocale="es"
+              >
+                <DateCalendar
+                  onChange={(newDate) => setDate(newDate)}
+                  value={date}
+                  disablePast
+                  minDate={initialDay}
+                />
+              </LocalizationProvider>
             </div>
           </div>
-          <DialogActions style={{justifyContent: 'center', marginBottom: '1rem'}} >
-            <Button variant="contained" onClick={handleContinueBooking} >Continuar reserva</Button>
+          <DialogActions
+            style={{ justifyContent: "center", marginBottom: "1rem" }}
+          >
+            <Button variant="contained" onClick={handleContinueBooking}>
+              Continuar reserva
+            </Button>
           </DialogActions>
         </Dialog>
       )}
-      {error && <ErrorMessage position="top"/> }
-      <div style={{ display: 'none' }}>
-      <FormBooking productDetail={productDetail} />
-    </div>
+      {error && <ErrorMessage position="top" />}
+      <div style={{ display: "none" }}>
+        {logedUser && <FormBooking productDetail={productDetail} />}
+      </div>
     </div>
   );
 };
