@@ -3,8 +3,6 @@ package com.dh.catering.domain;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -44,6 +42,9 @@ public class Usuario {
 
     @Column
     private Boolean estaHabilitado = false;
+
+    @OneToMany(mappedBy = "usuario")
+    private Set<Reserva> reservas = new HashSet<>();
 
     public Usuario(String nombre, String apellido, String contrasena, String email, Rol rol) {
         this.nombre = nombre;
