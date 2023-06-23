@@ -17,6 +17,8 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 
+const bookedDates = ["2023-07-12", "2023-07-15", "2023-07-10"];
+
 const ProductDetail = ({ productDetail }) => {
   const { rating, logedUser, error, setError } = useContext(AppContext);
 
@@ -26,6 +28,9 @@ const ProductDetail = ({ productDetail }) => {
   );
   const [showModal, setShowModal] = useState(false);
   const [date, setDate] = useState(initialDay);
+  const [formattedBookedDates] = useState(
+    bookedDates.map((date) => dayjs(date).format("YYYY-MM-DD"))
+  );
 
   console.log({ date: date.format("YYYY-MM-DD") });
 
@@ -61,6 +66,11 @@ const ProductDetail = ({ productDetail }) => {
   };
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  const getFormattedBookedDates = (date) => {
+    const formattedDate = date.format("YYYY-MM-DD");
+    return !!bookedDates.find((bookedDate) => bookedDate === formattedDate);
   };
 
   return (
@@ -131,11 +141,9 @@ const ProductDetail = ({ productDetail }) => {
           </div>
         </div>
         <p className="product-detail__price">
-          {logedUser && (
-            <LoadingButton onClick={handleGoToBooking} variant="contained">
-              Realizar reserva
-            </LoadingButton>
-          )}
+          <LoadingButton onClick={handleGoToBooking} variant="contained">
+            Realizar reserva
+          </LoadingButton>
           ${precio.toFixed(2)}
         </p>
       </div>
@@ -160,6 +168,7 @@ const ProductDetail = ({ productDetail }) => {
                   value={date}
                   disablePast
                   minDate={initialDay}
+                  shouldDisableDate={getFormattedBookedDates}
                 />
               </LocalizationProvider>
             </div>
