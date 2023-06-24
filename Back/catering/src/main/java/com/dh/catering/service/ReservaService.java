@@ -36,7 +36,7 @@ public class ReservaService {
         String mensaje = null;
         if (reservaDto != null){
             Integer restriccionDiasMinReserva = productoRepository.getReferenceById(reservaDto.getIdProducto()).getMinDiasReservaPrevia();
-            if (ChronoUnit.DAYS.between(Util.convertirStringToLocalDate(reservaDto.getFechaReserva()),Util.obtenerFechaActual())<restriccionDiasMinReserva){
+            if (ChronoUnit.DAYS.between(Util.obtenerFechaActual(),Util.convertirStringToLocalDate(reservaDto.getFechaReserva()))<restriccionDiasMinReserva){
                 mensaje = "Este producto solo puede ser reservado como minimo " + restriccionDiasMinReserva + " días previos al evento.";
                 log.error(mensaje);
                 throw new AsignacionException(mensaje);
