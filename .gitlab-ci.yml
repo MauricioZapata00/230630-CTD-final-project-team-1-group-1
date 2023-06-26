@@ -58,6 +58,8 @@ deploy_Backend:
   stage: deploy
   needs: [build_backend]
   image: alpine:3.11
+  before_script:
+    - apk update && apk add openssh-client bash
   script:
     - cd Back/catering/
     - export DRIVER_CLASS_NAME=''
