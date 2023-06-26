@@ -11,6 +11,9 @@ build_frontend:
     - npm install --save-dev
     - npm run build
     - echo "Frontend Build successfully!  :D"
+  artifacts:
+    paths:
+      - Front/dist/*
   only:
     - release
     - fix/broken-pipelines
@@ -38,7 +41,10 @@ deploy_application_frontend:
   script:
     - echo "deploying frontend app ..."
     - cd Front/
-    - aws s3 cp -r dist/* s3://equipo1-c1-bucket-frontend
+    - aws s3 rm s3://equipo1-c1-bucket-frontend/assets --recursive
+    - aws s3 rm s3://equipo1-c1-bucket-frontend/index.html
+    - aws s3 rm s3://equipo1-c1-bucket-frontend/vite.svg
+    - aws s3 cp dist/* s3://equipo1-c1-bucket-frontend --recursive
     - echo "Frontend deploy successfully!  :D"
   only:
     - release
@@ -49,6 +55,7 @@ deploy_Backend:
   needs: [build_backend]
   image: alpine:3.11
   script:
+    - cd Back/catering/
     - export DRIVER_CLASS_NAME=''
     - export DB_URL=$DB_URL
     - export USER=$DB_USER
@@ -61,8 +68,8 @@ deploy_Backend:
     - export URL_INSTANCE=$URL_EC2_INSTANCE
     - export MAIL_USERNAME=$MAIL_USERNAME_EMAIL
     - export MAIL_PASSWORD=$MAIL_PASSWORD_EMAIL
-    - ssh -i $EC2_PRIVATE_ACCESS_KEY ubuntu@18.188.200.107 "cd backendApp/ pkill -f catering-0.0.1-SNAPSHOT.jar rm -rf catering-0.0.1-SNAPSHOT.jar"
-    - scp -i $EC2_PRIVATE_ACCESS_KEY ../Back/catering/target/catering-0.0.1-SNAPSHOT.jar ubuntu@18.188.200.107:/home/ubuntu/backendApp
+    - ssh -i $EC2_PRIVATE_ACCESS_KEY ubuntu@18.188.200.107 "cd backendApp/ pkill -f catering-0.0.1-SNAPSHOT.jar rm -rf /home/ubuntu/backup/catering-0.0.1-SNAPSHOT.jar cp -r catering-0.0.1-SNAPSHOT.jar /home/ubuntu/backup rm -rf catering-0.0.1-SNAPSHOT.jar"
+    - scp -i $EC2_PRIVATE_ACCESS_KEY target/catering-0.0.1-SNAPSHOT.jar ubuntu@18.188.200.107:/home/ubuntu/backendApp
     - ssh -i $EC2_PRIVATE_ACCESS_KEY ubuntu@18.188.200.107 cd backendApp/ java -jar catering-0.0.1-SNAPSHOT.jar &"
     - echo "Finished deploying backend app :D"
   only:
