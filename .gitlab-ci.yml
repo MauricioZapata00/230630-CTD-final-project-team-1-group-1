@@ -51,7 +51,7 @@ deploy_application_frontend:
     - aws s3 rm s3://equipo1-c1-bucket-frontend/assets --recursive
     - aws s3 rm s3://equipo1-c1-bucket-frontend/index.html
     - aws s3 rm s3://equipo1-c1-bucket-frontend/vite.svg
-    - aws s3 cp dist/* s3://equipo1-c1-bucket-frontend --recursive
+    - aws s3 sync Front/dist/ s3://equipo1-c1-bucket-frontend
     - echo "Frontend deploy successfully!  :D"
   only:
     - release
