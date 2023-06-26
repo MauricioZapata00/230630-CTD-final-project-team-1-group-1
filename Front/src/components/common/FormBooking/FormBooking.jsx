@@ -6,12 +6,12 @@ import { CheckCircle } from "@mui/icons-material";
 import { RiCheckboxCircleLine } from "react-icons/ri";
 
 const FormBooking = ({ productDetail }) => {
-  const { error, setError, logedUser } = useContext(AppContext);
+  const { error, setError, logedUser, selectedDate } = useContext(AppContext);
   const [showModal, setShowModal] = useState(false);
   const [showModalConfirm, setShowModalConfirm] = useState(false);
   const [productDetaile] = useState(productDetail);
   const navigateTo = useNavigate();
-  console.log(productDetaile);
+
   const handleCheckBooking = () => {
     setShowModal(true);
   };
@@ -69,7 +69,12 @@ const FormBooking = ({ productDetail }) => {
         <h4>Datos de la reserva</h4>
         <p>
           <label>Fecha</label>
-          <Input fullWidth type="date" value={"2000-02-02"} />
+          <Input
+            disabled
+            fullWidth
+            type="date"
+            value={selectedDate.format("YYYY-MM-DD")}
+          />
         </p>
         <div
           style={{

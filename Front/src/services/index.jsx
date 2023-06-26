@@ -43,3 +43,11 @@ export const getRatingProduct = (id) => {
 export const submitRating = (data) => {
   return axios.post(`${baseUrl}/puntuaciones/`, data);
 };
+
+export const getProductBookings = (id, jwt) => {
+  return axios.get(`${baseUrl}/reservas/productos/${id}`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  });
+};
