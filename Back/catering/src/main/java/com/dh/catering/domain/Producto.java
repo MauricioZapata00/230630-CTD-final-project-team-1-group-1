@@ -53,6 +53,9 @@ public class Producto {
     @OneToMany(mappedBy = "producto", cascade = CascadeType.REMOVE)
     private Set<Puntuacion> puntuaciones = new HashSet<>();
 
+    @OneToMany(mappedBy = "producto")
+    private Set<Reserva> reservas = new HashSet<>();
+
     public Producto(String nombre, String descripcion, Double precio, String imagenUrl, Integer cantMin, Boolean requierePagoAnticipado, Integer minDiasReservaPrevia, Boolean permiteCambios, CategoriaProducto categoriaProducto) {
         this.nombre = nombre;
         this.descripcion = descripcion;

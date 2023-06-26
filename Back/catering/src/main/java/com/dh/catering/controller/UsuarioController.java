@@ -1,6 +1,7 @@
 package com.dh.catering.controller;
 
 import com.dh.catering.dto.UsuarioDto;
+import com.dh.catering.exceptions.AsignacionException;
 import com.dh.catering.exceptions.DuplicadoException;
 import com.dh.catering.exceptions.RecursoNoEncontradoException;
 import com.dh.catering.service.JwtService;
@@ -85,7 +86,7 @@ public class UsuarioController {
     @DeleteMapping("/eliminar/{id}")
     @Operation(summary = "Eliminar un usuario por su id", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
-    public ResponseEntity<String> eliminarPorId(@PathVariable Long id) throws RecursoNoEncontradoException {
+    public ResponseEntity<String> eliminarPorId(@PathVariable Long id) throws RecursoNoEncontradoException, AsignacionException {
         return usuarioService.deleteById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
@@ -94,7 +95,7 @@ public class UsuarioController {
     @PutMapping("/actualizar/{id}")
     @Operation(summary = "Actualizar un usuario por su id", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
-    public ResponseEntity<String> actualizarPorId(@PathVariable Long id,@RequestBody UsuarioDto usuarioDto) throws RecursoNoEncontradoException, DuplicadoException {
+    public ResponseEntity<String> actualizarPorId(@PathVariable Long id,@RequestBody UsuarioDto usuarioDto) throws RecursoNoEncontradoException, DuplicadoException, AsignacionException {
         return usuarioService.updateById(id,usuarioDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
