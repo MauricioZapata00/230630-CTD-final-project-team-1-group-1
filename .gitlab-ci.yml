@@ -38,7 +38,7 @@ deploy_application_frontend:
   stage: deploy
   needs: [build_frontend]
   image: 
-    name: amazon/aws-cli/2.11.18
+    name: amazon/aws-cli:latest
     entrypoint: [""]
   before_script:
     - aws --version
