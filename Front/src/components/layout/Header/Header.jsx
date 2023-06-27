@@ -55,7 +55,6 @@ const Header = ({ admin = false }) => {
       }
       const checkTokenExpiration = () => {
         const token = userData.jwt
-        console.log(userData.jwt);
         if (token) {
           const decodedToken = jwt_decode(token);
           const currentTime = Date.now() / 1000;

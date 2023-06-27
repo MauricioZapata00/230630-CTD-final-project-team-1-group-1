@@ -35,7 +35,6 @@ const DetailPage = () => {
     getRatingProduct(id)
       .then((response) => {
         setRating(response.data);
-        console.log(response.data);
       })
       .catch((error) => {
         const errorMsg = error?.response?.data?.description;

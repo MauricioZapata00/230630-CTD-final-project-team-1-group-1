@@ -7,16 +7,32 @@ import { RiCheckboxCircleLine } from "react-icons/ri";
 import { getProductDetail, submitBookings } from "../../../services";
 
 const FormBooking = () => {
-  const { error, setError, logedUser, selectedDate } = useContext(AppContext);
-  const [showModal, setShowModal] = useState(false);
-  const [showModalConfirm, setShowModalConfirm] = useState(false);
-  const [productDetail, setProductDetail] = useState()
-  const navigateTo = useNavigate();
-  const params = useParams()
+    const { error, setError, logedUser, selectedDate } = useContext(AppContext);
+    const [showModal, setShowModal] = useState(false);
+    const [showModalConfirm, setShowModalConfirm] = useState(false);
+    const [productDetail, setProductDetail] = useState(null)
+    const navigateTo = useNavigate();
+    const params = useParams()
+    const [data, setData] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [bookingData, setBookingData] = useState({
+        idProducto: "",
+        emailUsuario: "",
+        producto: "",
+        valorReserva: "",
+        fechaReserva: selectedDate?.format("YYYY-MM-DD") || ""
+      });
 
-console.log(params.id);
     useEffect(() => {
-        getProductDetail(params.id)
+        const logedUserData = localStorage.getItem("logedUser");
+        if (logedUserData) {
+            const userData = JSON.parse(logedUserData)
+            setData(userData)
+        }
+    }, []);
+
+    useEffect(() => {
+        getProductDetail(params?.id)
             .then((response) => {
                 setProductDetail(response.data);
                 console.log('hola');
@@ -24,26 +40,30 @@ console.log(params.id);
             .catch((error) => {
                 const errorMsg = error?.response?.data?.description;
                 setError(errorMsg || "Ha ocurrido un error.");
+                setLoading(false);
             })
-
-    }, [id, setError]);
-
-
-    const [bookingData, setBookingData] = useState({
-        idProducto: productDetail.id,
-        emailUsuario: logedUser.email,
-        producto: productDetail.nombre,
-        valorReserva: productDetail.precio,
-        fechaReserva: selectedDate.format("YYYY-MM-DD")
-    });
+            .finally(() => setLoading(false))
+    }, [params?.id, data, error])
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        const { value } = e.target;
         setBookingData((prevData) => ({
             ...prevData,
-            [name]: value
+            fechaReserva: value
         }));
     };
+
+    useEffect(() => {
+        if (productDetail && data) {
+          setBookingData({
+            idProducto: productDetail.id || "",
+            emailUsuario: data.email || "",
+            producto: productDetail.nombre || "",
+            valorReserva: productDetail.precio || "",
+            fechaReserva: selectedDate?.format("YYYY-MM-DD") || "",
+          });
+        }
+      }, [productDetail, data, selectedDate]);
 
     const handleCheckBooking = () => {
         setShowModal(true);
@@ -65,6 +85,7 @@ console.log(params.id);
             .catch((error) => {
                 const errorMsg = error?.response?.data?.description;
                 setError(errorMsg || "Ha ocurrido un error.");
+                console.log("reserva con error:", bookingData);
             });
     };
     const handleNavigate = () => {
@@ -72,33 +93,33 @@ console.log(params.id);
     };
 
     return (
-        <>
-            <div className="user-page">
-                <div className="user-page__info" style={{ height: "90%", width: "60vw" }}>
-                    <h2>DETALLE DE LA RESERVA</h2>
+        <div className="user-page">
+            <div className="user-page__info" style={{ height: "90%", width: "60vw" }}>
+                <h2>DETALLE DE LA RESERVA</h2>
+                {!loading && data && <>
                     <h4>Datos personales</h4>
-                    <p>
-                        <label>Nombre</label>
-                        <Input fullWidth type="text" value={logedUser.nombre} />
-                    </p>
-                    <p>
-                        <label>Apellido</label>{" "}
-                        <Input fullWidth type="text" value={logedUser.apellido} />
-                    </p>
-                    <p>
-                        <label>Email</label>
-                        <Input fullWidth type="text" value={bookingData.emailUsuario} />
-                    </p>
+                    <div>
+                        <label htmlFor="nombre">Nombre</label>
+                        <Input fullWidth  id="nombre" name="nombre" type="text" value={data.nombre} />
+                    </div>
+                    <div>
+                        <label htmlFor="apellido">Apellido</label>{" "}
+                        <Input fullWidth id="apellido" name="apellido" type="text" value={data.apellido} />
+                    </div>
+                    <div>
+                        <label htmlFor="email">Email</label>
+                        <Input fullWidth id="email" name="email" type="email" value={data.email} />
+                    </div>
                     <h4>Datos del producto</h4>
-                    <p>
-                        <label>Nombre</label>
-                        <Input fullWidth type="text" value={productDetail.nombre} />
-                    </p>
-                    <p>
-                        <label>Precio</label>{" "}
-                        <Input fullWidth type="text" readOnly={true} onChange={handleInputChange} value={bookingData.valorReserva} />
-                    </p>
-                    <p>
+                    <div>
+                        <label htmlFor="nombreProducto">Nombre</label>
+                        <Input fullWidth  id="nombreProducto" name="nombreProducto" type="text" value={productDetail.nombre} />
+                    </div>
+                    <div>
+                        <label htmlFor="precio">Precio</label>{" "}
+                        <Input fullWidth id="precio" name="precio"type="text" readOnly={true} value={productDetail.precio} />
+                    </div>
+                    <div>
                         <label>Cantidad</label>
                         <Input
                             fullWidth
@@ -107,12 +128,12 @@ console.log(params.id);
                             readOnly={true}
                             value={1}
                         />
-                    </p>
+                    </div>
                     <h4>Datos de la reserva</h4>
-                    <p>
+                    <div>
                         <label>Fecha</label>
                         <Input fullWidth type="date" onChange={handleInputChange} value={bookingData.fechaReserva} />
-                    </p>
+                    </div>
                     <div
                         style={{
                             margin: "1.5rem 0 1rem 0",
@@ -126,55 +147,61 @@ console.log(params.id);
                             Confirmar reserva
                         </Button>
                     </div>
-                </div>
-                {showModal && (
-                    <Dialog open={showModal} onClose={handleCloseModal}>
-                        <DialogActions>
-                            <Button style={{ fontWeight: "600" }} onClick={handleCloseModal}>
-                                X
-                            </Button>
-                        </DialogActions>
-                        <div
-                            className="calification"
-                            style={{ fontWeight: "600", paddingTop: "1rem" }}
-                        >
-                            <p style={{ fontWeight: "600" }}>
-                                ¿Estás seguro/a de que deseas realizar la reserva?
-                            </p>
-                        </div>
-                        <DialogActions
-                            style={{ justifyContent: "center", marginBottom: "1rem" }}
-                        >
-                            <Button onClick={handleEditBooking}>Editar Datos</Button>
-                            <Button variant="contained" onClick={handleConfirmBooking}>
-                                Confirmar reserva
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                )}
-                {showModalConfirm && (
-                    <Dialog open={showModal} onClose={handleCloseModal}>
-                        <DialogActions>
-                            <Button style={{ fontWeight: "600" }} onClick={handleCloseModal}>
-                                X
-                            </Button>
-                        </DialogActions>
-                        <div className="calification">
-                            <RiCheckboxCircleLine className="check-icon" />
-                            <p style={{ fontWeight: "600" }}>¡Muchas gracias!</p>
-                            <p> Su reserva se ha realizado exitosamente.</p>
-                        </div>
-                        <DialogActions
-                            style={{ justifyContent: "center", marginBottom: "1rem" }}
-                        >
-                            <Button variant="contained" onClick={handleNavigate}>
-                                OK
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
+                </>}
+
+                {!loading && !productDetail && (
+                    <div className="detail-page__empty">
+                        No es posible mostrar la información del producto
+                    </div>
                 )}
             </div>
-        </>
+            {showModal && (
+                <Dialog open={showModal} onClose={handleCloseModal}>
+                    <DialogActions>
+                        <Button style={{ fontWeight: "600" }} onClick={handleCloseModal}>
+                            X
+                        </Button>
+                    </DialogActions>
+                    <div
+                        className="calification"
+                        style={{ fontWeight: "600", paddingTop: "1rem" }}
+                    >
+                        <p style={{ fontWeight: "600" }}>
+                            ¿Estás seguro/a de que deseas realizar la reserva?
+                        </p>
+                    </div>
+                    <DialogActions
+                        style={{ justifyContent: "center", marginBottom: "1rem" }}
+                    >
+                        <Button onClick={handleEditBooking}>Editar Datos</Button>
+                        <Button variant="contained" onClick={handleConfirmBooking}>
+                            Confirmar reserva
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            )}
+            {showModalConfirm && (
+                <Dialog open={showModal} onClose={handleCloseModal}>
+                    <DialogActions>
+                        <Button style={{ fontWeight: "600" }} onClick={handleCloseModal}>
+                            X
+                        </Button>
+                    </DialogActions>
+                    <div className="calification">
+                        <RiCheckboxCircleLine className="check-icon" />
+                        <p style={{ fontWeight: "600" }}>¡Muchas gracias!</p>
+                        <p> Su reserva se ha realizado exitosamente.</p>
+                    </div>
+                    <DialogActions
+                        style={{ justifyContent: "center", marginBottom: "1rem" }}
+                    >
+                        <Button variant="contained" onClick={handleNavigate}>
+                            OK
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            )}
+        </div>
     );
 };
 export default FormBooking;

@@ -53,6 +53,23 @@
                   }
             }
         }
+        div{  display: flex;
+          font-weight: bold;
+          justify-content: space-between;
+          width: 90%;
+
+          @media screen and (max-width: 768px) {
+              flex-direction: column;
+            }
+
+          label{
+              padding: 1rem;
+
+              @media screen and (max-width: 768px) {
+                  padding: 0;
+                }
+          }
+      }
         h4{
           margin:1.5rem 0 0.5rem 0;
         }

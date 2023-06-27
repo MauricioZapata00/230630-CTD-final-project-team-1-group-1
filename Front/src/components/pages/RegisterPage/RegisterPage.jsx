@@ -31,7 +31,6 @@ const RegisterPage = () => {
 
   const handleChange = ({ target }) => {
     setData({ ...data, [target.name]: target.value });
-    console.log(data);
   };
 
   const handleSubmit = () => {
@@ -74,12 +73,10 @@ const RegisterPage = () => {
     createUser({ ...data, rolName: "USER" })
       .then((response) => {
         setMessage(response.data);
-        console.log(response.data);
         setShowModal(true);
       })
       .catch((error) => {
         const errorMsg = error?.response?.data?.description;
-        console.log(error);
         setError(errorMsg || "Ha ocurrido un error.");
       })
       .finally(() => setSending(false));

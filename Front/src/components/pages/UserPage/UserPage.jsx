@@ -5,12 +5,11 @@ import { useNavigate } from "react-router-dom";
 
 const UserPage = () => {
   const { logedUser } = useContext(AppContext);
-  const navigateTo = useNavigate();
 
   if (!logedUser) {
     return null;
   }
-  console.log(logedUser);
+  
   const { nombre, apellido, email } = logedUser;
   return (
     <div className="user-page">
