@@ -1,6 +1,7 @@
 package com.dh.catering.controller;
 
 import com.dh.catering.dto.ReservaDto;
+import com.dh.catering.dto.ReservaXUsuarioDto;
 import com.dh.catering.exceptions.AsignacionException;
 import com.dh.catering.exceptions.RecursoNoEncontradoException;
 import com.dh.catering.service.ReservaService;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/reservas")
-@Tag(name = "reservas")
+@Tag(name = "Reservas")
 @Slf4j
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('ADMIN') || hasAuthority('USER') ")
@@ -52,6 +53,12 @@ public class ReservaController {
     @Operation(summary = "lista todas las reservas por id de producto")
     public ResponseEntity<List<ReservaDto>> buscarTodosPorProductoId(@PathVariable Long id) {
         return ResponseEntity.ok(reservaService.buscarTodosPorProductoId(id));
+    }
+
+    @GetMapping("/productos/nombres/{nombre}")
+    @Operation(summary = "lista todas las reservas por nombre de producto")
+    public ResponseEntity<List<ReservaXUsuarioDto>> buscarTodosPorProductoNombre(@PathVariable String nombre) {
+        return ResponseEntity.ok(reservaService.buscarTodosPorProductoNombre(nombre));
     }
 
     @GetMapping("/productos/fechas/{id}")

@@ -4,6 +4,7 @@ import com.dh.catering.domain.Producto;
 import com.dh.catering.domain.Reserva;
 import com.dh.catering.domain.Usuario;
 import com.dh.catering.dto.ReservaDto;
+import com.dh.catering.dto.ReservaXUsuarioDto;
 import com.dh.catering.exceptions.AsignacionException;
 import com.dh.catering.exceptions.RecursoNoEncontradoException;
 import com.dh.catering.repository.ProductoRepository;
@@ -70,6 +71,21 @@ public class ReservaService {
         }
         return reservaDtoList;
     }
+
+    public List<ReservaXUsuarioDto> buscarTodosPorProductoNombre(String nombre){
+        return reservaRepository.findAllByProductoNombre(nombre).stream()
+                .map(reserva ->
+                        ReservaXUsuarioDto.builder()
+                                .idProducto(reserva.getProducto().getId())
+                                .fechaReserva(Util.convertirLocalDateToString(reserva.getFechaReserva()))
+                                .valorReserva(reserva.getValorReserva())
+                                .emailUsuario(reserva.getUsuario().getEmail())
+                                .fechaCreacion(reserva.getFechaCreacion())
+                                .imagenUrl(reserva.getProducto().getImagenUrl())
+                                .build()
+        ).toList();
+    }
+
 
     public List<String> obtenerFechasReservadasPorProductoId(Long id){
         List<String> fechas = new ArrayList<>();

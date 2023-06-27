@@ -9,6 +9,7 @@ import com.dh.catering.exceptions.RecursoNoEncontradoException;
 import com.dh.catering.repository.CategoriaProductoRepository;
 import com.dh.catering.repository.ProductoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,19 +21,13 @@ import java.util.Optional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CategoriaProductoService {
 
-    @Autowired
-    private CategoriaProductoRepository categoriaProductoRepository;
-
-    @Autowired
-    private ProductoRepository productoRepository;
-
-    @Autowired
-    private ObjectMapper mapper;
-
-    @Autowired
-    private S3ImageService s3ImageService;
+    private final CategoriaProductoRepository categoriaProductoRepository;
+    private final ProductoRepository productoRepository;
+    private final ObjectMapper mapper;
+    private final S3ImageService s3ImageService;
 
     public Optional<String> save(CategoriaProductoDto categoriaProductoDto, MultipartFile multipartFile) throws NombreDuplicadoException {
         String mensaje = null;
