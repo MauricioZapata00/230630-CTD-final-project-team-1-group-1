@@ -72,7 +72,7 @@ build_backend_deploy:
   image: maven:3.8.3-openjdk-17
   script:
     - cd Back/catering
-    - echo "Building app..."
+    - echo "Building app once again :'D ..."
     - mvn clean
     - mvn package -B -DDRIVER_CLASS_NAME=''
     - mvn package -B -DDB_URL=$DB_URL
@@ -108,21 +108,7 @@ deploy_Backend:
     - chmod 644 ~/.ssh/known_hosts
   script:
     - cd Back/catering/
-    - echo "Building app once again :'D ..."
-    - mvn clean
-    - mvn package -B -DDRIVER_CLASS_NAME=''
-    - mvn package -B -DDB_URL=$DB_URL
-    - mvn package -B -DUSER=$DB_USER
-    - mvn package -B -DPASSWORD=$DB_PASSWORD
-    - mvn package -B -DDB_PLATFORM=''
-    - mvn package -B -DH2_CONSOLE=false
-    - mvn package -B -DAccessKey=$AWS_ACCESS_KEY_ID
-    - mvn package -B -DSecretKey=$AWS_SECRET_ACCESS_KEY
-    - mvn package -B -DBucketName=$BUCKET_NAME
-    - mvn package -B -DURL_INSTANCE=$URL_EC2_INSTANCE
-    - mvn package -B -DMAIL_USERNAME=$MAIL_USERNAME_EMAIL
-    - mvn package -B -DMAIL_PASSWORD=$MAIL_PASSWORD_EMAIL
-    - mvn clean install
+    - echo "Deploying backend app ..."
     - export DRIVER_CLASS_NAME=''
     - export DB_URL=$DB_URL
     - export USER=$DB_USER
