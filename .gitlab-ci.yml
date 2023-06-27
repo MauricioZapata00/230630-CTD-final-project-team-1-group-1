@@ -25,18 +25,18 @@ build_backend:
     - cd Back/catering
     - echo "Building app..."
     - mvn clean
-    - mvn package -B -DRIVER_CLASS_NAME=''
-    - mvn package -B -DB_URL=$DB_URL
-    - mvn package -B -USER=$DB_USER
-    - mvn package -B -PASSWORD=$DB_PASSWORD
-    - mvn package -B -DB_PLATFORM=''
-    - mvn package -B -H2_CONSOLE=false
-    - mvn package -B -AccessKey=$AWS_ACCESS_KEY_ID
-    - mvn package -B -SecretKey=$AWS_SECRET_ACCESS_KEY
-    - mvn package -B -BucketName=$BUCKET_NAME
-    - mvn package -B -URL_INSTANCE=$URL_EC2_INSTANCE
-    - mvn package -B -MAIL_USERNAME=$MAIL_USERNAME_EMAIL
-    - mvn package -B -MAIL_PASSWORD=$MAIL_PASSWORD_EMAIL
+    - mvn package -B -DDRIVER_CLASS_NAME=''
+    - mvn package -B -DDB_URL=$DB_URL
+    - mvn package -B -DUSER=$DB_USER
+    - mvn package -B -DPASSWORD=$DB_PASSWORD
+    - mvn package -B -DDB_PLATFORM=''
+    - mvn package -B -DH2_CONSOLE=false
+    - mvn package -B -DAccessKey=$AWS_ACCESS_KEY_ID
+    - mvn package -B -DSecretKey=$AWS_SECRET_ACCESS_KEY
+    - mvn package -B -DBucketName=$BUCKET_NAME
+    - mvn package -B -DURL_INSTANCE=$URL_EC2_INSTANCE
+    - mvn package -B -DMAIL_USERNAME=$MAIL_USERNAME_EMAIL
+    - mvn package -B -DMAIL_PASSWORD=$MAIL_PASSWORD_EMAIL
     - mvn clean install
     - echo "Finished building backend app :D"
   only:
