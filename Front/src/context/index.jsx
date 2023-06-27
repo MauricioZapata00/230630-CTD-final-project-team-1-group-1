@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export const AppContext = createContext();
 
 const AppContextProvider = ({ children }) => {
-  const [logedUser, setLogedUser] = useState(null);
+  const [logedUser, setLogedUser] = useState();
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
   const [rating, setRating] = useState(0);

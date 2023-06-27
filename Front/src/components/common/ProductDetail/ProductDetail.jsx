@@ -21,7 +21,7 @@ const bookedDates = ["2023-07-12", "2023-07-15", "2023-07-10"];
 
 const ProductDetail = ({ productDetail }) => {
   const { rating, logedUser, error, setError } = useContext(AppContext);
-
+  
   const initialDay = dayjs().add(
     Number(productDetail.minDiasReservaPrevia),
     "d"
@@ -182,10 +182,7 @@ const ProductDetail = ({ productDetail }) => {
           </DialogActions>
         </Dialog>
       )}
-      {error && <ErrorMessage position="top" />}
-      <div style={{ display: "none" }}>
-        {logedUser && <FormBooking productDetail={productDetail} />}
-      </div>
+     
     </div>
   );
 };

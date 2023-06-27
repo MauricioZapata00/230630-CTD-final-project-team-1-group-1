@@ -1,16 +1,16 @@
 import PropTypes from "prop-types";
 
 const Booking = ({ booking }) => {
-    const { imagenUrl, nombre, precio, id, fecha } = booking;
-   
+    const { idProducto, valorReserva, fechaReserva } = booking;
+   console.log(valorReserva);
     return (
       <div className="product">
-        <div className="product__image-container">
+        {/*<div className="product__image-container">
           <img src={imagenUrl} alt={nombre} />
-        </div>
-        <h3>{nombre}</h3>
-        <p>$ {precio}</p>
-        <p>Fecha:{fecha}</p>
+    </div>*/}
+        <h3>{idProducto}</h3>
+        <p>$ {valorReserva}</p>
+        <p>Fecha:{fechaReserva}</p>
         <p>estado</p>
       </div>
     );
@@ -18,10 +18,9 @@ const Booking = ({ booking }) => {
   
   Booking.propTypes = {
     booking: PropTypes.shape({
-      imagenUrl: PropTypes.string.isRequired,
-      nombre: PropTypes.string.isRequired,
-      precio: PropTypes.number.isRequired,
-      id: PropTypes.number.isRequired,
+        idProducto: PropTypes.string.isRequired,
+      valorReserva: PropTypes.number.isRequired,
+      fechaReserva: PropTypes.string.isRequired,
     }).isRequired,
     
   };
