@@ -58,3 +58,11 @@ export const submitBookings = (data,jwt) => {
     },
   });
 };
+
+export const getProductBookings = (id, jwt) => {
+  return axios.get(`${baseUrl}/reservas/productos/${id}`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  });
+};

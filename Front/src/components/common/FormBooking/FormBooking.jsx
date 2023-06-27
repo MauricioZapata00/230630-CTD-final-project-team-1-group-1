@@ -7,12 +7,12 @@ import { RiCheckboxCircleLine } from "react-icons/ri";
 import { getProductDetail, submitBookings } from "../../../services";
 
 const FormBooking = () => {
-    const { error, setError, logedUser } = useContext(AppContext);
-    const [showModal, setShowModal] = useState(false);
-    const [showModalConfirm, setShowModalConfirm] = useState(false);
-    const navigateTo = useNavigate();
-    const params = useParams()
-    const [productDetail, setProductDetail] = useState()
+  const { error, setError, logedUser, selectedDate } = useContext(AppContext);
+  const [showModal, setShowModal] = useState(false);
+  const [showModalConfirm, setShowModalConfirm] = useState(false);
+  const [productDetail, setProductDetail] = useState()
+  const navigateTo = useNavigate();
+  const params = useParams()
 
 console.log(params.id);
     useEffect(() => {
@@ -34,7 +34,7 @@ console.log(params.id);
         emailUsuario: logedUser.email,
         producto: productDetail.nombre,
         valorReserva: productDetail.precio,
-        fechaReserva: "2000-06-02"
+        fechaReserva: selectedDate.format("YYYY-MM-DD")
     });
 
     const handleInputChange = (e) => {
