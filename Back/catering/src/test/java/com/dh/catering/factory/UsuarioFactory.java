@@ -8,13 +8,13 @@ import lombok.experimental.UtilityClass;
 public final class UsuarioFactory {
 
     public static Usuario iniciarUsuario() {
-        return Usuario.builder()
-                .id(1L)
-                .nombre("Pepito")
-                .apellido("Perez")
-                .contrasena("no es una clave")
-                .email("pepito.perez@gmail.com")
-                .build();
+        Usuario usuario = new Usuario();
+        usuario.setId(1L);
+        usuario.setNombre("Pepito");
+        usuario.setApellido("Perez");
+        usuario.setContrasena("no es una clave");
+        usuario.setEmail("pepito.perez@gmail.com");
+        return usuario;
     }
 
     public static UsuarioDto iniciarUsuarioDto() {
@@ -26,4 +26,3 @@ public final class UsuarioFactory {
                 .build();
     }
 }
-
