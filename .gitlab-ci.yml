@@ -72,12 +72,14 @@ deploy_Backend:
   image: alpine:3.11
   before_script:
     - apk update && apk add openssh-client bash
-    - mkdir -p ~/.ssh
+    - apk add --update openssh
     - eval $(ssh-agent -s)
-    - echo "$EC2_PRIVATE_ACCESS_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - echo "$EC2_PRIVATE_ACCESS_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
     - touch ~/.ssh/config
-    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     - ssh-keyscan -H 18.188.200.107 >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
   script:
     - cd Back/catering/
     - export DRIVER_CLASS_NAME=''
@@ -92,9 +94,9 @@ deploy_Backend:
     - export URL_INSTANCE=$URL_EC2_INSTANCE
     - export MAIL_USERNAME=$MAIL_USERNAME_EMAIL
     - export MAIL_PASSWORD=$MAIL_PASSWORD_EMAIL
-    - ssh -i ubuntu@18.188.200.107 "cd backendApp/ pkill -f catering-0.0.1-SNAPSHOT.jar rm -rf /home/ubuntu/backup/catering-0.0.1-SNAPSHOT.jar cp -r catering-0.0.1-SNAPSHOT.jar /home/ubuntu/backup rm -rf catering-0.0.1-SNAPSHOT.jar"
+    - ssh -o StrictHostKeyChecking=no ubuntu@18.188.200.107 "cd backendApp/ pkill -f catering-0.0.1-SNAPSHOT.jar rm -rf /home/ubuntu/backup/catering-0.0.1-SNAPSHOT.jar cp -r catering-0.0.1-SNAPSHOT.jar /home/ubuntu/backup rm -rf catering-0.0.1-SNAPSHOT.jar"
     - scp -i target/catering-0.0.1-SNAPSHOT.jar ubuntu@18.188.200.107:/home/ubuntu/backendApp
-    - ssh -i ubuntu@18.188.200.107 cd backendApp/ java -jar catering-0.0.1-SNAPSHOT.jar &"
+    - ssh -o StrictHostKeyChecking=no ubuntu@18.188.200.107 "cd backendApp/ java -jar catering-0.0.1-SNAPSHOT.jar &"
     - echo "Finished deploying backend app :D"
   only:
     - release
