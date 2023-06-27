@@ -94,7 +94,8 @@ deploy_Backend:
     - export URL_INSTANCE=$URL_EC2_INSTANCE
     - export MAIL_USERNAME=$MAIL_USERNAME_EMAIL
     - export MAIL_PASSWORD=$MAIL_PASSWORD_EMAIL
-    - ssh -o StrictHostKeyChecking=no ubuntu@18.188.200.107 "cd "backendApp/" && pkill -f catering-0.0.1-SNAPSHOT.jar && rm -rf /home/ubuntu/backup/catering-0.0.1-SNAPSHOT.jar && cp -r catering-0.0.1-SNAPSHOT.jar /home/ubuntu/backup && rm -rf catering-0.0.1-SNAPSHOT.jar"
+    - ssh -o StrictHostKeyChecking=no ubuntu@18.188.200.107 "cd "backendApp/" && pkill -f catering-0.0.1-SNAPSHOT.jar" 
+    - ssh -o StrictHostKeyChecking=no ubuntu@18.188.200.107 "cd "backendApp/" && rm -rf /home/ubuntu/backup/catering-0.0.1-SNAPSHOT.jar && cp -r catering-0.0.1-SNAPSHOT.jar /home/ubuntu/backup && rm -rf catering-0.0.1-SNAPSHOT.jar"
     - scp target/catering-0.0.1-SNAPSHOT.jar ubuntu@18.188.200.107:/home/ubuntu/backendApp
     - ssh -o StrictHostKeyChecking=no ubuntu@18.188.200.107 "cd "backendApp/" && java -jar catering-0.0.1-SNAPSHOT.jar &"
     - echo "Finished deploying backend app :D"
