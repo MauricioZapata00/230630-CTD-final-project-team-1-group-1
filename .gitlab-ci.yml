@@ -66,14 +66,39 @@ deploy_frontend_application:
     - release
     - fix/broken-pipelines
 
-deploy_Backend:
+build_backend_deploy:
   stage: deploy
   needs: [build_backend]
+  image: maven:3.8.3-openjdk-17
+  script:
+    - cd Back/catering
+    - echo "Building app..."
+    - mvn clean
+    - mvn package -B -DDRIVER_CLASS_NAME=''
+    - mvn package -B -DDB_URL=$DB_URL
+    - mvn package -B -DUSER=$DB_USER
+    - mvn package -B -DPASSWORD=$DB_PASSWORD
+    - mvn package -B -DDB_PLATFORM=''
+    - mvn package -B -DH2_CONSOLE=false
+    - mvn package -B -DAccessKey=$AWS_ACCESS_KEY_ID
+    - mvn package -B -DSecretKey=$AWS_SECRET_ACCESS_KEY
+    - mvn package -B -DBucketName=$BUCKET_NAME
+    - mvn package -B -DURL_INSTANCE=$URL_EC2_INSTANCE
+    - mvn package -B -DMAIL_USERNAME=$MAIL_USERNAME_EMAIL
+    - mvn package -B -DMAIL_PASSWORD=$MAIL_PASSWORD_EMAIL
+    - mvn clean install
+    - echo "Finished building backend app :D"
+  only:
+    - release
+    - fix/broken-pipelines
+
+deploy_Backend:
+  stage: deploy
+  needs: [build_backend, build_backend_deploy]
   image: alpine:3.11
   before_script:
     - apk update && apk add openssh-client bash
     - apk add --update openssh
-    - apk add --no-cache maven=3.8.3
     - eval $(ssh-agent -s)
     - echo "$EC2_PRIVATE_ACCESS_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
