@@ -73,6 +73,8 @@ deploy_Backend:
   before_script:
     - apk update && apk add openssh-client bash
     - apk add --update openssh
+    - apk add --no-cache openjdk17
+    - apk add --no-cache maven=3.8.3
     - eval $(ssh-agent -s)
     - echo "$EC2_PRIVATE_ACCESS_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
