@@ -118,7 +118,7 @@ const Header = ({ admin = false }) => {
           )
         ) : (
           <div className="header__user-info">
-            <Avatar sx={{ bgcolor: "#67D671" }}>{logedUser.avatar}</Avatar>
+            <Avatar onClick={handleUsernameClick} style={{ cursor: "pointer" }} sx={{ bgcolor: "#67D671" }}>{logedUser.avatar}</Avatar>
             <span onClick={handleUsernameClick} style={{ cursor: "pointer" }}>
               {logedUser.nombre} {logedUser.apellido}
             </span>

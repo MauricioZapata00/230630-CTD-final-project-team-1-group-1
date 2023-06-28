@@ -1,10 +1,9 @@
-import { Button, Dialog, DialogActions, Input } from "@mui/material";
+import { Button, Dialog, DialogActions, Input, Grow, Slide } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../../../context";
-import { CheckCircle } from "@mui/icons-material";
-import { RiCheckboxCircleLine } from "react-icons/ri";
 import { getProductDetail, submitBookings } from "../../../services";
+import Check from "../../../assets/check.png";
 
 const FormBooking = () => {
     const { error, setError, logedUser, selectedDate } = useContext(AppContext);
@@ -21,7 +20,7 @@ const FormBooking = () => {
         producto: "",
         valorReserva: "",
         fechaReserva: selectedDate?.format("YYYY-MM-DD") || ""
-      });
+    });
 
     useEffect(() => {
         const logedUserData = localStorage.getItem("logedUser");
@@ -55,15 +54,15 @@ const FormBooking = () => {
 
     useEffect(() => {
         if (productDetail && data) {
-          setBookingData({
-            idProducto: productDetail.id || "",
-            emailUsuario: data.email || "",
-            producto: productDetail.nombre || "",
-            valorReserva: productDetail.precio || "",
-            fechaReserva: selectedDate?.format("YYYY-MM-DD") || "",
-          });
+            setBookingData({
+                idProducto: productDetail.id || "",
+                emailUsuario: data.email || "",
+                producto: productDetail.nombre || "",
+                valorReserva: productDetail.precio || "",
+                fechaReserva: selectedDate?.format("YYYY-MM-DD") || "",
+            });
         }
-      }, [productDetail, data, selectedDate]);
+    }, [productDetail, data, selectedDate]);
 
     const handleCheckBooking = () => {
         setShowModal(true);
@@ -76,11 +75,11 @@ const FormBooking = () => {
         handleCloseModal();
     };
 
-    const handleConfirmBooking = (data) => {
+    const handleConfirmBooking = () => {
         setShowModalConfirm(true);
         submitBookings(bookingData, logedUser.jwt)
             .then(() => {
-                console.log("reservan enviada:", bookingData);
+                console.log("reserva enviada:", bookingData);
             })
             .catch((error) => {
                 const errorMsg = error?.response?.data?.description;
@@ -100,7 +99,7 @@ const FormBooking = () => {
                     <h4>Datos personales</h4>
                     <div>
                         <label htmlFor="nombre">Nombre</label>
-                        <Input fullWidth  id="nombre" name="nombre" type="text" value={data.nombre} />
+                        <Input fullWidth id="nombre" name="nombre" type="text" value={data.nombre} />
                     </div>
                     <div>
                         <label htmlFor="apellido">Apellido</label>{" "}
@@ -113,11 +112,11 @@ const FormBooking = () => {
                     <h4>Datos del producto</h4>
                     <div>
                         <label htmlFor="nombreProducto">Nombre</label>
-                        <Input fullWidth  id="nombreProducto" name="nombreProducto" type="text" value={productDetail.nombre} />
+                        <Input fullWidth id="nombreProducto" name="nombreProducto" type="text" value={productDetail.nombre} />
                     </div>
                     <div>
                         <label htmlFor="precio">Precio</label>{" "}
-                        <Input fullWidth id="precio" name="precio"type="text" readOnly={true} value={productDetail.precio} />
+                        <Input fullWidth id="precio" name="precio" type="text" readOnly={true} value={productDetail.precio} />
                     </div>
                     <div>
                         <label>Cantidad</label>
@@ -151,7 +150,7 @@ const FormBooking = () => {
 
                 {!loading && !productDetail && (
                     <div className="detail-page__empty">
-                        No es posible mostrar la información del producto
+                        No es posible mostrar la información.
                     </div>
                 )}
             </div>
@@ -188,7 +187,10 @@ const FormBooking = () => {
                         </Button>
                     </DialogActions>
                     <div className="calification">
-                        <RiCheckboxCircleLine className="check-icon" />
+                        <Grow in={showModalConfirm} style={{ transformOrigin: '0 0 0' , marginBottom:'0.5rem'}}
+                            {...(showModalConfirm ? { timeout: 2000 } : {})}>
+                            <img src={Check} alt="check" />
+                        </Grow>
                         <p style={{ fontWeight: "600" }}>¡Muchas gracias!</p>
                         <p> Su reserva se ha realizado exitosamente.</p>
                     </div>
