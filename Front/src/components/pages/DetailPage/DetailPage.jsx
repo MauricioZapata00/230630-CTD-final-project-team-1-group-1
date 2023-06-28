@@ -51,9 +51,7 @@ const DetailPage = () => {
           const stringBookings = response.data.map((data) => data.fechaReserva);
           setProductBookings(stringBookings);
         })
-        .catch((error) => {
-          console.log(error, "error");
-        });
+        .catch(() => {});
     }
   }, [id, logedUser]);
 

@@ -1,8 +1,5 @@
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router";
-import ProductRating from "../ProductRating";
-import { useContext } from "react";
-import { AppContext } from "../../../context";
 
 const Product = ({ product }) => {
   const { imagenUrl, nombre, precio, id } = product;
@@ -18,7 +15,6 @@ const Product = ({ product }) => {
       </div>
       <h3>{nombre}</h3>
       <p>$ {precio}</p>
-    
     </div>
   );
 };

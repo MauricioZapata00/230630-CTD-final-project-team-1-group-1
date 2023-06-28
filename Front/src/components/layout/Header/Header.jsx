@@ -1,4 +1,4 @@
-import { Alert, Avatar, Button, IconButton, Snackbar } from "@mui/material";
+import { Avatar, Button, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Logo1 from "../../../assets/Imagen2.png";
 import { useContext, useEffect, useState } from "react";
@@ -8,9 +8,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import LoginIcon from "@mui/icons-material/Login";
 import PopupUser from "../../common/PopupUser";
 import jwt_decode from "jwt-decode";
-import MuiAlert from "@mui/material/Alert"
-import { toast } from 'react-toastify';
-
+import { toast } from "react-toastify";
 
 const Header = ({ admin = false }) => {
   const navigateTo = useNavigate();
@@ -54,7 +52,7 @@ const Header = ({ admin = false }) => {
         navigateTo("/");
       }
       const checkTokenExpiration = () => {
-        const token = userData.jwt
+        const token = userData.jwt;
         if (token) {
           const decodedToken = jwt_decode(token);
           const currentTime = Date.now() / 1000;
@@ -68,17 +66,15 @@ const Header = ({ admin = false }) => {
 
       if (tokenExpired) {
         setIsSessionExpired(true);
-        handleLogOut()
+        handleLogOut();
         toast.error("¡Lo sentimos! La sesión ha expirado.");
       }
     }
-  }, [admin,setIsSessionExpired, navigateTo, setLogedUser]);
-
+  }, [admin, setIsSessionExpired, navigateTo, setLogedUser]);
 
   const handleUsernameClick = () => {
     setShowPopup(!showPopup);
   };
-
 
   return (
     <>
@@ -127,9 +123,7 @@ const Header = ({ admin = false }) => {
             </IconButton>
             {showPopup && <PopupUser />}
           </div>
-
         )}
-
       </div>
     </>
   );
