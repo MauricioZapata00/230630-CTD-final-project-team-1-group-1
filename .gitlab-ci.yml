@@ -25,20 +25,24 @@ build_backend:
     - cd Back/catering
     - echo "Building app..."
     - mvn clean
-    - mvn package -B -DDRIVER_CLASS_NAME=''
-    - mvn package -B -DDB_URL=$DB_URL
-    - mvn package -B -DUSER=$DB_USER
-    - mvn package -B -DPASSWORD=$DB_PASSWORD
-    - mvn package -B -DDB_PLATFORM=''
-    - mvn package -B -DH2_CONSOLE=false
-    - mvn package -B -DAccessKey=$AWS_ACCESS_KEY_ID
-    - mvn package -B -DSecretKey=$AWS_SECRET_ACCESS_KEY
-    - mvn package -B -DBucketName=$BUCKET_NAME
-    - mvn package -B -DURL_INSTANCE=$URL_EC2_INSTANCE
-    - mvn package -B -DMAIL_USERNAME=$MAIL_USERNAME_EMAIL
-    - mvn package -B -DMAIL_PASSWORD=$MAIL_PASSWORD_EMAIL
-    - mvn clean install
+    - mvn package -B -DDRIVER_CLASS_NAME='' -DDB_URL=$DB_URL -DUSER=$DB_USER -DPASSWORD=$DB_PASSWORD -DDB_PLATFORM='' -DH2_CONSOLE=false -DAccessKey=$AWS_ACCESS_KEY_ID -DSecretKey=$AWS_SECRET_ACCESS_KEY -DBucketName=$BUCKET_NAME -DURL_INSTANCE=$URL_EC2_INSTANCE -DMAIL_USERNAME=$MAIL_USERNAME_EMAIL -DMAIL_PASSWORD=$MAIL_PASSWORD_EMAIL
+    # - mvn package -B -DDB_URL=$DB_URL
+    # - mvn package -B -DUSER=$DB_USER
+    # - mvn package -B -DPASSWORD=$DB_PASSWORD
+    # - mvn package -B -DDB_PLATFORM=''
+    # - mvn package -B -DH2_CONSOLE=false
+    # - mvn package -B -DAccessKey=$AWS_ACCESS_KEY_ID
+    # - mvn package -B -DSecretKey=$AWS_SECRET_ACCESS_KEY
+    # - mvn package -B -DBucketName=$BUCKET_NAME
+    # - mvn package -B -DURL_INSTANCE=$URL_EC2_INSTANCE
+    # - mvn package -B -DMAIL_USERNAME=$MAIL_USERNAME_EMAIL
+    # - mvn package -B -DMAIL_PASSWORD=$MAIL_PASSWORD_EMAIL
+    - mvn install -DskipTests=true
     - echo "Finished building backend app :D"
+  artifacts:
+    expire_in: "1 days"
+    paths:
+      - "Back/catering/target/catering-0.0.1-SNAPSHOT.jar"
   only:
     - release
     - fix/broken-pipelines
@@ -66,71 +70,71 @@ deploy_frontend_application:
     - release
     - fix/broken-pipelines
 
-build_backend_deploy:
-  stage: deploy
-  needs: [build_backend]
-  image: andrejentzsch/maven_java_opencv_tesseract
-  script:
-    - cd Back/catering
-    - echo "Building app once again :'D ..."
-    - mvn clean
-    - mvn package -B -DDRIVER_CLASS_NAME=''
-    - mvn package -B -DDB_URL=$DB_URL
-    - mvn package -B -DUSER=$DB_USER
-    - mvn package -B -DPASSWORD=$DB_PASSWORD
-    - mvn package -B -DDB_PLATFORM=''
-    - mvn package -B -DH2_CONSOLE=false
-    - mvn package -B -DAccessKey=$AWS_ACCESS_KEY_ID
-    - mvn package -B -DSecretKey=$AWS_SECRET_ACCESS_KEY
-    - mvn package -B -DBucketName=$BUCKET_NAME
-    - mvn package -B -DURL_INSTANCE=$URL_EC2_INSTANCE
-    - mvn package -B -DMAIL_USERNAME=$MAIL_USERNAME_EMAIL
-    - mvn package -B -DMAIL_PASSWORD=$MAIL_PASSWORD_EMAIL
-    - mvn clean install
-    - echo "Finished building backend app :D"
-    - ssh -i $EC2_PRIVATE_ACCESS_KEY ubuntu@18.188.200.107 "cd "backendApp/" && pkill -f catering-0.0.1-SNAPSHOT.jar" 
-    - ssh -i $EC2_PRIVATE_ACCESS_KEY ubuntu@18.188.200.107 "cd "backendApp/" && rm -rf /home/ubuntu/backup/catering-0.0.1-SNAPSHOT.jar && cp -r catering-0.0.1-SNAPSHOT.jar /home/ubuntu/backup && rm -rf catering-0.0.1-SNAPSHOT.jar"
-    - scp -i $EC2_PRIVATE_ACCESS_KEY target/catering-0.0.1-SNAPSHOT.jar ubuntu@18.188.200.107:/home/ubuntu/backendApp
-    - ssh -i $EC2_PRIVATE_ACCESS_KEY ubuntu@18.188.200.107 "cd "backendApp/" && java -jar catering-0.0.1-SNAPSHOT.jar &"
-    - echo "Finished deploying backend app :D"
-  only:
-    - release
-    - fix/broken-pipelines
-
-# deploy_Backend:
+# build_backend_deploy:
 #   stage: deploy
-#   needs: [build_backend, build_backend_deploy]
-#   image: alpine:3.11
-#   before_script:
-#     - apk update && apk add openssh-client bash
-#     - apk add --update openssh
-#     - eval $(ssh-agent -s)
-#     - echo "$EC2_PRIVATE_ACCESS_KEY" | tr -d '\r' | ssh-add -
-#     - mkdir -p ~/.ssh
-#     - chmod 700 ~/.ssh
-#     - touch ~/.ssh/config
-#     - ssh-keyscan -H 18.188.200.107 >> ~/.ssh/known_hosts
-#     - chmod 644 ~/.ssh/known_hosts
+#   needs: [build_backend]
+#   image: andrejentzsch/maven_java_opencv_tesseract
 #   script:
-#     - cd Back/catering/
-#     - echo "Deploying backend app ..."
-#     - export DRIVER_CLASS_NAME=''
-#     - export DB_URL=$DB_URL
-#     - export USER=$DB_USER
-#     - export PASSWORD=$DB_PASSWORD
-#     - export DB_PLATFORM=''
-#     - export H2_CONSOLE=''
-#     - export AccessKey=$AWS_ACCESS_KEY_ID
-#     - export SecretKey=$AWS_SECRET_ACCESS_KEY
-#     - export BucketName=$BUCKET_NAME
-#     - export URL_INSTANCE=$URL_EC2_INSTANCE
-#     - export MAIL_USERNAME=$MAIL_USERNAME_EMAIL
-#     - export MAIL_PASSWORD=$MAIL_PASSWORD_EMAIL
-#     - ssh -o StrictHostKeyChecking=no ubuntu@18.188.200.107 "cd "backendApp/" && pkill -f catering-0.0.1-SNAPSHOT.jar" 
-#     - ssh -o StrictHostKeyChecking=no ubuntu@18.188.200.107 "cd "backendApp/" && rm -rf /home/ubuntu/backup/catering-0.0.1-SNAPSHOT.jar && cp -r catering-0.0.1-SNAPSHOT.jar /home/ubuntu/backup && rm -rf catering-0.0.1-SNAPSHOT.jar"
-#     - scp target/catering-0.0.1-SNAPSHOT.jar ubuntu@18.188.200.107:/home/ubuntu/backendApp
-#     - ssh -o StrictHostKeyChecking=no ubuntu@18.188.200.107 "cd "backendApp/" && java -jar catering-0.0.1-SNAPSHOT.jar &"
+#     - cd Back/catering
+#     - echo "Building app once again :'D ..."
+#     - mvn clean
+#     - mvn package -B -DDRIVER_CLASS_NAME=''
+#     - mvn package -B -DDB_URL=$DB_URL
+#     - mvn package -B -DUSER=$DB_USER
+#     - mvn package -B -DPASSWORD=$DB_PASSWORD
+#     - mvn package -B -DDB_PLATFORM=''
+#     - mvn package -B -DH2_CONSOLE=false
+#     - mvn package -B -DAccessKey=$AWS_ACCESS_KEY_ID
+#     - mvn package -B -DSecretKey=$AWS_SECRET_ACCESS_KEY
+#     - mvn package -B -DBucketName=$BUCKET_NAME
+#     - mvn package -B -DURL_INSTANCE=$URL_EC2_INSTANCE
+#     - mvn package -B -DMAIL_USERNAME=$MAIL_USERNAME_EMAIL
+#     - mvn package -B -DMAIL_PASSWORD=$MAIL_PASSWORD_EMAIL
+#     - mvn clean install
+#     - echo "Finished building backend app :D"
+#     - ssh -i $EC2_PRIVATE_ACCESS_KEY ubuntu@18.188.200.107 "cd "backendApp/" && pkill -f catering-0.0.1-SNAPSHOT.jar" 
+#     - ssh -i $EC2_PRIVATE_ACCESS_KEY ubuntu@18.188.200.107 "cd "backendApp/" && rm -rf /home/ubuntu/backup/catering-0.0.1-SNAPSHOT.jar && cp -r catering-0.0.1-SNAPSHOT.jar /home/ubuntu/backup && rm -rf catering-0.0.1-SNAPSHOT.jar"
+#     - scp -i $EC2_PRIVATE_ACCESS_KEY target/catering-0.0.1-SNAPSHOT.jar ubuntu@18.188.200.107:/home/ubuntu/backendApp
+#     - ssh -i $EC2_PRIVATE_ACCESS_KEY ubuntu@18.188.200.107 "cd "backendApp/" && java -jar catering-0.0.1-SNAPSHOT.jar &"
 #     - echo "Finished deploying backend app :D"
 #   only:
 #     - release
 #     - fix/broken-pipelines
+
+deploy_Backend:
+  stage: deploy
+  needs: [build_backend]
+  image: alpine:3.11
+  before_script:
+    - apk update && apk add openssh-client bash
+    - apk add --update openssh
+    - eval $(ssh-agent -s)
+    - echo "$EC2_PRIVATE_ACCESS_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - touch ~/.ssh/config
+    - ssh-keyscan -H 18.188.200.107 >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - cd Back/catering/
+    - echo "Deploying backend app ..."
+    - export DRIVER_CLASS_NAME=''
+    - export DB_URL=$DB_URL
+    - export USER=$DB_USER
+    - export PASSWORD=$DB_PASSWORD
+    - export DB_PLATFORM=''
+    - export H2_CONSOLE=''
+    - export AccessKey=$AWS_ACCESS_KEY_ID
+    - export SecretKey=$AWS_SECRET_ACCESS_KEY
+    - export BucketName=$BUCKET_NAME
+    - export URL_INSTANCE=$URL_EC2_INSTANCE
+    - export MAIL_USERNAME=$MAIL_USERNAME_EMAIL
+    - export MAIL_PASSWORD=$MAIL_PASSWORD_EMAIL
+    - ssh -o StrictHostKeyChecking=no ubuntu@18.188.200.107 "cd "backendApp/" && pkill -f catering-0.0.1-SNAPSHOT.jar" 
+    - ssh -o StrictHostKeyChecking=no ubuntu@18.188.200.107 "cd "backendApp/" && rm -rf /home/ubuntu/backup/catering-0.0.1-SNAPSHOT.jar && cp -r catering-0.0.1-SNAPSHOT.jar /home/ubuntu/backup && rm -rf catering-0.0.1-SNAPSHOT.jar"
+    - scp target/catering-0.0.1-SNAPSHOT.jar ubuntu@18.188.200.107:/home/ubuntu/backendApp
+    - ssh -o StrictHostKeyChecking=no ubuntu@18.188.200.107 "cd "backendApp/" && java -jar catering-0.0.1-SNAPSHOT.jar &"
+    - echo "Finished deploying backend app :D"
+  only:
+    - release
+    - fix/broken-pipelines
