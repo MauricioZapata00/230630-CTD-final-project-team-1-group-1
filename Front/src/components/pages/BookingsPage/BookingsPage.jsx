@@ -1,4 +1,6 @@
 import { useContext, useEffect, useState } from "react";
+import Product from "../../common/Product/Product";
+import ProductDetail from "../../common/ProductDetail";
 import Booking from "../../common/Booking/Booking";
 import { getBookingsForUser } from "../../../services";
 import { AppContext } from "../../../context";
@@ -14,13 +16,14 @@ const BookingsPage = () => {
     getBookingsForUser(logedUser.email, logedUser.jwt)
       .then((response) => {
         setReservas(response.data);
+        console.log(logedUser.email, reservas);
       })
       .catch((error) => {
         const errorMsg = error?.response?.data?.description;
         setError(errorMsg || "Ha ocurrido un error.");
       })
       .finally(() => setLoading(false));
-  }, [logedUser, reservas, setError, setLogedUser]);
+  }, [logedUser, setError, setLogedUser]);
 
   return (
     <div>
