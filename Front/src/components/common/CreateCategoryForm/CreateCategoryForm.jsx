@@ -134,7 +134,6 @@ const CreateCategoryForm = ({ isFormOpen, setIsFormOpen }) => {
         setIsFormOpen(false);
       })
       .catch((error) => {
-        console.log({ error });
         setSending(false);
         const errorMsg = error?.response?.data?.description;
         setError(errorMsg || "Ha ocurrido un error.");

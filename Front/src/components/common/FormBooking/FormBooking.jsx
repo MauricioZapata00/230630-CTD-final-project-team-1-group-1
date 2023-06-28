@@ -75,11 +75,11 @@ const FormBooking = () => {
         handleCloseModal();
     };
 
-    const handleConfirmBooking = () => {
+    const handleConfirmBooking = (data) => {
         setShowModalConfirm(true);
         submitBookings(bookingData, logedUser.jwt)
             .then(() => {
-                console.log("reserva enviada:", bookingData);
+                console.log("reservan enviada:", bookingData);
             })
             .catch((error) => {
                 const errorMsg = error?.response?.data?.description;

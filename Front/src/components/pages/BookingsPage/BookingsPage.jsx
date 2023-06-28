@@ -1,6 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import Product from "../../common/Product/Product"
-import ProductDetail from "../../common/ProductDetail"
 import Booking from "../../common/Booking/Booking";
 import { getBookingsForUser } from "../../../services";
 import { AppContext } from "../../../context";
@@ -8,7 +6,7 @@ import { AppContext } from "../../../context";
 const BookingsPage = () => {
     const [reservas, setReservas] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { error, setError, logedUser, setLogedUser } = useContext(AppContext);
+    const { error, setError, logedUser} = useContext(AppContext);
 
     useEffect(() => {
         if (logedUser) {

@@ -13,12 +13,14 @@ const ProductRating = ({ ratings }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedRating, setSelectedRating] = useState(0);
   const { setError, logedUser } = useContext(AppContext);
-  const [isImageFocused, setIsImageFocused] = useState('');
-  const[dataId, setDataId]=useState(null)
+  const [isImageFocused, setIsImageFocused] = useState("");
+  const [dataId, setDataId] = useState(null);
 
   const calculateAverageRating = () => {
     const totalRatings = ratings ? ratings.length : 0;
-    const sumRatings = ratings ? ratings.reduce((acc, rating) => acc + rating, 0) : 0;
+    const sumRatings = ratings
+      ? ratings.reduce((acc, rating) => acc + rating, 0)
+      : 0;
     const averageRating = ratings ? (sumRatings / totalRatings).toFixed(1) : 0;
     const validAverageRating = isNaN(averageRating) ? 0 : averageRating;
     return { averageRating: validAverageRating, totalRatings };
@@ -72,14 +74,11 @@ const ProductRating = ({ ratings }) => {
   const { averageRating, totalRatings } = calculateAverageRating();
   const starRating = renderStarRating(averageRating);
 
-  
   useEffect(() => {
     const logedUserData = localStorage.getItem("logedUser");
     if (logedUserData) {
-      const userData = JSON.parse(logedUserData)
-      setDataId(userData.id)
-      console.log(userData.id);
-     console.log(dataId);
+      const userData = JSON.parse(logedUserData);
+      setDataId(userData.id);
     }
   }, [setDataId]);
 
@@ -87,9 +86,8 @@ const ProductRating = ({ ratings }) => {
     setShowModal(false);
     setSelectedRating(0);
   };
-  
+
   const handleSubmitRating = (rating, productoId, dataId) => {
-    
     const data = {
       usuarioId: dataId,
       productoId: productoId,
@@ -97,11 +95,8 @@ const ProductRating = ({ ratings }) => {
     };
     submitRating(data)
       .then(() => {
-        console.log("Puntuación enviada:", rating);
         handleCloseModal();
         window.location.reload();
-        console.log(data);
-       ;
       })
       .catch((error) => {
         const errorMsg = error?.response?.data?.description;
@@ -110,18 +105,21 @@ const ProductRating = ({ ratings }) => {
   };
 
   const handleImageClick = (index) => {
-    setIsImageFocused(index +1);
+    setIsImageFocused(index + 1);
   };
   return (
     <div>
       <div className="rating">
         <div>
-        {logedUser && (
-          <Button onClick={() => setShowModal(true)}>Calificar</Button>
-        )}
-        <span className="rating__average">{averageRating}</span>
+          {logedUser && (
+            <Button onClick={() => setShowModal(true)}>Calificar</Button>
+          )}
+          <span className="rating__average">{averageRating}</span>
         </div>
-        <p>{starRating}<span>({totalRatings})</span></p>
+        <p>
+          {starRating}
+          <span>({totalRatings})</span>
+        </p>
       </div>
       {showModal && (
         <Dialog open={showModal} onClose={handleCloseModal}>
@@ -138,7 +136,7 @@ const ProductRating = ({ ratings }) => {
                   style={{ cursor: "pointer" }}
                 >
                   <img
-                    className={isImageFocused === index + 1 ? 'focused' : ''}
+                    className={isImageFocused === index + 1 ? "focused" : ""}
                     src={starImage}
                     alt=""
                     onClick={() => handleImageClick(index)}
@@ -148,7 +146,9 @@ const ProductRating = ({ ratings }) => {
             </div>
           </div>
           <DialogActions>
-            <Button onClick={() => handleSubmitRating(selectedRating, id , dataId)}>
+            <Button
+              onClick={() => handleSubmitRating(selectedRating, id, dataId)}
+            >
               Enviar puntuación
             </Button>
           </DialogActions>
