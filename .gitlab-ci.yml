@@ -20,7 +20,7 @@ build_frontend:
 
 build_backend:
   stage: build
-  image: maven:3.8.3-openjdk-17
+  image: andrejentzsch/maven_java_opencv_tesseract
   script:
     - cd Back/catering
     - echo "Building app..."
