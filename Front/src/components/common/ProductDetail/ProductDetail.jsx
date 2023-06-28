@@ -9,8 +9,6 @@ import ProductRating from "../ProductRating";
 import { AppContext } from "../../../context";
 import ImageGallery from "../ImageGallery";
 import { LoadingButton } from "@mui/lab";
-import ErrorMessage from "../ErrorMessage";
-import FormBooking from "../FormBooking/FormBooking";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
@@ -18,19 +16,22 @@ import dayjs from "dayjs";
 import "dayjs/locale/es";
 
 const ProductDetail = ({ productDetail, productBookings }) => {
-  const { rating, logedUser, error, setError, selectedDate, setSelectedDate } =
+  const { rating, logedUser, setError, selectedDate, setSelectedDate } =
     useContext(AppContext);
 
   const [showModal, setShowModal] = useState(false);
+
+  const minDate = dayjs().add(Number(productDetail.minDiasReservaPrevia), "d");
 
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1);
   };
 
-  const handleDateChange = (newDate) => setSelectedDate(newDate);
+  const handleDateChange = (newDate) => {
+    setSelectedDate(newDate);
+  };
 
-  console.log(rating);
   const {
     imagenUrl,
     nombre,
@@ -65,11 +66,11 @@ const ProductDetail = ({ productDetail, productBookings }) => {
   };
 
   useEffect(() => {
-    const initialDay = dayjs().add(
+    const initialDate = dayjs().add(
       Number(productDetail.minDiasReservaPrevia),
       "d"
     );
-    setSelectedDate(initialDay);
+    setSelectedDate(initialDate);
   }, [productDetail.minDiasReservaPrevia, setSelectedDate]);
 
   return (
@@ -166,7 +167,7 @@ const ProductDetail = ({ productDetail, productBookings }) => {
                   onChange={handleDateChange}
                   value={selectedDate}
                   disablePast
-                  minDate={selectedDate}
+                  minDate={minDate}
                   shouldDisableDate={getFormattedBookedDates}
                 />
               </LocalizationProvider>
@@ -181,7 +182,6 @@ const ProductDetail = ({ productDetail, productBookings }) => {
           </DialogActions>
         </Dialog>
       )}
-     
     </div>
   );
 };

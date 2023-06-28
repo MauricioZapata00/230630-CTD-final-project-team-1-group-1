@@ -11,7 +11,6 @@ import CreateCategoryForm from "../../common/CreateCategoryForm";
 const AdminEditProduct = () => {
   const { id } = useParams();
   const { setError } = useContext(AppContext);
-  console.log(id);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -21,7 +20,7 @@ const AdminEditProduct = () => {
   useEffect(() => {
     getProductDetail(id)
       .then((response) => setProduct(response.data))
-      .catch((error) => console.log("Ha ocurrido un error", error))
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, [id]);
 
