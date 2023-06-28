@@ -9,8 +9,8 @@ import com.dh.catering.exceptions.RecursoNoEncontradoException;
 import com.dh.catering.repository.RolRepository;
 import com.dh.catering.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,16 +19,12 @@ import java.util.Optional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class RolService {
 
-    @Autowired
-    private RolRepository rolRepository;
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-
-    @Autowired
-    private ObjectMapper mapper;
+    private final RolRepository rolRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final ObjectMapper mapper;
 
     public Optional<String> save(RolDto rolDto) throws NombreDuplicadoException {
         String mensaje = null;
@@ -86,7 +82,7 @@ public class RolService {
                 throw new AsignacionException("No se puede eliminar el rol porque esta asignado a " + usuarios.size() + " usuario(s)");
             }
             rolRepository.deleteById(id);
-            mensaje = "Se elimino corrctamente el rol con id " + id;
+            mensaje = "Se elimino correctamente el rol con id " + id;
             log.info(mensaje);
         }
         return Optional.ofNullable(mensaje);

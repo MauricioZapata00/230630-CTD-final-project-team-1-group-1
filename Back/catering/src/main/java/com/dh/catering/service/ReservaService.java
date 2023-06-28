@@ -4,7 +4,6 @@ import com.dh.catering.domain.Producto;
 import com.dh.catering.domain.Reserva;
 import com.dh.catering.domain.Usuario;
 import com.dh.catering.dto.ReservaDto;
-import com.dh.catering.dto.ReservaXUsuarioDto;
 import com.dh.catering.exceptions.AsignacionException;
 import com.dh.catering.exceptions.RecursoNoEncontradoException;
 import com.dh.catering.repository.ProductoRepository;
@@ -52,40 +51,15 @@ public class ReservaService {
         return Optional.ofNullable(mensaje);
     }
 
-    public List<ReservaDto> listarTodos(){
-        List<ReservaDto> reservaDtoList = new ArrayList<>();
-        List<Reserva> reservas = reservaRepository.findAll();
-        for (Reserva reserva: reservas){
-            ReservaDto reservaDto = new ReservaDto(reserva.getId(),reserva.getFechaCreacion(),Util.convertirLocalDateToString(reserva.getFechaReserva()),reserva.getProducto().getId(),reserva.getUsuario().getEmail(),reserva.getValorReserva());
-            reservaDtoList.add(reservaDto);
-        }
-        return reservaDtoList;
+    public List<ReservaDto> listarTodos() {
+        return reservaRepository.findAll().stream()
+                .map(this::mapearReservaADto).toList();
     }
 
-    public List<ReservaDto> buscarTodosPorProductoId(Long id){
-        List<ReservaDto> reservaDtoList = new ArrayList<>();
-        List<Reserva> reservas = reservaRepository.findAllByProductoId(id);
-        for (Reserva reserva: reservas){
-            ReservaDto reservaDto = new ReservaDto(reserva.getId(),reserva.getFechaCreacion(),Util.convertirLocalDateToString(reserva.getFechaReserva()),reserva.getProducto().getId(),reserva.getUsuario().getEmail(),reserva.getValorReserva());
-            reservaDtoList.add(reservaDto);
-        }
-        return reservaDtoList;
+    public List<ReservaDto> buscarTodosPorProductoId(Long id) {
+        return reservaRepository.findAllByProductoId(id).stream()
+                .map(this::mapearReservaADto).toList();
     }
-
-    public List<ReservaXUsuarioDto> buscarTodosPorProductoNombre(String nombre){
-        return reservaRepository.findAllByProductoNombre(nombre).stream()
-                .map(reserva ->
-                        ReservaXUsuarioDto.builder()
-                                .idProducto(reserva.getProducto().getId())
-                                .fechaReserva(Util.convertirLocalDateToString(reserva.getFechaReserva()))
-                                .valorReserva(reserva.getValorReserva())
-                                .emailUsuario(reserva.getUsuario().getEmail())
-                                .fechaCreacion(reserva.getFechaCreacion())
-                                .imagenUrl(reserva.getProducto().getImagenUrl())
-                                .build()
-        ).toList();
-    }
-
 
     public List<String> obtenerFechasReservadasPorProductoId(Long id){
         List<String> fechas = new ArrayList<>();
@@ -98,13 +72,8 @@ public class ReservaService {
     }
 
     public List<ReservaDto> buscarTodosPorUsuarioEmail(String email){
-        List<ReservaDto> reservaDtoList = new ArrayList<>();
-        List<Reserva> reservas = reservaRepository.findAllByEmail(email);
-        for (Reserva reserva: reservas){
-            ReservaDto reservaDto = new ReservaDto(reserva.getId(),reserva.getFechaCreacion(),Util.convertirLocalDateToString(reserva.getFechaReserva()),reserva.getProducto().getId(),reserva.getUsuario().getEmail(),reserva.getValorReserva());
-            reservaDtoList.add(reservaDto);
-        }
-        return reservaDtoList;
+        return reservaRepository.findAllByEmail(email).stream()
+                .map(this::mapearReservaADto).toList();
     }
 
     public Optional<ReservaDto> buscarPorId(Long id) throws RecursoNoEncontradoException {
@@ -115,8 +84,7 @@ public class ReservaService {
             throw new RecursoNoEncontradoException("No existe una reserva con id: " + id);
         }
         Reserva reserva = optionalReserva.get();
-        reservaDto = new ReservaDto(reserva.getId(),reserva.getFechaCreacion(),Util.convertirLocalDateToString(reserva.getFechaReserva()),reserva.getProducto().getId(),reserva.getUsuario().getEmail(),reserva.getValorReserva());
-        return Optional.ofNullable(reservaDto);
+        return Optional.ofNullable(mapearReservaADto(reserva));
     }
 
     public Optional<String> eliminarPorId(Long id) throws RecursoNoEncontradoException {
@@ -137,6 +105,18 @@ public class ReservaService {
         mensaje = "La reserva fue actualizada exitosamente!";
         log.info(mensaje);
         return Optional.ofNullable(mensaje);
+    }
+
+    private ReservaDto mapearReservaADto(Reserva reserva) {
+        return ReservaDto.builder()
+                .id(reserva.getId())
+                .fechaCreacion(reserva.getFechaCreacion())
+                .fechaReserva(Util.convertirLocalDateToString(reserva.getFechaReserva()))
+                .emailUsuario(reserva.getUsuario().getEmail())
+                .valorReserva(reserva.getValorReserva())
+                .imagenUrl(reserva.getProducto().getImagenUrl())
+                .nombreProducto(reserva.getProducto().getNombre())
+                .build();
     }
 
 }
