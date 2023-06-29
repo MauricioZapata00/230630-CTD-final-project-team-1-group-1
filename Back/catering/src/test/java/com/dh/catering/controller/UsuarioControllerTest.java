@@ -68,5 +68,38 @@ class UsuarioControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$").isArray());
     }
+
+    @Test
+    void testListarTodosPorRolId() throws Exception {
+        doReturn(List.of(UsuarioFactory.iniciarUsuarioDto())).when(usuarioService).findAllByRolId(any());
+        mvc.perform(MockMvcRequestBuilders.get(URL_TEMPLATE+"rolId/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$").isArray());
+    }
+
+    @Test
+    void testBuscarPorId() throws Exception {
+        doReturn(Optional.of(UsuarioFactory.iniciarUsuarioDto())).when(usuarioService).getById(any());
+        mvc.perform(MockMvcRequestBuilders.get(URL_TEMPLATE+"id/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$").exists());
+    }
+
+    @Test
+    void testBuscarPorEmail() throws Exception {
+        doReturn(Optional.of(UsuarioFactory.iniciarUsuarioDto())).when(usuarioService).getByEmail(any());
+        mvc.perform(MockMvcRequestBuilders.get(URL_TEMPLATE+"email/admin@gmail.com"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$").exists());
+    }
+
+    @Test
+    void testEliminarPorId() throws Exception {
+        var test = "test";
+        doReturn(Optional.of(test)).when(usuarioService).deleteById(any());
+        mvc.perform(MockMvcRequestBuilders.delete(URL_TEMPLATE+"eliminar/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(test));
+    }
 }
 

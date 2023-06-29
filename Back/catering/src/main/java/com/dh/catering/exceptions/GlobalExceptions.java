@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptions {
 
+    public static final String MENSAJE = "Lo sentimos, ha ocurrido un error!";
+
     @ExceptionHandler({NombreDuplicadoException.class})
     public ResponseEntity<MensajeError> procesarNombreDuplicado(NombreDuplicadoException e){
         MensajeError mensajeError = new MensajeError();
-        mensajeError.setMessage("Lo sentimos, ha ocurrido un error!");
+        mensajeError.setMessage(MENSAJE);
         mensajeError.setDescription(e.getMessage());
         mensajeError.setStatusCode(1001);
 
@@ -22,7 +24,7 @@ public class GlobalExceptions {
     @ExceptionHandler({RecursoNoEncontradoException.class})
     public ResponseEntity<MensajeError> procesarRecursoNoEncontrado(RecursoNoEncontradoException e){
         MensajeError mensajeError = new MensajeError();
-        mensajeError.setMessage("Lo sentimos, ha ocurrido un error!");
+        mensajeError.setMessage(MENSAJE);
         mensajeError.setDescription(e.getMessage());
         mensajeError.setStatusCode(1002);
 
@@ -40,9 +42,9 @@ public class GlobalExceptions {
     }
 
     @ExceptionHandler({AsignacionException.class})
-    public ResponseEntity<MensajeError> procesarCategoriaAsdignada(AsignacionException e){
+    public ResponseEntity<MensajeError> procesarCategoriaAsignada(AsignacionException e){
         MensajeError mensajeError = new MensajeError();
-        mensajeError.setMessage("Lo sentimos, ha ocurrido un error!");
+        mensajeError.setMessage(MENSAJE);
         mensajeError.setDescription(e.getMessage());
         mensajeError.setStatusCode(1004);
 
@@ -52,7 +54,7 @@ public class GlobalExceptions {
     @ExceptionHandler({BadCredentialsException.class})
     public ResponseEntity<MensajeError> procesarCredencialesIncorrectas(BadCredentialsException e){
         MensajeError mensajeError = new MensajeError();
-        mensajeError.setMessage("Lo sentimos, ha ocurrido un error!");
+        mensajeError.setMessage(MENSAJE);
         mensajeError.setDescription(e.getMessage());
         mensajeError.setStatusCode(1005);
 
@@ -62,7 +64,7 @@ public class GlobalExceptions {
     @ExceptionHandler({IllegalStateException.class})
     public ResponseEntity<MensajeError> procesarFallaEnvioEmail(IllegalStateException e){
         MensajeError mensajeError = new MensajeError();
-        mensajeError.setMessage("Lo sentimos, ha ocurrido un error!");
+        mensajeError.setMessage(MENSAJE);
         mensajeError.setDescription(e.getMessage());
         mensajeError.setStatusCode(1006);
 
@@ -72,7 +74,7 @@ public class GlobalExceptions {
     @ExceptionHandler({DuplicadoException.class})
     public ResponseEntity<MensajeError> procesarDuplicadoException(DuplicadoException e){
         MensajeError mensajeError = new MensajeError();
-        mensajeError.setMessage("Lo sentimos, ha ocurrido un error!");
+        mensajeError.setMessage(MENSAJE);
         mensajeError.setDescription(e.getMessage());
         mensajeError.setStatusCode(1007);
 
