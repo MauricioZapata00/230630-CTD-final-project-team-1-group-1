@@ -2,19 +2,23 @@ import { useParams } from "react-router-dom";
 import { AppContext } from "../../../context";
 import { useContext, useEffect, useState } from "react";
 import ProductDetail from "../../common/ProductDetail";
-import { getProductDetail, getRatingProduct } from "../../../services";
+import {
+  getProductDetail,
+  getRatingProduct,
+  getProductBookings,
+} from "../../../services";
 import ErrorMessage from "../../common/ErrorMessage";
 import { CircularProgress } from "@mui/material";
-import Product from "../../common/Product/Product";
 
 const DetailPage = () => {
   const { id } = useParams();
 
-  const { error, setError, rating, setRating } = useContext(AppContext);
+  const { error, setError, rating, setRating, logedUser } =
+    useContext(AppContext);
 
   const [productDetail, setProductDetail] = useState(null);
+  const [productBookings, setProductBookings] = useState(null);
   const [loading, setLoading] = useState(true);
-
 
   useEffect(() => {
     getProductDetail(id)
@@ -31,7 +35,6 @@ const DetailPage = () => {
     getRatingProduct(id)
       .then((response) => {
         setRating(response.data);
-        console.log(response.data);
       })
       .catch((error) => {
         const errorMsg = error?.response?.data?.description;
@@ -40,7 +43,17 @@ const DetailPage = () => {
       })
       .finally(() => setLoading(false));
   }, [id, setRating, setError]);
-  
+
+  useEffect(() => {
+    if (logedUser) {
+      getProductBookings(id, logedUser.jwt)
+        .then((response) => {
+          const stringBookings = response.data.map((data) => data.fechaReserva);
+          setProductBookings(stringBookings);
+        })
+        .catch(() => {});
+    }
+  }, [id, logedUser]);
 
   return (
     <div className="detail-page">
@@ -52,6 +65,7 @@ const DetailPage = () => {
           productDetail={productDetail}
           loading={loading}
           rating={rating}
+          productBookings={productBookings}
         />
       )}
       {!loading && !productDetail && (

@@ -15,6 +15,8 @@ import AdminEditProduct from "./components/pages/AdminEditProduct/AdminEditProdu
 import AdminListUsers from "./components/pages/AdminListUsers/AdminListUsers";
 import BookingsPage from "./components/pages/BookingsPage/BookingsPage";
 import BookingDetailPage from "./components/pages/BookingDetailPage/BookingDetailPage";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
@@ -52,6 +54,7 @@ const App = () => {
           </BrowserRouter>
         </AppContextProvider>
       </ThemeContextProvider>
+      <ToastContainer position="top-right" />
     </div>
   );
 };

@@ -28,6 +28,12 @@
 
         h2{
             font-family: $primary-font;
+            background-color: #cfd3da;
+            text-align: center;
+            width: 100%;
+            color:rgba(0, 0, 0, 0.3);
+            font-size: 1.2rem;
+            padding: 0.5rem 0
         }
 
         p{  display: flex;
@@ -46,6 +52,28 @@
                     padding: 0;
                   }
             }
+        }
+        div{  display: flex;
+          font-weight: bold;
+          justify-content: space-between;
+          width: 90%;
+
+          @media screen and (max-width: 768px) {
+              flex-direction: column;
+            }
+          Input{
+            font-weight: lighter;
+          }
+          label{
+              padding: 1rem;
+
+              @media screen and (max-width: 768px) {
+                  padding: 0;
+                }
+          }
+      }
+        h4{
+          margin:1.5rem 0 0.5rem 0;
         }
     }
 }

@@ -2,10 +2,12 @@ package com.dh.catering.service;
 
 import com.dh.catering.domain.Producto;
 import com.dh.catering.dto.ProductoDto;
+import com.dh.catering.exceptions.AsignacionException;
 import com.dh.catering.exceptions.NombreDuplicadoException;
 import com.dh.catering.exceptions.RecursoNoEncontradoException;
 import com.dh.catering.repository.CategoriaProductoRepository;
 import com.dh.catering.repository.ProductoRepository;
+import com.dh.catering.repository.ReservaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +35,9 @@ public class ProductoService {
 
   @Autowired
   private S3ImageService s3ImageService;
+
+  @Autowired
+  private ReservaRepository reservaRepository;
 
   private String imgUrlActualizacion;
 
@@ -130,8 +135,9 @@ public class ProductoService {
     return Optional.ofNullable(productoDto);
   }
 
-  public Optional<String> deleteById(Long id) throws RecursoNoEncontradoException {
+  public Optional<String> deleteById(Long id) throws RecursoNoEncontradoException, AsignacionException {
     String mensaje = null;
+    validarSiPuedeSerEditado(id);
     Optional<ProductoDto> optionalProductoDto = this.getById(id);
     if (optionalProductoDto.isPresent()) {
       productoRepository.deleteById(id);
@@ -142,14 +148,21 @@ public class ProductoService {
   }
 
   public Optional<String> updateById(Long id, ProductoDto productoDto, MultipartFile archivoAGuardar)
-      throws RecursoNoEncontradoException, NombreDuplicadoException {
+          throws RecursoNoEncontradoException, NombreDuplicadoException, AsignacionException {
     String mensaje = null;
+    validarSiPuedeSerEditado(id);
     imgUrlActualizacion = getById(id).get().getImagenUrl();
     this.deleteById(id);
     this.save(productoDto,archivoAGuardar);
     mensaje = "Se actualizo correctamente el producto que tenia el id: " + id + ". Al producto actualizado se le asigno el id: " + this.getByNombre(productoDto.getNombre()).get().getId();
     log.info(mensaje);
     return Optional.ofNullable(mensaje);
+  }
+
+  private void validarSiPuedeSerEditado(Long id) throws AsignacionException {
+    if (!reservaRepository.findAllByProductoId(id).isEmpty()) {
+      throw new AsignacionException("No se puede modificar el producto porque esta asociado a alguna reserva");
+    }
   }
 
 }

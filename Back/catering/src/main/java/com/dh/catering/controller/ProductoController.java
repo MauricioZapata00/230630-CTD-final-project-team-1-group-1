@@ -1,6 +1,7 @@
 package com.dh.catering.controller;
 
 import com.dh.catering.dto.ProductoDto;
+import com.dh.catering.exceptions.AsignacionException;
 import com.dh.catering.exceptions.NombreDuplicadoException;
 import com.dh.catering.exceptions.RecursoNoEncontradoException;
 import com.dh.catering.service.ProductoService;
@@ -77,7 +78,7 @@ public class ProductoController {
     @DeleteMapping("/eliminar/{id}")
     @Operation(summary = "Eliminar un producto por id", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> eliminarPorId(@PathVariable Long id) throws RecursoNoEncontradoException{
+    public ResponseEntity<String> eliminarPorId(@PathVariable Long id) throws RecursoNoEncontradoException, AsignacionException {
         return productoService.deleteById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
@@ -86,7 +87,7 @@ public class ProductoController {
     @PutMapping(value = "/actualizar/{id}", consumes = {"multipart/form-data", "application/octet-stream"})
     @Operation(summary = "Actualizar un producto por su id", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> actualizarPorId(@PathVariable Long id,@RequestParam("productoDto") String productoDto, @RequestParam(value = "imageFile", required = false)MultipartFile archivoImagen) throws NombreDuplicadoException, RecursoNoEncontradoException, JsonProcessingException {
+    public ResponseEntity<String> actualizarPorId(@PathVariable Long id,@RequestParam("productoDto") String productoDto, @RequestParam(value = "imageFile", required = false)MultipartFile archivoImagen) throws NombreDuplicadoException, RecursoNoEncontradoException, JsonProcessingException, AsignacionException {
         ProductoDto dtoObtenido = mapper.readValue(productoDto, ProductoDto.class);
         return productoService.updateById(id,dtoObtenido,archivoImagen)
                 .map(ResponseEntity::ok)

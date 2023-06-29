@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Button, Dialog, DialogActions } from "@mui/material";
 import { IconButton } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -9,17 +9,29 @@ import ProductRating from "../ProductRating";
 import { AppContext } from "../../../context";
 import ImageGallery from "../ImageGallery";
 import { LoadingButton } from "@mui/lab";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import dayjs from "dayjs";
+import "dayjs/locale/es";
 
-const ProductDetail = ({ productDetail }) => {
-  const { rating, logedUser, error, setError } = useContext(AppContext);
+const ProductDetail = ({ productDetail, productBookings }) => {
+  const { rating, logedUser, setError, selectedDate, setSelectedDate } =
+    useContext(AppContext);
+
   const [showModal, setShowModal] = useState(false);
+
+  const minDate = dayjs().add(Number(productDetail.minDiasReservaPrevia), "d");
 
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1);
   };
 
-  console.log(rating);
+  const handleDateChange = (newDate) => {
+    setSelectedDate(newDate);
+  };
+
   const {
     imagenUrl,
     nombre,
@@ -33,17 +45,33 @@ const ProductDetail = ({ productDetail }) => {
 
   const handleGoToBooking = () => {
     if (!logedUser) {
-      navigate('/ingreso')
+      navigate("/ingreso");
+      setError(
+        "Es necesario iniciar sesión antes de realizar una reserva. Si no posees una cuenta, debes crearte una. "
+      );
     } else {
-      setShowModal(true)
+      setShowModal(true);
     }
-  }
+  };
   const handleContinueBooking = () => {
-    navigate(`/reservas/${productDetail._id}`)
-  }
+    navigate(`/reservas/${productDetail.id}`);
+  };
   const handleCloseModal = () => {
     setShowModal(false);
   };
+
+  const getFormattedBookedDates = (date) => {
+    const formattedDate = date.format("YYYY-MM-DD");
+    return !!productBookings.find((bookedDate) => bookedDate === formattedDate);
+  };
+
+  useEffect(() => {
+    const initialDate = dayjs().add(
+      Number(productDetail.minDiasReservaPrevia),
+      "d"
+    );
+    setSelectedDate(initialDate);
+  }, [productDetail.minDiasReservaPrevia, setSelectedDate]);
 
   return (
     <div className="product-detail">
@@ -113,23 +141,44 @@ const ProductDetail = ({ productDetail }) => {
           </div>
         </div>
         <p className="product-detail__price">
-          <LoadingButton onClick={handleGoToBooking} variant="contained">Realizar reserva</LoadingButton>
+          <LoadingButton onClick={handleGoToBooking} variant="contained">
+            Realizar reserva
+          </LoadingButton>
           ${precio.toFixed(2)}
         </p>
       </div>
       {showModal && (
         <Dialog open={showModal} onClose={handleCloseModal}>
           <DialogActions>
-            <Button style={{ fontWeight: "600" }} onClick={handleCloseModal}>X</Button>
+            <Button style={{ fontWeight: "600" }} onClick={handleCloseModal}>
+              X
+            </Button>
           </DialogActions>
           <div className="calification">
-            <p style={{ fontWeight: "600" }}>Elige la fecha que deseas reservar este producto</p>
+            <p style={{ fontWeight: "600" }}>
+              Elige la fecha que deseas reservar este producto
+            </p>
             <div>
-              <p>calendario</p>        
+              <LocalizationProvider
+                dateAdapter={AdapterDayjs}
+                adapterLocale="es"
+              >
+                <DateCalendar
+                  onChange={handleDateChange}
+                  value={selectedDate}
+                  disablePast
+                  minDate={minDate}
+                  shouldDisableDate={getFormattedBookedDates}
+                />
+              </LocalizationProvider>
             </div>
           </div>
-          <DialogActions style={{justifyContent: 'center', marginBottom: '1rem'}} >
-            <Button variant="contained" onClick={handleContinueBooking} >Continuar reserva</Button>
+          <DialogActions
+            style={{ justifyContent: "center", marginBottom: "1rem" }}
+          >
+            <Button variant="contained" onClick={handleContinueBooking}>
+              Continuar reserva
+            </Button>
           </DialogActions>
         </Dialog>
       )}
@@ -147,8 +196,10 @@ ProductDetail.propTypes = {
     minDiasReservaPrevia: PropTypes.number.isRequired,
     permiteCambios: PropTypes.bool.isRequired,
     requierePagoAnticipado: PropTypes.bool.isRequired,
+    id: PropTypes.number.isRequired,
   }).isRequired,
   rating: PropTypes.arrayOf(PropTypes.number),
+  productBookings: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default ProductDetail;

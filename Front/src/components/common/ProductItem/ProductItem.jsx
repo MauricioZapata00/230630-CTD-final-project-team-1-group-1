@@ -47,7 +47,6 @@ const ProductItem = ({ product }) => {
       })
       .catch((error) => {
         const errorMsg = error?.response?.data?.description;
-        console.log({ error });
         setError(errorMsg || "Ha ocurrido un error.");
       })
       .finally(() => setLoading(false));

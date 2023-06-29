@@ -1,13 +1,15 @@
 import { createContext, useState } from "react";
 import PropTypes from "prop-types";
+import dayjs from "dayjs";
 
 export const AppContext = createContext();
 
 const AppContextProvider = ({ children }) => {
-  const [logedUser, setLogedUser] = useState(null);
+  const [logedUser, setLogedUser] = useState();
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
   const [rating, setRating] = useState(0);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
 
   const contextValue = {
     logedUser,
@@ -17,7 +19,9 @@ const AppContextProvider = ({ children }) => {
     error,
     setError,
     rating,
-    setRating
+    setRating,
+    selectedDate,
+    setSelectedDate,
   };
 
   return (

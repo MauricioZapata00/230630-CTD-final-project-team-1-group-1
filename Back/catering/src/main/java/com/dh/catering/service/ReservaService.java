@@ -39,7 +39,7 @@ public class ReservaService {
         String mensaje = null;
         if (reservaDto != null){
             Integer restriccionDiasMinReserva = productoRepository.getReferenceById(reservaDto.getIdProducto()).getMinDiasReservaPrevia();
-            if (ChronoUnit.DAYS.between(Util.convertirStringToLocalDate(reservaDto.getFechaReserva()),Util.obtenerFechaActual())<restriccionDiasMinReserva){
+            if (ChronoUnit.DAYS.between(Util.obtenerFechaActual(),Util.convertirStringToLocalDate(reservaDto.getFechaReserva()))<restriccionDiasMinReserva){
                 mensaje = "Este producto solo puede ser reservado como minimo " + restriccionDiasMinReserva + " días previos al evento.";
                 log.error(mensaje);
                 throw new AsignacionException(mensaje);
@@ -55,24 +55,14 @@ public class ReservaService {
         return Optional.ofNullable(mensaje);
     }
 
-    public List<ReservaDto> listarTodos(){
-        List<ReservaDto> reservaDtoList = new ArrayList<>();
-        List<Reserva> reservas = reservaRepository.findAll();
-        for (Reserva reserva: reservas){
-            ReservaDto reservaDto = new ReservaDto(reserva.getId(),reserva.getFechaCreacion(),Util.convertirLocalDateToString(reserva.getFechaReserva()),reserva.getProducto().getId(),reserva.getUsuario().getEmail(),reserva.getValorReserva());
-            reservaDtoList.add(reservaDto);
-        }
-        return reservaDtoList;
+    public List<ReservaDto> listarTodos() {
+        return reservaRepository.findAll().stream()
+                .map(this::mapearReservaADto).toList();
     }
 
-    public List<ReservaDto> buscarTodosPorProductoId(Long id){
-        List<ReservaDto> reservaDtoList = new ArrayList<>();
-        List<Reserva> reservas = reservaRepository.findAllByProductoId(id);
-        for (Reserva reserva: reservas){
-            ReservaDto reservaDto = new ReservaDto(reserva.getId(),reserva.getFechaCreacion(),Util.convertirLocalDateToString(reserva.getFechaReserva()),reserva.getProducto().getId(),reserva.getUsuario().getEmail(),reserva.getValorReserva());
-            reservaDtoList.add(reservaDto);
-        }
-        return reservaDtoList;
+    public List<ReservaDto> buscarTodosPorProductoId(Long id) {
+        return reservaRepository.findAllByProductoId(id).stream()
+                .map(this::mapearReservaADto).toList();
     }
 
     public List<String> obtenerFechasReservadasPorProductoId(Long id){
@@ -86,13 +76,8 @@ public class ReservaService {
     }
 
     public List<ReservaDto> buscarTodosPorUsuarioEmail(String email){
-        List<ReservaDto> reservaDtoList = new ArrayList<>();
-        List<Reserva> reservas = reservaRepository.findAllByEmail(email);
-        for (Reserva reserva: reservas){
-            ReservaDto reservaDto = new ReservaDto(reserva.getId(),reserva.getFechaCreacion(),Util.convertirLocalDateToString(reserva.getFechaReserva()),reserva.getProducto().getId(),reserva.getUsuario().getEmail(),reserva.getValorReserva());
-            reservaDtoList.add(reservaDto);
-        }
-        return reservaDtoList;
+        return reservaRepository.findAllByEmail(email).stream()
+                .map(this::mapearReservaADto).toList();
     }
 
     public Optional<ReservaDto> buscarPorId(Long id) throws RecursoNoEncontradoException {
@@ -103,8 +88,7 @@ public class ReservaService {
             throw new RecursoNoEncontradoException("No existe una reserva con id: " + id);
         }
         Reserva reserva = optionalReserva.get();
-        reservaDto = new ReservaDto(reserva.getId(),reserva.getFechaCreacion(),Util.convertirLocalDateToString(reserva.getFechaReserva()),reserva.getProducto().getId(),reserva.getUsuario().getEmail(),reserva.getValorReserva());
-        return Optional.ofNullable(reservaDto);
+        return Optional.ofNullable(mapearReservaADto(reserva));
     }
 
     public Optional<String> eliminarPorId(Long id) throws RecursoNoEncontradoException {
@@ -182,5 +166,17 @@ public class ReservaService {
         return emailContent;
     }
 
+
+    private ReservaDto mapearReservaADto(Reserva reserva) {
+        return ReservaDto.builder()
+                .id(reserva.getId())
+                .fechaCreacion(reserva.getFechaCreacion())
+                .fechaReserva(Util.convertirLocalDateToString(reserva.getFechaReserva()))
+                .emailUsuario(reserva.getUsuario().getEmail())
+                .valorReserva(reserva.getValorReserva())
+                .imagenUrl(reserva.getProducto().getImagenUrl())
+                .nombreProducto(reserva.getProducto().getNombre())
+                .build();
+    }
 
 }

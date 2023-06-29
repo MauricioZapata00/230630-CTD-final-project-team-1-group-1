@@ -7,12 +7,15 @@ import PropTypes from "prop-types";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LoginIcon from "@mui/icons-material/Login";
 import PopupUser from "../../common/PopupUser";
+import jwt_decode from "jwt-decode";
+import { toast } from "react-toastify";
 
 const Header = ({ admin = false }) => {
   const navigateTo = useNavigate();
 
   const { logedUser, setLogedUser } = useContext(AppContext);
   const [showPopup, setShowPopup] = useState(false);
+  const [isSessionExpired, setIsSessionExpired] = useState(false);
 
   const handleLogoClick = () => {
     !admin ? navigateTo("/") : navigateTo("/admin");
@@ -48,9 +51,26 @@ const Header = ({ admin = false }) => {
       if (admin && userData?.rolName !== "ADMIN") {
         navigateTo("/");
       }
+      const checkTokenExpiration = () => {
+        const token = userData.jwt;
+        if (token) {
+          const decodedToken = jwt_decode(token);
+          const currentTime = Date.now() / 1000;
+          if (decodedToken.exp < currentTime) {
+            return true;
+          }
+        }
+        return false;
+      };
+      const tokenExpired = checkTokenExpiration();
+
+      if (tokenExpired) {
+        setIsSessionExpired(true);
+        handleLogOut();
+        toast.error("¡Lo sentimos! La sesión ha expirado.");
+      }
     }
-  }, [admin, navigateTo, setLogedUser]);
-  
+  }, [admin, setIsSessionExpired, navigateTo, setLogedUser]);
 
   const handleUsernameClick = () => {
     setShowPopup(!showPopup);
@@ -94,18 +114,16 @@ const Header = ({ admin = false }) => {
           )
         ) : (
           <div className="header__user-info">
-            <Avatar sx={{ bgcolor: "#67D671" }}>{logedUser.avatar}</Avatar>
+            <Avatar onClick={handleUsernameClick} style={{ cursor: "pointer" }} sx={{ bgcolor: "#67D671" }}>{logedUser.avatar}</Avatar>
             <span onClick={handleUsernameClick} style={{ cursor: "pointer" }}>
               {logedUser.nombre} {logedUser.apellido}
-            </span>         
+            </span>
             <IconButton onClick={handleLogOut} aria-label="cerrar sesión">
               <LoginIcon />
             </IconButton>
-            {showPopup && <PopupUser />} 
+            {showPopup && <PopupUser />}
           </div>
-          
         )}
-          
       </div>
     </>
   );
