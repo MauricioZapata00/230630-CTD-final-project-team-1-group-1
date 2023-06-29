@@ -42,7 +42,7 @@ const FormBooking = () => {
                 setLoading(false);
             })
             .finally(() => setLoading(false))
-    }, [params?.id, data, error])
+    }, [params?.id, data])
 
     const handleInputChange = (e) => {
         const { value } = e.target;
@@ -195,7 +195,7 @@ const FormBooking = () => {
                         <p style={{ fontWeight: "600" }}>¡Muchas gracias!</p>
                         <p> Su reserva se ha realizado exitosamente.</p>
                     </div>) : (
-                        <div>{error}</div>
+                        <div className="calification">{error}</div>
                     )}
                     <DialogActions
                         style={{ justifyContent: "center", marginBottom: "1rem" }}
