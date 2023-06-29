@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Button, Dialog, DialogActions } from "@mui/material";
 import { IconButton } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -9,37 +9,29 @@ import ProductRating from "../ProductRating";
 import { AppContext } from "../../../context";
 import ImageGallery from "../ImageGallery";
 import { LoadingButton } from "@mui/lab";
-import ErrorMessage from "../ErrorMessage";
-import FormBooking from "../FormBooking/FormBooking";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 
-const bookedDates = ["2023-07-12", "2023-07-15", "2023-07-10"];
+const ProductDetail = ({ productDetail, productBookings }) => {
+  const { rating, logedUser, setError, selectedDate, setSelectedDate } =
+    useContext(AppContext);
 
-const ProductDetail = ({ productDetail }) => {
-  const { rating, logedUser, error, setError } = useContext(AppContext);
-
-  const initialDay = dayjs().add(
-    Number(productDetail.minDiasReservaPrevia),
-    "d"
-  );
   const [showModal, setShowModal] = useState(false);
-  const [date, setDate] = useState(initialDay);
-  const [formattedBookedDates] = useState(
-    bookedDates.map((date) => dayjs(date).format("YYYY-MM-DD"))
-  );
 
-  console.log({ date: date.format("YYYY-MM-DD") });
+  const minDate = dayjs().add(Number(productDetail.minDiasReservaPrevia), "d");
 
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1);
   };
 
-  console.log(rating);
+  const handleDateChange = (newDate) => {
+    setSelectedDate(newDate);
+  };
+
   const {
     imagenUrl,
     nombre,
@@ -70,8 +62,16 @@ const ProductDetail = ({ productDetail }) => {
 
   const getFormattedBookedDates = (date) => {
     const formattedDate = date.format("YYYY-MM-DD");
-    return !!bookedDates.find((bookedDate) => bookedDate === formattedDate);
+    return !!productBookings.find((bookedDate) => bookedDate === formattedDate);
   };
+
+  useEffect(() => {
+    const initialDate = dayjs().add(
+      Number(productDetail.minDiasReservaPrevia),
+      "d"
+    );
+    setSelectedDate(initialDate);
+  }, [productDetail.minDiasReservaPrevia, setSelectedDate]);
 
   return (
     <div className="product-detail">
@@ -164,10 +164,10 @@ const ProductDetail = ({ productDetail }) => {
                 adapterLocale="es"
               >
                 <DateCalendar
-                  onChange={(newDate) => setDate(newDate)}
-                  value={date}
+                  onChange={handleDateChange}
+                  value={selectedDate}
                   disablePast
-                  minDate={initialDay}
+                  minDate={minDate}
                   shouldDisableDate={getFormattedBookedDates}
                 />
               </LocalizationProvider>
@@ -182,10 +182,6 @@ const ProductDetail = ({ productDetail }) => {
           </DialogActions>
         </Dialog>
       )}
-      {error && <ErrorMessage position="top" />}
-      <div style={{ display: "none" }}>
-        {logedUser && <FormBooking productDetail={productDetail} />}
-      </div>
     </div>
   );
 };
@@ -200,8 +196,10 @@ ProductDetail.propTypes = {
     minDiasReservaPrevia: PropTypes.number.isRequired,
     permiteCambios: PropTypes.bool.isRequired,
     requierePagoAnticipado: PropTypes.bool.isRequired,
+    id: PropTypes.number.isRequired,
   }).isRequired,
   rating: PropTypes.arrayOf(PropTypes.number),
+  productBookings: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default ProductDetail;

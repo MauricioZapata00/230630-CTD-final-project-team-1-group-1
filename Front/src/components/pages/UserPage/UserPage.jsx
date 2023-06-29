@@ -1,16 +1,14 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { AppContext } from "../../../context";
 import { Input } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 
 const UserPage = () => {
   const { logedUser } = useContext(AppContext);
-  const navigateTo = useNavigate();
 
   if (!logedUser) {
     return null;
   }
-  console.log(logedUser);
+
   const { nombre, apellido, email } = logedUser;
   return (
     <div className="user-page">

@@ -20,11 +20,9 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PuntuacionService {
-    @Autowired
+
     private final ProductoRepository productoRepository;
-    @Autowired
     private final UsuarioRepository usuarioRepository;
-    @Autowired
     private final PuntuacionRepository puntuacionRepository;
 
     public Optional<String> save(PuntuacionDto dto) throws RecursoNoEncontradoException {

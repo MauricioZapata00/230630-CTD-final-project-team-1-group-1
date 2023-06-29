@@ -3,16 +3,13 @@ import { Button, Dialog, DialogActions, TextField } from "@mui/material";
 import { useContext, useState } from "react";
 import { createUser } from "../../../services";
 import { AppContext } from "../../../context";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ErrorMessage from "../../common/ErrorMessage";
-import SuccessMessage from "../../common/SuccessMessage";
 
 const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
 const RegisterPage = () => {
-  const navigateTo = useNavigate();
-
-  const {success, setSuccess, error, setError } = useContext(AppContext);
+  const { error, setError } = useContext(AppContext);
   const [data, setData] = useState({
     nombre: "",
     apellido: "",
@@ -22,7 +19,7 @@ const RegisterPage = () => {
   const [sending, setSending] = useState(false);
   const [errors, setErrors] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState("");
 
   const hasError = (name) => {
     const foundError = errors.find((error) => error.name === name);
@@ -31,7 +28,6 @@ const RegisterPage = () => {
 
   const handleChange = ({ target }) => {
     setData({ ...data, [target.name]: target.value });
-    console.log(data);
   };
 
   const handleSubmit = () => {
@@ -74,20 +70,18 @@ const RegisterPage = () => {
     createUser({ ...data, rolName: "USER" })
       .then((response) => {
         setMessage(response.data);
-        console.log(response.data);
         setShowModal(true);
       })
       .catch((error) => {
         const errorMsg = error?.response?.data?.description;
-        console.log(error);
         setError(errorMsg || "Ha ocurrido un error.");
       })
       .finally(() => setSending(false));
   };
- 
+
   const handleCloseModal = () => {
     setShowModal(false);
-    setMessage('')
+    setMessage("");
   };
 
   return (
@@ -169,11 +163,15 @@ const RegisterPage = () => {
           <div className="calification">
             <p style={{ fontWeight: "600" }}>¡Listo! Revisa tu correo</p>
             <div>
-              <p>{message}</p>        
+              <p>{message}</p>
             </div>
           </div>
-          <DialogActions style={{justifyContent: 'center', marginBottom: '1rem'}} >
-            <Button variant="contained" onClick={handleCloseModal} >OK</Button>
+          <DialogActions
+            style={{ justifyContent: "center", marginBottom: "1rem" }}
+          >
+            <Button variant="contained" onClick={handleCloseModal}>
+              OK
+            </Button>
           </DialogActions>
         </Dialog>
       )}

@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/reservas")
-@Tag(name = "reservas")
+@Tag(name = "Reservas")
 @Slf4j
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('ADMIN') || hasAuthority('USER') ")

@@ -2,19 +2,17 @@ package com.dh.catering.service;
 
 import com.dh.catering.domain.TokenConfirmacionCorreo;
 import com.dh.catering.repository.TokenConfirmacionCorreoRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TokenConfirmacionCorreoService {
 
-    @Autowired
-    private TokenConfirmacionCorreoRepository tokenConfirmacionCorreoRepository;
+    private final TokenConfirmacionCorreoRepository tokenConfirmacionCorreoRepository;
 
     public void saveConfirmationToken(TokenConfirmacionCorreo token) {
         tokenConfirmacionCorreoRepository.save(token);

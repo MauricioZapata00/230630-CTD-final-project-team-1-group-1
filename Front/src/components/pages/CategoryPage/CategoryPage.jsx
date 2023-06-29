@@ -19,7 +19,6 @@ const CategoryPage = () => {
     const fetchCategoryDetail = async () => {
       try {
         const response = await getCategoryDetail(params.id);
-        console.log(response.data);
         if (response.status === 200) {
           setProducts(response.data);
         }

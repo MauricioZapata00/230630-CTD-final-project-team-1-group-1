@@ -49,7 +49,6 @@ const ProductForm = ({ selectedProduct, categories }) => {
   const [file, setFile] = useState(null);
   const [stringImageUrl, setStringImageUrl] = useState("");
 
-  console.log({ productImageURL, stringImageUrl });
   const [sending, setSending] = useState(false);
 
   const [errors, setErrors] = useState([]);
@@ -57,7 +56,6 @@ const ProductForm = ({ selectedProduct, categories }) => {
   const handleChange = ({ target }) => {
     const { name, value } = target;
 
-    console.log({ target });
     if (name === "requierePagoAnticipado" || name === "permiteCambios") {
       setProduct({ ...product, [name]: target.checked });
       return;
@@ -212,7 +210,7 @@ const ProductForm = ({ selectedProduct, categories }) => {
     } else {
       const data = { ...product, imagenUrl: "" };
       const formData = new FormData();
-      console.log(stringImageUrl);
+
       if (stringImageUrl) {
         data.imagenUrl = stringImageUrl;
         formData.append(FORM_FILE_STRING_CONST, file, stringImageUrl);
@@ -233,7 +231,6 @@ const ProductForm = ({ selectedProduct, categories }) => {
           }
         )
         .then((response) => {
-          console.log({ data: response.data });
           setSending(false);
           setSuccess("El producto se actualizó correctamente.");
           const data = response.data.split("id: ");

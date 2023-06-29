@@ -43,3 +43,26 @@ export const getRatingProduct = (id) => {
 export const submitRating = (data) => {
   return axios.post(`${baseUrl}/puntuaciones/`, data);
 };
+
+export const getBookingsForUser = (email,jwt)=>{
+  return axios.get(`${baseUrl}/reservas/usuarios/${email}`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  })
+}
+export const submitBookings = (data,jwt) => {
+  return axios.post(`${baseUrl}/reservas/`, data,{
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  });
+};
+
+export const getProductBookings = (id, jwt) => {
+  return axios.get(`${baseUrl}/reservas/productos/${id}`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  });
+};
