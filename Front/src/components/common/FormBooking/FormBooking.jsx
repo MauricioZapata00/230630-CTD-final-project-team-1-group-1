@@ -186,6 +186,7 @@ const FormBooking = () => {
                             X
                         </Button>
                     </DialogActions>
+                    {!error ? (
                     <div className="calification">
                         <Grow in={showModalConfirm} style={{ transformOrigin: '0 0 0' , marginBottom:'0.5rem'}}
                             {...(showModalConfirm ? { timeout: 2000 } : {})}>
@@ -193,7 +194,9 @@ const FormBooking = () => {
                         </Grow>
                         <p style={{ fontWeight: "600" }}>¡Muchas gracias!</p>
                         <p> Su reserva se ha realizado exitosamente.</p>
-                    </div>
+                    </div>) : (
+                        <div>{error}</div>
+                    )}
                     <DialogActions
                         style={{ justifyContent: "center", marginBottom: "1rem" }}
                     >
