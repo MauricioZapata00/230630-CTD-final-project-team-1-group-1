@@ -25,7 +25,7 @@ public class EmailService {
                     new MimeMessageHelper(mimeMessage, "utf-8");
             helper.setText(email, true);
             helper.setTo(to);
-            helper.setSubject("Confirmacion de email");
+            helper.setSubject("Confirmación Catering");
             helper.setFrom("cateringapplicationservice@gmail.com");
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
