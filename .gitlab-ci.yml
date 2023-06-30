@@ -16,7 +16,6 @@ build_frontend:
       - Front/dist/*
   only:
     - release
-    - fix/broken-pipelines
 
 build_backend:
   stage: build
@@ -34,7 +33,6 @@ build_backend:
   #     - "Back/catering/target/catering-0.0.1-SNAPSHOT.jar"
   only:
     - release
-    - fix/broken-pipelines
 
 deploy_frontend_application:
   stage: deploy
@@ -57,38 +55,6 @@ deploy_frontend_application:
     - echo "Frontend deploy successfully!  :D"
   only:
     - release
-    - fix/broken-pipelines
-
-# build_backend_deploy:
-#   stage: deploy
-#   needs: [build_backend]
-#   image: andrejentzsch/maven_java_opencv_tesseract
-#   script:
-#     - cd Back/catering
-#     - echo "Building app once again :'D ..."
-#     - mvn clean
-#     - mvn package -B -DDRIVER_CLASS_NAME=''
-#     - mvn package -B -DDB_URL=$DB_URL
-#     - mvn package -B -DUSER=$DB_USER
-#     - mvn package -B -DPASSWORD=$DB_PASSWORD
-#     - mvn package -B -DDB_PLATFORM=''
-#     - mvn package -B -DH2_CONSOLE=false
-#     - mvn package -B -DAccessKey=$AWS_ACCESS_KEY_ID
-#     - mvn package -B -DSecretKey=$AWS_SECRET_ACCESS_KEY
-#     - mvn package -B -DBucketName=$BUCKET_NAME
-#     - mvn package -B -DURL_INSTANCE=$URL_EC2_INSTANCE
-#     - mvn package -B -DMAIL_USERNAME=$MAIL_USERNAME_EMAIL
-#     - mvn package -B -DMAIL_PASSWORD=$MAIL_PASSWORD_EMAIL
-#     - mvn clean install
-#     - echo "Finished building backend app :D"
-#     - ssh -i $EC2_PRIVATE_ACCESS_KEY ubuntu@18.188.200.107 "cd "backendApp/" && pkill -f catering-0.0.1-SNAPSHOT.jar" 
-#     - ssh -i $EC2_PRIVATE_ACCESS_KEY ubuntu@18.188.200.107 "cd "backendApp/" && rm -rf /home/ubuntu/backup/catering-0.0.1-SNAPSHOT.jar && cp -r catering-0.0.1-SNAPSHOT.jar /home/ubuntu/backup && rm -rf catering-0.0.1-SNAPSHOT.jar"
-#     - scp -i $EC2_PRIVATE_ACCESS_KEY target/catering-0.0.1-SNAPSHOT.jar ubuntu@18.188.200.107:/home/ubuntu/backendApp
-#     - ssh -i $EC2_PRIVATE_ACCESS_KEY ubuntu@18.188.200.107 "cd "backendApp/" && java -jar catering-0.0.1-SNAPSHOT.jar &"
-#     - echo "Finished deploying backend app :D"
-#   only:
-#     - release
-#     - fix/broken-pipelines
 
 deploy_Backend:
   stage: deploy
@@ -126,4 +92,3 @@ deploy_Backend:
     - echo "Finished deploying backend app :D"
   only:
     - release
-    - fix/broken-pipelines
