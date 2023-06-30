@@ -11,44 +11,68 @@ build_frontend:
     - npm install --save-dev
     - npm run build
     - echo "Frontend Build successfully!  :D"
+  artifacts:
+    paths:
+      - Front/dist/*
   only:
     - release
-    - fix/broken-pipelines
 
 build_backend:
   stage: build
-  image: maven:3.8.3-openjdk-17
+  image: andrejentzsch/maven_java_opencv_tesseract
   script:
     - cd Back/catering
     - echo "Building app..."
     - mvn clean
-    - mvn clean install
+    - mvn package -B -DDRIVER_CLASS_NAME='' -DDB_URL=$DB_URL -DUSER=$DB_USER -DPASSWORD=$DB_PASSWORD -DDB_PLATFORM='' -DH2_CONSOLE=false -DAccessKey=$AWS_ACCESS_KEY_ID -DSecretKey=$AWS_SECRET_ACCESS_KEY -DBucketName=$BUCKET_NAME -DURL_INSTANCE=$URL_EC2_INSTANCE -DMAIL_USERNAME=$MAIL_USERNAME_EMAIL -DMAIL_PASSWORD=$MAIL_PASSWORD_EMAIL
+    - mvn install -DskipTests=true
     - echo "Finished building backend app :D"
-  artifacts:
-    paths:
-      - Back/catering/target/catering-0.0.1-SNAPSHOT.jar
+  # artifacts:
+  #   expire_in: "1 days"
+  #   paths:
+  #     - "Back/catering/target/catering-0.0.1-SNAPSHOT.jar"
   only:
     - release
-    - fix/broken-pipelines
 
-deploy_application_frontend:
+deploy_frontend_application:
   stage: deploy
   needs: [build_frontend]
-  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+  image: 
+    name: amazon/aws-cli:latest
+    entrypoint: [""]
+  before_script:
+    - aws --version
+    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+    - aws configure set default.region $AWS_DEFAULT_REGION
   script:
     - echo "deploying frontend app ..."
     - cd Front/
-    - aws s3 cp -r dist/* s3://equipo1-c1-bucket-frontend
+    - aws s3 rm s3://equipo1-c1-bucket-frontend/assets --recursive
+    - aws s3 rm s3://equipo1-c1-bucket-frontend/index.html
+    - aws s3 rm s3://equipo1-c1-bucket-frontend/vite.svg
+    - aws s3 sync dist/ s3://equipo1-c1-bucket-frontend
     - echo "Frontend deploy successfully!  :D"
   only:
     - release
-    - fix/broken-pipelines
 
 deploy_Backend:
   stage: deploy
   needs: [build_backend]
   image: alpine:3.11
+  before_script:
+    - apk update && apk add openssh-client bash
+    - apk add --update openssh
+    - eval $(ssh-agent -s)
+    - echo "$EC2_PRIVATE_ACCESS_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - touch ~/.ssh/config
+    - ssh-keyscan -H 18.188.200.107 >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
   script:
+    - cd Back/catering/
+    - echo "Deploying backend app ..."
     - export DRIVER_CLASS_NAME=''
     - export DB_URL=$DB_URL
     - export USER=$DB_USER
@@ -61,10 +85,10 @@ deploy_Backend:
     - export URL_INSTANCE=$URL_EC2_INSTANCE
     - export MAIL_USERNAME=$MAIL_USERNAME_EMAIL
     - export MAIL_PASSWORD=$MAIL_PASSWORD_EMAIL
-    - ssh -i $EC2_PRIVATE_ACCESS_KEY ubuntu@18.188.200.107 "cd backendApp/ pkill -f catering-0.0.1-SNAPSHOT.jar rm -rf catering-0.0.1-SNAPSHOT.jar"
-    - scp -i $EC2_PRIVATE_ACCESS_KEY ../Back/catering/target/catering-0.0.1-SNAPSHOT.jar ubuntu@18.188.200.107:/home/ubuntu/backendApp
-    - ssh -i $EC2_PRIVATE_ACCESS_KEY ubuntu@18.188.200.107 cd backendApp/ java -jar catering-0.0.1-SNAPSHOT.jar &"
+    - ssh -o StrictHostKeyChecking=no ubuntu@18.188.200.107 "cd "backendApp/" && pkill -f catering-0.0.1-SNAPSHOT.jar" 
+    - ssh -o StrictHostKeyChecking=no ubuntu@18.188.200.107 "cd "backendApp/" && rm -rf /home/ubuntu/backup/catering-0.0.1-SNAPSHOT.jar && cp -r catering-0.0.1-SNAPSHOT.jar /home/ubuntu/backup && rm -rf catering-0.0.1-SNAPSHOT.jar"
+    - scp target/catering-0.0.1-SNAPSHOT.jar ubuntu@18.188.200.107:/home/ubuntu/backendApp
+    - ssh -o StrictHostKeyChecking=no ubuntu@18.188.200.107 "cd "backendApp/" && java -jar catering-0.0.1-SNAPSHOT.jar &"
     - echo "Finished deploying backend app :D"
   only:
     - release
-    - fix/broken-pipelines
